@@ -13,8 +13,10 @@ from app.schemas import (
     SamasaOut,
 )
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-VIDYUT_DATA_DIR = Path(os.environ.get("VIDYUT_DATA_DIR", BASE_DIR / "vidyut-data"))
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+VIDYUT_DATA_DIR = BASE_DIR / "vidyut-data"
 
 app = FastAPI(title="Sanskrit Proof-Checker API (Phase 1, 2 & 3)", version="0.3.0")
 
@@ -56,6 +58,7 @@ def check_text(payload: CheckRequest):
                 lemma=t.lemma,
                 is_valid=t.is_valid,
                 status=t.status,
+                severity=t.severity,
                 analysis=t.analysis,
                 suggestion=t.suggestion,
                 rule=t.rule,

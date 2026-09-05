@@ -24,8 +24,7 @@ from vidyut.lipi import Scheme, transliterate
 
 from app.lexicon import SupplementalLexicon
 from app.sandhi_checker import SandhiChecker
-from app.karaka_syntax import KarakaSyntaxEngine, SyntaxIssue, SamasaAnalysis, PRONOUN_MAP, _pronoun_lookup
-from app.verb_grammar import VerbForm, VerbGrammar
+from app.karaka_syntax import KarakaSyntaxEngine, SyntaxIssue, SamasaAnalysis
 
 
 # Regex to isolate Sanskrit Devanagari word tokens, excluding dandas (।, ॥) and punctuation
@@ -87,34 +86,9 @@ COMMON_GRAMMAR_SUGGESTIONS: dict[str, tuple[str, str, str]] = {
     ),
 }
 
-# Phonetic/visual confusability classes used only to constrain which letter
-# substitutions the general spelling-candidate generator below will try --
-# these are standard Devanagari confusion groups (vowel length, dental vs.
-# retroflex, sibilants, labial glide), not a table of specific answers. This
-# keeps candidate generation from wandering into unrelated real words that
-# happen to be one raw character away with no phonetic relationship at all.
-SLP1_CONFUSABLE_GROUPS = [
-    "aA", "iI", "uU", "fF", "xX", "eE", "oO",   # vowel length
-    "tw", "TW", "dq", "DQ", "nR",                 # dental <-> retroflex pairs
-    "kK", "gG", "cC", "jJ", "wW", "qQ", "tT", "dD", "pP", "bB",  # aspirated <-> unaspirated
-    "sSz",                                         # sibilants
-    "bv",                                          # labial/labio-dental glide
-    "mMn",                                         # anusvara vs. a written nasal consonant
-]
-
-
-def _confusable_letters(ch: str) -> set[str]:
-    out: set[str] = set()
-    for group in SLP1_CONFUSABLE_GROUPS:
-        if ch in group:
-            out.update(group)
-    out.discard(ch)
-    return out
-
 # Common phonetic/orthographic typing substitutions
 ORTHOGRAPHIC_SUBSTITUTIONS = [
     ("Dy", "dy", "'द्य' (द् + य) should be used instead of 'ध्य' (ध् + य)"),
-    ("D", "dy", "'ध' may be a mistyped 'द्य' (द् + य) conjunct"),
     ("S", "z", "'ष' should be used instead of 'श'"),
     ("z", "S", "'श' should be used instead of 'ष'"),
     ("s", "S", "'श' should be used instead of 'स'"),
@@ -135,17 +109,11 @@ class TokenResult:
     lemma: Optional[str]    # dictionary root/stem
     is_valid: bool          # True if recognized
     status: str = "valid"   # "valid" | "invalid" | "sandhi_error" | "karaka_error" | "agreement_error"
-    severity: str = "error"  # "error" (confirmed problem) | "review" (offered, not asserted)
     analysis: Optional[str] = None
     suggestion: Optional[str] = None
     rule: Optional[str] = None
     sandhi_issue: Optional[str] = None
     karaka_issue: Optional[str] = None
-    # Structured grammatical readings, used for real agreement/kAraka analysis
-    # instead of string-matching a description. Populated from vidyut.kosha
-    # Subanta entries and from VerbGrammar's Paninian-derived tiNanta index.
-    nominal_entries: list = field(default_factory=list)
-    verb_readings: list = field(default_factory=list)
 
 
 @dataclass
@@ -157,25 +125,16 @@ class CheckResult:
 
     @property
     def error_count(self) -> int:
-        """Confirmed problems only. Never counts a 'review'-severity finding --
-        an unrecognised word or an unapplied-but-optional sandhi is offered for
-        human judgement, not asserted as a defect."""
-        return sum(1 for t in self.tokens if t.status != "valid" and t.severity == "error")
-
-    @property
-    def review_count(self) -> int:
-        return sum(1 for t in self.tokens if t.status != "valid" and t.severity == "review")
+        return sum(1 for t in self.tokens if t.status != "valid")
 
     @property
     def sandhi_error_count(self) -> int:
-        return sum(1 for t in self.tokens if t.status == "sandhi_error" and t.severity == "error")
+        return sum(1 for t in self.tokens if t.status == "sandhi_error")
 
     @property
     def syntax_error_count(self) -> int:
         return sum(
-            1 for t in self.tokens
-            if t.status in ["karaka_error", "agreement_error", "upapada_error"]
-            and t.severity == "error"
+            1 for t in self.tokens if t.status in ["karaka_error", "agreement_error", "upapada_error"]
         )
 
 
@@ -188,33 +147,11 @@ class SanskritEngine:
         self._kosha = Kosha(str(data_dir / "kosha"))
         self._lexicon = SupplementalLexicon()
         self._sandhi_checker = SandhiChecker(data_dir / "sandhi" / "rules.csv")
-        self._verb_grammar = VerbGrammar(data_dir / "prakriya")
-        self._karaka_engine = KarakaSyntaxEngine(self._verb_grammar)
+        self._karaka_engine = KarakaSyntaxEngine()
 
     def _describe(self, entry) -> str:
         """User-friendly grammatical description of a kosha entry."""
         return str(entry)
-
-    @staticmethod
-    def _pick_best_entry(entries: list):
-        """The most likely reading among several homographic Kosha entries,
-        for display purposes (lemma/analysis shown to the user).
-
-        A surface form can be genuinely ambiguous (राम: also matches a rare
-        कृदन्त bahuvacana reading of the unrelated root रम्, alongside the
-        ordinary proper-noun reading), and vidyut does not rank entries by
-        frequency, so entries[0] can be a rare homograph rather than the
-        obvious intended word. An ordinary/basic nominal reading in the
-        singular is preferred over a secondary (कृदन्त-derived) or
-        plural/dual reading when both are available.
-        """
-        def rank(e):
-            kind = type(getattr(e, "pratipadika_entry", None)).__name__
-            is_basic = 0 if kind.endswith("Basic") else 1
-            vacana = getattr(e, "vacana", None)
-            is_eka = 0 if (vacana is None or getattr(vacana, "name", None) == "Eka") else 1
-            return (is_basic, is_eka)
-        return sorted(entries, key=rank)[0]
 
     def _raw_check(self, slp1_word: str) -> tuple[bool, Optional[str], Optional[str], str]:
         """Internal helper to test word existence without triggering suggestions loop."""
@@ -227,7 +164,7 @@ class SanskritEngine:
         # 2. Direct Kosha lookup
         entries = list(self._kosha.get(slp1_word))
         if entries:
-            first = self._pick_best_entry(entries)
+            first = entries[0]
             lemma = getattr(first, "lemma", None)
             lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
             analysis = self._describe(first)
@@ -246,7 +183,7 @@ class SanskritEngine:
                     return True, lemma_deva, lex_entry.analysis, cand
                 entries = list(self._kosha.get(cand))
                 if entries:
-                    first = self._pick_best_entry(entries)
+                    first = entries[0]
                     lemma = getattr(first, "lemma", None)
                     lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
                     analysis = self._describe(first)
@@ -263,7 +200,7 @@ class SanskritEngine:
                 return True, lemma_deva, lex_entry.analysis, cand
             entries = list(self._kosha.get(cand))
             if entries:
-                first = self._pick_best_entry(entries)
+                first = entries[0]
                 lemma = getattr(first, "lemma", None)
                 lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
                 analysis = self._describe(first)
@@ -280,7 +217,7 @@ class SanskritEngine:
                 return True, lemma_deva, lex_entry.analysis, cand
             entries = list(self._kosha.get(cand))
             if entries:
-                first = self._pick_best_entry(entries)
+                first = entries[0]
                 lemma = getattr(first, "lemma", None)
                 lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
                 analysis = self._describe(first)
@@ -291,109 +228,13 @@ class SanskritEngine:
             cand = slp1_word[:-1] + "s"
             entries = list(self._kosha.get(cand))
             if entries:
-                first = self._pick_best_entry(entries)
+                first = entries[0]
                 lemma = getattr(first, "lemma", None)
                 lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
                 analysis = self._describe(first)
                 return True, lemma_deva, analysis, cand
 
         return False, None, None, slp1_word
-
-    def _raw_kosha_entries(self, slp1_word: str) -> list:
-        """All raw vidyut.kosha entries for a surface form, trying the same
-        visarga/anusvara normalizations as `_raw_check`, but returning every
-        candidate reading rather than an arbitrary first one -- callers that
-        need real grammatical categories (vibhakti, vacana, ...) must inspect
-        all candidates themselves rather than trust entries[0], which is not
-        ranked by frequency and can be a rare homograph (e.g. रामः also
-        matches a कृदन्त bahuvacana reading of the unrelated root रम्)."""
-        entries = list(self._kosha.get(slp1_word))
-        if entries:
-            return entries
-        if slp1_word.endswith("H"):
-            stem = slp1_word[:-1]
-            for ending in ["s", "r"]:
-                entries = list(self._kosha.get(stem + ending))
-                if entries:
-                    return entries
-        if slp1_word.endswith("o"):
-            entries = list(self._kosha.get(slp1_word[:-1] + "as"))
-            if entries:
-                return entries
-        if slp1_word.endswith("M"):
-            entries = list(self._kosha.get(slp1_word[:-1] + "m"))
-            if entries:
-                return entries
-        if slp1_word.endswith("r"):
-            entries = list(self._kosha.get(slp1_word[:-1] + "s"))
-            if entries:
-                return entries
-        return []
-
-    def _is_recognized(self, slp1_word: str) -> bool:
-        is_valid, *_ = self._raw_check(slp1_word)
-        return is_valid or bool(self._verb_grammar.lookup(slp1_word))
-
-    def _edit_distance_1_candidates(self, slp1_word: str) -> set[str]:
-        """Every string reachable from `slp1_word` by one deletion, one
-        phonetically-plausible substitution, a constrained insertion, or an
-        adjacent-letter transposition.
-
-        This is a general, grammar-agnostic spelling-candidate generator (the
-        standard single-edit method used by ordinary spellcheckers), not a
-        table of known confusions: it covers a missing visarga (insertion),
-        a doubled consonant from OCR (deletion), and a misordered conjunct
-        (transposition) with the same mechanism, and every candidate is
-        validated against the real lexicon/verb-grammar before being trusted.
-
-        Substitutions and insertions are restricted to phonetically/visually
-        confusable letters (see SLP1_CONFUSABLE_GROUPS) plus the two most
-        common omissions, visarga and anusvara. An unrestricted full-alphabet
-        search finds far too many *unrelated* real words one raw character
-        away (Sanskrit's morphology is productive enough that almost any
-        short string is one substitution from some rare inflected form),
-        which makes a confident single-candidate correction rare even for
-        genuine typos; restricting to actual confusion classes keeps the
-        search targeted at the errors people and OCR engines actually make.
-        """
-        n = len(slp1_word)
-        candidates: set[str] = set()
-        for i in range(n):
-            # Deleting a leading अ- is not a typo candidate: अ-/अन्- is the
-            # productive नञ्-समास negation prefix, so "not W" spelled
-            # correctly is a different, equally valid word from W, not a
-            # misspelling of it (e.g. असामान्यशब्दः "an uncommon word" is not
-            # a typo of सामान्यशब्दः "a common word").
-            if i == 0 and slp1_word[0] == "a" and n > 1:
-                continue
-            candidates.add(slp1_word[:i] + slp1_word[i + 1:])
-        for i in range(n - 1):
-            if slp1_word[i] != slp1_word[i + 1]:
-                candidates.add(slp1_word[:i] + slp1_word[i + 1] + slp1_word[i] + slp1_word[i + 2:])
-        for i in range(n):
-            for ch in _confusable_letters(slp1_word[i]):
-                candidates.add(slp1_word[:i] + ch + slp1_word[i + 1:])
-        for i in range(n + 1):
-            candidates.add(slp1_word[:i] + "H" + slp1_word[i:])
-            candidates.add(slp1_word[:i] + "M" + slp1_word[i:])
-            # Reduplication/haplography: a doubled letter or syllable lost
-            # (गच्छति -> गछति) or gained (अध्ययनम् -> अध्यनम्, dropping the
-            # repeated य) is one of the most common Sanskrit typing/OCR slips.
-            if i > 0:
-                candidates.add(slp1_word[:i] + slp1_word[i - 1] + slp1_word[i:])
-            if i > 1:
-                candidates.add(slp1_word[:i] + slp1_word[i - 2:i] + slp1_word[i:])
-        candidates.discard(slp1_word)
-        return candidates
-
-    def _find_spelling_correction(self, slp1_word: str) -> Optional[str]:
-        """A single lexicon-verified one-edit fix, or None if zero or several
-        candidates validate -- an ambiguous or unmatched word is left for
-        human review rather than guessed at. Precision matters more than
-        recall here: asserting a confident but wrong "fix" on a word that
-        was already fine is worse than leaving a genuine typo at review tier."""
-        valid = [c for c in self._edit_distance_1_candidates(slp1_word) if self._is_recognized(c)]
-        return valid[0] if len(valid) == 1 else None
 
     def check_word(
         self, slp1_word: str
@@ -405,21 +246,6 @@ class SanskritEngine:
         is_valid, lemma_deva, analysis, underlying = self._raw_check(slp1_word)
         if is_valid:
             return True, lemma_deva, analysis, underlying, None, None
-
-        # Genuine Paninian tiNanta check: is this an exact form the Dhatupatha's
-        # laT-kartari derivation actually produces for some root? (a real
-        # vidyut.prakriya derivation, not a lookup table of known-good forms).
-        # This recognises every root in the Dhatupatha, not only the handful
-        # covered by the base kosha's incidental participle homographs.
-        verb_forms = self._verb_grammar.lookup(slp1_word)
-        if verb_forms:
-            vf = verb_forms[0]
-            root_deva = transliterate(vf.aupadeshika, Scheme.Slp1, Scheme.Devanagari)
-            analysis = (
-                f"तिङन्त (धातुः {root_deva}, पुरुषः {vf.purusha.name}, वचनम् {vf.vacana.name}, "
-                f"लट्लकारः, कर्तरि प्रयोगः)"
-            )
-            return True, root_deva, analysis, slp1_word, None, None
 
         # Check for grammatical substitution suggestions (e.g. gamati -> gacCati)
         if slp1_word in COMMON_GRAMMAR_SUGGESTIONS:
@@ -442,25 +268,6 @@ class SanskritEngine:
                         cand_deva,
                         "वर्ण-शुद्धिः (Spelling Correction)",
                     )
-
-        # General fallback: any recognised word reachable by a single letter
-        # edit (insertion/deletion/substitution/transposition). Covers cases
-        # the fixed confusion table above does not name outright -- a missing
-        # visarga, a doubled consonant, a misordered conjunct -- without
-        # hardcoding the specific pairs, since every candidate is checked
-        # against the real lexicon/verb-grammar and only a single unambiguous
-        # match is trusted.
-        general_fix = self._find_spelling_correction(slp1_word)
-        if general_fix:
-            fix_deva = transliterate(general_fix, Scheme.Slp1, Scheme.Devanagari)
-            return (
-                False,
-                None,
-                "Spelling: exactly one recognised form is a single letter away",
-                slp1_word,
-                fix_deva,
-                "वर्ण-शुद्धिः (Spelling Correction)",
-            )
 
         return False, None, None, slp1_word, None, None
 
@@ -499,40 +306,6 @@ class SanskritEngine:
             is_valid, lemma, analysis, underlying_slp1, suggestion, rule = self.check_word(w_slp1)
 
             status = "valid" if is_valid else "invalid"
-            # An unrecognised word with no validated correction is sent for
-            # human review, not asserted as a defect -- it is very often a
-            # proper noun, place name or technical term. Only a word for which
-            # a specific, lexicon-verified fix was found is a confirmed error.
-            severity = "error" if (is_valid or suggestion is not None) else "review"
-
-            # An indeclinable's real grammatical identity is settled by the
-            # lexicon match itself; a coincidental Kosha reading of the same
-            # letters as some rare declinable noun is noise, not a competing
-            # analysis, and must not feed case/gender agreement checks.
-            is_avyaya = bool(analysis) and analysis.startswith("Avyaya")
-            # A pronoun's grammatical role (puruSha/vacana/liNga) is already
-            # fully determined by which तद्/अस्मद्/युष्मद् form was used
-            # (PRONOUN_MAP / PRONOUN_GENDER_MAP), same as an avyaya. Bare
-            # pronoun surfaces (ते, तत्, ...) frequently coincide with dozens
-            # of unrelated noun-declension homographs in the Kosha (from
-            # adjective stems ending the same way), so trusting those would
-            # manufacture spurious case/gender conflicts for a word whose
-            # real identity is not in question.
-            is_pronoun = _pronoun_lookup(PRONOUN_MAP, w_slp1) is not None
-            nominal_entries = []
-            if not is_avyaya and not is_pronoun:
-                nominal_entries = [
-                    e for e in self._raw_kosha_entries(w_slp1)
-                    if type(e).__name__.endswith("Subanta")
-                ]
-                # Words that exist only in the supplemental lexicon (e.g.
-                # बालिका, अध्यापिका -- textbook stems vidyut's base Kosha does
-                # not carry) still need structured vibhakti/vacana/liNga data
-                # to participate in real case/gender agreement checking.
-                lex_entry = self._lexicon.lookup(w_slp1)
-                if lex_entry and lex_entry.subanta is not None:
-                    nominal_entries.append(lex_entry.subanta)
-            verb_readings = self._verb_grammar.lookup(w_slp1)
 
             tok = TokenResult(
                 text_deva=w_deva,
@@ -541,12 +314,9 @@ class SanskritEngine:
                 lemma=lemma,
                 is_valid=is_valid,
                 status=status,
-                severity=severity,
                 analysis=analysis,
                 suggestion=suggestion,
                 rule=rule,
-                nominal_entries=nominal_entries,
-                verb_readings=verb_readings,
             )
             result.tokens.append(tok)
 
@@ -569,22 +339,13 @@ class SanskritEngine:
                 t2.underlying_slp1,
             )
 
-            if junction.issue_detected and t1.status == "valid":
-                # Writing padas unjoined across a word boundary is a legitimate
-                # editorial convention in Sanskrit (padapATha-style), not a
-                # defect in the word itself -- so this is offered at review
-                # tier, never asserted as a confirmed error. Only escalate a
-                # word already flagged invalid for its own sake stays that way.
+            if junction.issue_detected:
                 t1.status = "sandhi_error"
-                t1.severity = "review"
                 t1.suggestion = junction.suggested_w1_deva
                 t1.rule = junction.rule_sutra
                 t1.sandhi_issue = (
-                    f"External sandhi not applied before '{t2.text_deva}': the "
-                    f"expected sandhi-joined form is '{junction.suggested_w1_deva}' "
-                    f"({junction.rule_explanation}). Writing the words unjoined is a "
-                    f"legitimate editorial convention, so this is offered for a "
-                    f"style decision rather than reported as an error."
+                    f"Required Sandhi transformation missing before '{t2.text_deva}': "
+                    f"expected '{junction.suggested_w1_deva}' ({junction.rule_explanation})"
                 )
 
         # 3. Phase 3: Syntactic, Kāraka Dependency, and Samāsa Analysis

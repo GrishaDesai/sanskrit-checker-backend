@@ -27,6 +27,7 @@ class TokenOut(BaseModel):
     lemma: str | None = None
     is_valid: bool
     status: str = "valid"  # "valid" | "invalid" | "sandhi_error" | "karaka_error" | "agreement_error"
+    severity: str = "error"  # "error" (confirmed problem) | "review" (offered, not asserted)
     analysis: str | None = None
     suggestion: str | None = None
     rule: str | None = None

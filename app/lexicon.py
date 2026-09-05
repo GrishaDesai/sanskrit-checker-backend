@@ -23,12 +23,50 @@ from vidyut.prakriya import (
 )
 
 
+class SupplementalSubantaEntry:
+    """Duck-compatible with vidyut.kosha's PadaEntry_Subanta for the parts
+    karaka_syntax.py's structured-grammar helpers use (vibhakti, vacana,
+    linga, to_prakriya_args()). Lets a word that only exists in the
+    supplemental lexicon (not vidyut's base Kosha, e.g. बालिका) still
+    participate in real case/gender agreement checking instead of being
+    invisible to it.
+    """
+
+    def __init__(self, pada_subanta):
+        self._pada = pada_subanta
+        # Ordinary nominal/adjective stems (never a कृदन्त secondary
+        # formation), so this ranks like a "Basic" pratipadika_entry in
+        # KarakaSyntaxEngine's Basic-preferred disambiguation.
+        self.pratipadika_entry = _SupplementalPratipadikaBasic(pada_subanta.pratipadika)
+
+    @property
+    def vibhakti(self):
+        return self._pada.vibhakti
+
+    @property
+    def vacana(self):
+        return self._pada.vacana
+
+    @property
+    def linga(self):
+        return self._pada.linga
+
+    def to_prakriya_args(self):
+        return self._pada
+
+
+class _SupplementalPratipadikaBasic:
+    def __init__(self, pratipadika):
+        self.pratipadika = pratipadika
+
+
 @dataclass
 class LexiconEntry:
     text_slp1: str
     lemma: str
     analysis: str
     is_valid: bool = True
+    subanta: Optional[SupplementalSubantaEntry] = None
 
 
 # Standard avyayas (indeclinables) commonly used in Sanskrit texts
@@ -159,10 +197,12 @@ class SupplementalLexicon:
                                 f"vibhakti={vib_name}, vacana={vac_name})"
                             )
                             # Store both surface form and s/r-normalized padanta form
+                            subanta_entry = SupplementalSubantaEntry(p)
                             self._entries[form_slp1] = LexiconEntry(
                                 text_slp1=form_slp1,
                                 lemma=lemma,
                                 analysis=analysis,
+                                subanta=subanta_entry,
                             )
                             # If ends in 'H' (visarga), also store with 's' and 'r' for kosha compatibility
                             if form_slp1.endswith("H"):
@@ -171,6 +211,7 @@ class SupplementalLexicon:
                                     text_slp1=s_form,
                                     lemma=lemma,
                                     analysis=analysis,
+                                    subanta=subanta_entry,
                                 )
                     except Exception:
                         continue
