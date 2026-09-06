@@ -51,13 +51,16 @@ def engine_verdict(result) -> str:
     finding (unrecognised word with no confident fix, unapplied-but-optional
     sandhi, ...) is offered for human judgement and must not read as a defect."""
     has_token_error = any(t.status != "valid" and t.severity == "error" for t in result.tokens)
-    has_syntax_issue = bool(result.syntax_issues)  # karaka/agreement/upapada issues are always "error" severity
-    return "error" if (has_token_error or has_syntax_issue) else "correct"
+    # Syntax issues carry a severity too: an agreement finding that rests on
+    # an ambiguous morphological analysis is offered, not asserted, and must
+    # read the same way as a review-tier token flag.
+    has_syntax_error = any(i.severity == "error" for i in result.syntax_issues)
+    return "error" if (has_token_error or has_syntax_error) else "correct"
 
 
 def flagged_surfaces(result) -> set[str]:
     surfaces = {t.text_deva for t in result.tokens if t.status != "valid" and t.severity == "error"}
-    surfaces |= {i.token_text for i in result.syntax_issues}
+    surfaces |= {i.token_text for i in result.syntax_issues if i.severity == "error"}
     return surfaces
 
 

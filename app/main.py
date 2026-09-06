@@ -68,6 +68,7 @@ def check_text(payload: CheckRequest):
             for t in result.tokens
         ],
         error_count=result.error_count,
+        review_count=result.review_count,
         sandhi_error_count=result.sandhi_error_count,
         syntax_error_count=result.syntax_error_count,
         syntax_issues=[
@@ -79,6 +80,7 @@ def check_text(payload: CheckRequest):
                 description=issue.description,
                 suggested_text=issue.suggested_text,
                 rule_sutra=issue.rule_sutra,
+                severity=issue.severity,
             )
             for issue in result.syntax_issues
         ],

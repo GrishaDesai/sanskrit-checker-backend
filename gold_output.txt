@@ -1,0 +1,208 @@
+﻿
+========================================================================================
+SANSKRIT CHECKER — GOLD EVALUATION REPORT
+========================================================================================
+
+[ 1] 1. Spelling / Orthographic Errors
+--------------------------------------   in-scope 8/17   (known-gap 2/3)
+  FAIL  1-01     Missing Visarga                  exp=error   got=correct   राम गच्छति।
+  FAIL  1-02     Missing Visarga                  exp=error   got=correct   बालक गच्छति।
+  FAIL  1-03     Missing anusvara / case ending   exp=error   got=correct   गुरुः शिष्य शिक्षयति।
+  FAIL  1-04     Spelling                         exp=error   got=correct   विधालयः
+  FAIL  1-05     Incorrect word segmentation      exp=error   got=correct [known-gap]   विद्या लयः
+  PASS  1-06     Spelling                         exp=error   got=error     संस्क्रुतम्
+  PASS  1-07     Consonant error                  exp=error   got=error     सन्स्कृतम्
+  FAIL  1-08     Missing consonant                exp=error   got=correct   प्रथना
+  PASS  1-09     Spelling / anusvara              exp=review  got=correct [known-gap]   स्वास्थ्यम्
+  FAIL  1-10     Spelling                         exp=error   got=correct   आर्शीवादः
+  FAIL  1-11     Vowel placement                  exp=error   got=correct   आशिर्वादः
+  PASS  1-12     Vowel error                      exp=error   got=error     क्रिपया
+  PASS  1-13     Incorrect vowel                  exp=error   got=error     कॄपया
+  PASS  1-14     Conjunct error                   exp=error   got=error     श्रध्दा
+  PASS  1-15     Conjunct error                   exp=error   got=error     बुध्दिः
+  PASS  1-16     Conjunct error                   exp=error   got=error     सिध्दिः
+  PASS  1-17     Missing consonant                exp=review  got=correct [known-gap]   उद्देशः
+  FAIL  1-18     Missing consonant                exp=error   got=error     अध्यनम्
+  PASS  1-19     Orthographic variant — review    exp=review  got=correct   स्वतन्त्र
+  FAIL  1-20     Spelling                         exp=error   got=correct   परिक्षा
+
+[ 2] 2. Case / विभक्ति Errors
+-----------------------------   in-scope 5/12
+  PASS  2-21     Correct baseline                 exp=correct got=correct   रामः वनं गच्छति।
+  FAIL  2-22     Incorrect case                   exp=error   got=correct   रामः वनः गच्छति।
+  FAIL  2-23     Accusative error                 exp=error   got=correct   रामः गुरुः नमति।
+  PASS  2-24     Correct baseline                 exp=correct got=correct   रामः गुरुम् नमति।
+  PASS  2-25     Correct baseline                 exp=correct got=correct   रामस्य पिता आगच्छति।
+  FAIL  2-26     Genitive error                   exp=error   got=correct   रामः पिता आगच्छति।
+  FAIL  2-27     Instrumental error               exp=error   got=correct   सीता रामेन सह गच्छति।
+  FAIL  2-28     Subject/case error               exp=error   got=correct   रामेन विद्यालयं गच्छति।
+  PASS  2-29     Correct baseline                 exp=correct got=correct   गुरुः शिष्याय ज्ञानं ददाति।
+  FAIL  2-30     Dative error                     exp=error   got=correct   गुरुः शिष्यं ज्ञानं ददाति।
+  PASS  2-31     Correct baseline                 exp=correct got=correct   बालकः कक्षायां पठति।
+  FAIL  2-32     Locative error                   exp=error   got=correct   बालकः कक्षां पठति।
+
+[ 3] 3. Number / वचन Errors
+---------------------------   in-scope 8/8
+  PASS  3-33     Singular verb mismatch           exp=error   got=error     बालकः पठन्ति।
+  PASS  3-34     Plural verb mismatch             exp=error   got=error     बालकाः पठति।
+  PASS  3-35     Dual verb mismatch               exp=error   got=error     बालकौ पठति।
+  PASS  3-36     Plural verb mismatch             exp=error   got=error     ते गच्छति।
+  PASS  3-37     Singular/plural mismatch         exp=error   got=error     सः गच्छन्ति।
+  PASS  3-38     Dual mismatch                    exp=error   got=error     तौ गच्छन्ति।
+  PASS  3-39     Person/number mismatch           exp=error   got=error     वयं गच्छति।
+  PASS  3-40     Person mismatch                  exp=error   got=error     अहं गच्छसि।
+
+[ 4] 4. पुरुष / Person Errors
+-----------------------------   in-scope 6/6
+  PASS  4-41     Person                           exp=error   got=error     अहं पठसि।
+  PASS  4-42     Person                           exp=error   got=error     त्वं पठामि।
+  PASS  4-43     Person                           exp=error   got=error     सः पठामि।
+  PASS  4-44     Person                           exp=error   got=error     वयं पठथ।
+  PASS  4-45     Person                           exp=error   got=error     यूयं पठामः।
+  PASS  4-46     Person                           exp=error   got=error     ते पठथ।
+
+[ 5] 5. Gender / लिङ्ग Errors
+-----------------------------   in-scope 1/6
+  FAIL  5-47     Gender agreement                 exp=error   got=correct   सुन्दरः बालिका।
+  FAIL  5-48     Gender agreement                 exp=error   got=correct   सुन्दरी बालकः।
+  FAIL  5-49     Pronoun gender                   exp=error   got=error     सः बालिका अस्ति।
+  FAIL  5-50     Pronoun gender                   exp=error   got=error     सा बालकः अस्ति।
+  FAIL  5-51     Gender agreement                 exp=error   got=correct   एषः नदी।
+  PASS  5-52     Gender agreement                 exp=error   got=error     एषा वृक्षः।
+
+[ 6] 6. Verb / धातु / लकार Errors
+---------------------------------   in-scope 6/6   (known-gap 2/2)
+  PASS  6-53     Verb/person                      exp=error   got=error     रामः पठसि।
+  PASS  6-54     Verb/number                      exp=error   got=error     रामः गच्छन्ति।
+  PASS  6-55     Correct baseline                 exp=correct got=correct   रामः अगच्छत्।
+  PASS  6-56     Tense/context issue              exp=review  got=correct [known-gap]   रामः अगच्छति।
+  PASS  6-57     Orthography                      exp=review  got=correct [known-gap]   बालकः पुस्तकम् पठति।
+  PASS  6-58     Verb agreement                   exp=error   got=error     बालकः पुस्तकं पठन्ति।
+  PASS  6-59     Verb agreement                   exp=error   got=error     बालकाः पुस्तकं पठति।
+  PASS  6-60     Verb agreement                   exp=error   got=error     ते विद्यालयं गच्छति।
+
+[ 7] 7. Sandhi Errors
+---------------------   in-scope 13/13   (known-gap 1/1)
+  PASS  7-61     Visarga Sandhi                   exp=review  got=correct   रामः गच्छति।
+  PASS  7-62     Visarga + vowel                  exp=review  got=correct   रामः अस्ति।
+  PASS  7-63     Sandhi/context — review          exp=review  got=correct [known-gap]   नरः इह अस्ति।
+  PASS  7-64     Visarga Sandhi                   exp=review  got=correct   सः अपि गच्छति।
+  PASS  7-65     Sandhi                           exp=review  got=correct   रामः एव गच्छति।
+  PASS  7-66     Consonant/vowel sandhi           exp=review  got=correct   तत् एव।
+  PASS  7-67     Sandhi                           exp=review  got=correct   तत् अपि।
+  PASS  7-68     Sandhi                           exp=review  got=correct   तत् अर्थम्।
+  PASS  7-69     Vowel Sandhi                     exp=review  got=correct   विद्या आलयः।
+  PASS  7-70     Vowel Sandhi                     exp=review  got=correct   महा उत्सवः।
+  PASS  7-71     Vowel Sandhi                     exp=review  got=correct   देव इन्द्रः।
+  PASS  7-72     Vowel Sandhi                     exp=review  got=correct   नर इन्द्रः।
+  PASS  7-73     Vowel Sandhi                     exp=review  got=correct   सुर ईशः।
+  PASS  7-74     Vowel Sandhi                     exp=review  got=correct   गण ईशः।
+
+[ 8] 8. Sandhi Splitting Tests
+------------------------------   in-scope 10/10
+  PASS  8-75     Sandhi splitting                 exp=correct got=correct   रामो गच्छति।
+  PASS  8-76     Sandhi splitting                 exp=correct got=correct   रामोऽस्ति।
+  PASS  8-77     Sandhi splitting                 exp=correct got=correct   सोऽपि गच्छति।
+  PASS  8-78     Sandhi splitting                 exp=correct got=correct   तदेव।
+  PASS  8-79     Sandhi splitting                 exp=correct got=correct   तदपि।
+  PASS  8-80     Sandhi splitting                 exp=correct got=correct   तदर्थम्।
+  PASS  8-81     Sandhi splitting                 exp=correct got=correct   महोत्सवः।
+  PASS  8-82     Sandhi splitting                 exp=correct got=correct   देवेन्द्रः।
+  PASS  8-83     Sandhi splitting                 exp=correct got=correct   नरेन्द्रः।
+  PASS  8-84     Sandhi splitting                 exp=correct got=correct   सुरेशः।
+
+[ 9] 9. Compound / समास Tests
+-----------------------------   in-scope 4/4   (known-gap 6/6)
+  PASS  9-85     Compound                         exp=review  got=correct   राजपुरुषः
+  PASS  9-86     Compound                         exp=review  got=correct   नीलकमलम्
+  PASS  9-87     Compound                         exp=review  got=correct   महापुरुषः
+  PASS  9-88     Compound                         exp=review  got=correct   देवालयः
+  PASS  9-89     Compound                         exp=review  got=correct [known-gap]   ग्रामवासी
+  PASS  9-90     Compound                         exp=review  got=correct [known-gap]   जलपानम्
+  PASS  9-91     Compound                         exp=review  got=correct [known-gap]   राजमार्गः
+  PASS  9-92     Compound                         exp=review  got=correct [known-gap]   धर्मशास्त्रम्
+  PASS  9-93     Compound / Dvandva               exp=review  got=correct [known-gap]   मातापितरौ
+  PASS  9-94     Compound                         exp=review  got=correct [known-gap]   नीलोत्पलम्
+
+[10] 10. Unknown Word / Proper Noun Tests
+-----------------------------------------   in-scope 8/8
+  PASS  10-95    Proper noun                      exp=correct got=correct   रामः विद्यालयं गच्छति।
+  PASS  10-96    Proper noun                      exp=correct got=correct   कृष्णः गच्छति।
+  PASS  10-97    Place name                       exp=review  got=correct   वाराणसी नगरी अस्ति।
+  PASS  10-98    Place name                       exp=review  got=correct   अयोध्या नगरी प्रसिद्धा अस्ति।
+  PASS  10-99    Proper noun                      exp=correct got=correct   हिमालयः विशालः अस्ति।
+  PASS  10-100   Unknown/technical                exp=review  got=correct   अमुकशब्दः अत्र प्रयुक्तः।
+  PASS  10-101   Possible technical term          exp=review  got=correct   विशेषसंज्ञा
+  PASS  10-102   Possible compound                exp=review  got=correct   पुस्तकनाम
+
+[11] 11. Correct Sanskrit — MUST NOT FLAG
+-----------------------------------------   in-scope 17/18
+  PASS  11-103   must_not_flag                    exp=correct got=correct   रामः वनं गच्छति।
+  PASS  11-104   must_not_flag                    exp=correct got=correct   रामो गच्छति।
+  PASS  11-105   must_not_flag                    exp=correct got=correct   सीता विद्यालयं गच्छति।
+  PASS  11-106   must_not_flag                    exp=correct got=correct   बालकः पुस्तकं पठति।
+  PASS  11-107   must_not_flag                    exp=correct got=correct   बालकाः पुस्तकं पठन्ति।
+  PASS  11-108   must_not_flag                    exp=correct got=correct   गुरुः शिष्यं शिक्षयति।
+  PASS  11-109   must_not_flag                    exp=correct got=correct   गुरुः शिष्याय ज्ञानं ददाति।
+  PASS  11-110   must_not_flag                    exp=correct got=correct   रामस्य पिता आगच्छति।
+  PASS  11-111   must_not_flag                    exp=correct got=correct   सीता रामेण सह गच्छति।
+  PASS  11-112   must_not_flag                    exp=correct got=correct   अहं संस्कृतं पठामि।
+  PASS  11-113   must_not_flag                    exp=correct got=correct   त्वं संस्कृतं पठसि।
+  PASS  11-114   must_not_flag                    exp=correct got=correct   सः संस्कृतं पठति।
+  PASS  11-115   must_not_flag                    exp=correct got=correct   वयं संस्कृतं पठामः।
+  FAIL  11-116   must_not_flag                    exp=correct got=error     यूयं संस्कृतं पठथ।
+  PASS  11-117   must_not_flag                    exp=correct got=correct   ते संस्कृतं पठन्ति।
+  PASS  11-118   must_not_flag                    exp=correct got=correct   तदेव सत्यम्।
+  PASS  11-119   must_not_flag                    exp=correct got=correct   तदपि आवश्यकम्।
+  PASS  11-120   must_not_flag                    exp=correct got=correct   रामोऽपि गच्छति।
+
+[12] 12. Unicode / Devanagari Tests
+-----------------------------------   in-scope 9/10
+  PASS  12-121   Valid Unicode                    exp=correct got=correct   रामः
+  PASS  12-122   Valid                            exp=correct got=correct   रामः।
+  PASS  12-123   Extra whitespace                 exp=review  got=correct   रामः  गच्छति।
+  PASS  12-124   Missing whitespace               exp=review  got=correct   रामःगच्छति।
+  FAIL  12-125   Punctuation review               exp=review  got=error     रामः, गच्छति।
+  PASS  12-126   Whitespace before punctuation    exp=review  got=correct   रामः ।
+  PASS  12-127   Missing space after punctuation  exp=review  got=correct   रामः।गच्छति।
+  PASS  12-128   Newline handling                 exp=correct got=correct   रामः
+गच्छति।
+  PASS  12-129   Tab handling                     exp=review  got=correct   रामः	गच्छति।
+  PASS  12-130   Duplicate whitespace             exp=review  got=correct   रामः   गच्छति।
+
+[13] 13. OCR Error Tests
+------------------------   in-scope 5/9   (known-gap 1/1)
+  PASS  13-131   OCR/consonant duplication        exp=error   got=error     रामः गछ्छति।
+  FAIL  13-132   OCR/spelling                     exp=error   got=correct   विधालयः
+  PASS  13-133   OCR                              exp=error   got=error     सन्स्कृतम्
+  PASS  13-134   OCR/conjunct                     exp=error   got=error     बुध्दिः
+  PASS  13-135   OCR                              exp=error   got=error     श्रध्दा
+  PASS  13-136   OCR                              exp=error   got=error     अधययनम्
+  FAIL  13-137   OCR/spelling                     exp=error   got=correct   परिक्षा
+  FAIL  13-138   OCR                              exp=error   got=correct   प्रर्थना
+  FAIL  13-139   OCR                              exp=error   got=correct   आर्शीवादः
+  PASS  13-140   OCR                              exp=review  got=correct [known-gap]   स्वास्थ्यम्
+
+[14] 14. Difficult / Ambiguous Cases
+------------------------------------   in-scope 7/7   (known-gap 3/3)
+  PASS  14-141   Analyze                          exp=review  got=correct   रामः गच्छति।
+  PASS  14-142   Analyze sandhi                   exp=correct got=correct   रामो गच्छति।
+  PASS  14-143   Possible semantic issue          exp=review  got=correct [known-gap]   देवालयः गच्छति।
+  PASS  14-144   Compound analysis                exp=review  got=correct   राजपुरुषः आगच्छति।
+  PASS  14-145   Compound analysis                exp=review  got=correct   महापुरुषः आगच्छति।
+  PASS  14-146   Correct                          exp=correct got=correct   सः तत् करोति।
+  PASS  14-147   Correct                          exp=correct got=correct   सः तदेव करोति।
+  PASS  14-148   Compound                         exp=review  got=correct [known-gap]   गुरुकुलम् अस्ति।
+  PASS  14-149   Compound                         exp=review  got=correct [known-gap]   धर्मक्षेत्रम् अस्ति।
+  PASS  14-150   Unknown → review                 exp=review  got=correct   असामान्यशब्दः
+
+========================================================================================
+SUMMARY
+========================================================================================
+  in-scope pass rate     107/134  (79.9%)
+  known-gap pass rate    15/16  (93.8%)  (informational only)
+
+  by category (in-scope only):
+    expected=error    32/57  (56.1%)
+    expected=correct  42/43  (97.7%)
+    expected=review   33/34  (97.1%)

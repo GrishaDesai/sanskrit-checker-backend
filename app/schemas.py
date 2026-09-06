@@ -13,6 +13,7 @@ class SyntaxIssueOut(BaseModel):
     description: str
     suggested_text: str | None = None
     rule_sutra: str | None = None
+    severity: str = "error"  # "error" (confirmed problem) | "review" (offered, not asserted)
 
 
 class SamasaOut(BaseModel):
@@ -39,6 +40,7 @@ class CheckResponse(BaseModel):
     input_text: str
     tokens: list[TokenOut]
     error_count: int
+    review_count: int = 0
     sandhi_error_count: int = 0
     syntax_error_count: int = 0
     syntax_issues: list[SyntaxIssueOut] = []

@@ -45,12 +45,34 @@ class VerbForm:
 class VerbGrammar:
     """Derives and indexes the लट्-कर्तरि paradigm of every root in the Dhatupatha."""
 
-    def __init__(self, prakriya_data_dir: str | Path):
+    def __init__(self, prakriya_data_dir: str | Path, kosha=None):
         self._vyakarana = Vyakarana()
         data = Data(str(prakriya_data_dir))
         self._entries = {e.code: e for e in data.load_dhatu_entries()}
         self._by_surface: dict[str, list[VerbForm]] = {}
+        self._clean_roots: dict[str, str] = {}
+        if kosha is not None:
+            self._load_clean_roots(kosha)
         self._build_index()
+
+    def _load_clean_roots(self, kosha) -> None:
+        """Map each Dhatupatha aupadeshika to its plain-text root.
+
+        A Dhatupatha citation carries accents and it-markers -- गम् is listed
+        as `ga\mx~` and कृ as `qukf\Y` -- which is correct data but not a
+        root anyone wants shown to them. The Kosha's own DhatuEntry already
+        carries the cleaned form, so the display name comes from vidyut rather
+        than from stripping anubandhas here by hand.
+        """
+        for entry in kosha.dhatus():
+            try:
+                self._clean_roots.setdefault(entry.dhatu.aupadeshika, entry.clean_text)
+            except Exception:
+                continue
+
+    def clean_root(self, aupadeshika: str) -> str:
+        """The plain-text root for display, falling back to the raw citation."""
+        return self._clean_roots.get(aupadeshika, aupadeshika)
 
     def _build_index(self) -> None:
         for code, entry in self._entries.items():

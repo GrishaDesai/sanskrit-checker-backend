@@ -24,7 +24,10 @@ from vidyut.lipi import Scheme, transliterate
 
 from app.lexicon import SupplementalLexicon
 from app.sandhi_checker import SandhiChecker
-from app.karaka_syntax import KarakaSyntaxEngine, SyntaxIssue, SamasaAnalysis, PRONOUN_MAP, _pronoun_lookup
+from app.karaka_syntax import (
+    KarakaSyntaxEngine, SyntaxIssue, SamasaAnalysis, PRONOUN_MAP, _pronoun_lookup,
+    AVYAYA_KRT, _strip_it_markers,
+)
 from app.verb_grammar import VerbForm, VerbGrammar
 
 
@@ -111,6 +114,52 @@ def _confusable_letters(ch: str) -> set[str]:
     out.discard(ch)
     return out
 
+# How a pada's final letter may be written, and what it can stand for
+# underlyingly. A word reaches the lexicon under whichever of these spellings
+# the corpus happened to store, so every lookup path normalizes through the
+# same table (see SanskritEngine._padanta_variants).
+#
+# The voiced-stop rows are जश्त्व (८.२.३९ झलां जशोऽन्ते): a pada-final
+# voiceless stop is written voiced before a voiced sound, which is why
+# उपरिष्टात् is also written उपरिष्टाद्. The dental pair (-द् for -त्) is by
+# far the commonest, but the family is listed in full rather than singling
+# that one out, since the rule is not specific to the dental series.
+PADANTA_FINAL_VARIANTS: dict[str, tuple[str, ...]] = {
+    "H": ("s", "r"),    # visarga for underlying -s / -r
+    "o": ("as",),       # -o for underlying -as (६.१.११३ अतो रोरप्लुतादप्लुते)
+    "M": ("m",),        # anusvara for a pada-final -m
+    # यण् (६.१.७७ इको यणचि): a pada-final इ/उ/ऋ becomes य्/व्/र् before a
+    # vowel, so इति is written इत्य् and एतासु is written एतास्व् whenever the
+    # next word begins with a vowel. Editions vary on whether they then print
+    # the two words joined or spaced, and when spaced the यण्-final fragment
+    # arrives here as a token of its own.
+    "y": ("i", "I"),
+    "v": ("u", "U"),
+    "r": ("s", "f", "F"),   # repha for underlying -s, and यण् for -ऋ
+    "d": ("t",),        # जश्त्व: dental
+    "b": ("p",),        # जश्त्व: labial
+    "g": ("k",),        # जश्त्व: velar
+    "q": ("w",),        # जश्त्व: retroflex
+    "j": ("c",),        # जश्त्व: palatal
+}
+
+# The traditional उपसर्गs plus the अव्ययs that head an अव्ययीभाव. Used only
+# to recognise a compound whose *whole* is absent from the Kosha but whose
+# parts are not; never to segment or rewrite a token.
+UPASARGA_PREFIXES = frozenset({
+    "pra", "parA", "apa", "sam", "anu", "ava", "nis", "niH", "dus", "duH",
+    "vi", "A", "ni", "aDi", "api", "ati", "su", "ud", "aBi", "prati", "pari",
+    "upa", "yaTA", "sa",
+})
+
+# The core सर्वनाम (pronominal) stems. A piece of a fused token whose Kosha
+# reading has one of these stems is a pronoun in some case -- तस्य, येन,
+# एतेषु -- which is the class, alongside the अव्ययs, that external sandhi
+# routinely fuses to a neighbouring word in print.
+PRONOMINAL_STEMS = frozenset({
+    "tad", "yad", "etad", "idam", "adas", "kim", "asmad", "yuzmad",
+})
+
 # Common phonetic/orthographic typing substitutions
 ORTHOGRAPHIC_SUBSTITUTIONS = [
     ("Dy", "dy", "'द्य' (द् + य) should be used instead of 'ध्य' (ध् + य)"),
@@ -146,6 +195,10 @@ class TokenResult:
     # Subanta entries and from VerbGrammar's Paninian-derived tiNanta index.
     nominal_entries: list = field(default_factory=list)
     verb_readings: list = field(default_factory=list)
+    # Lets the syntax layer ask the Kosha follow-up questions about this token
+    # (e.g. how it would read with a dropped visarga restored) without the
+    # syntax layer holding a Kosha handle of its own.
+    kosha_lookup: object = None
 
 
 @dataclass
@@ -188,7 +241,7 @@ class SanskritEngine:
         self._kosha = Kosha(str(data_dir / "kosha"))
         self._lexicon = SupplementalLexicon()
         self._sandhi_checker = SandhiChecker(data_dir / "sandhi" / "rules.csv")
-        self._verb_grammar = VerbGrammar(data_dir / "prakriya")
+        self._verb_grammar = VerbGrammar(data_dir / "prakriya", kosha=self._kosha)
         self._karaka_engine = KarakaSyntaxEngine(self._verb_grammar)
 
     def _describe(self, entry) -> str:
@@ -216,119 +269,93 @@ class SanskritEngine:
             return (is_basic, is_eka)
         return sorted(entries, key=rank)[0]
 
+    def _padanta_variants(self, slp1_word: str) -> list[str]:
+        """The underlying pada forms a surface word-final letter may stand for.
+
+        A pada's final letter is not written the same way in every context, so
+        the same word reaches the lexicon under more than one spelling. Rather
+        than a per-ending ladder of near-identical lookups, the pairs live in
+        `PADANTA_FINAL_VARIANTS` and every lookup path walks the same list --
+        `_raw_check` and `_raw_kosha_entries` previously carried two
+        hand-maintained copies of this that had already drifted apart (the
+        supplemental lexicon was consulted for some endings but not others).
+        """
+        out: list[str] = []
+        for final, underlying in PADANTA_FINAL_VARIANTS.items():
+            if slp1_word.endswith(final):
+                stem = slp1_word[: -len(final)]
+                out.extend(stem + u for u in underlying)
+        return out
+
+    def _kosha_hit(self, cand: str):
+        """(lemma_deva, analysis) for a Kosha form, or None."""
+        entries = list(self._kosha.get(cand))
+        if not entries:
+            return None
+        first = self._pick_best_entry(entries)
+        lemma = getattr(first, "lemma", None)
+        lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
+        analysis = self._describe(first)
+        if len(entries) > 1:
+            analysis += f"  (+{len(entries) - 1} other possible analyses)"
+        return lemma_deva, analysis
+
     def _raw_check(self, slp1_word: str) -> tuple[bool, Optional[str], Optional[str], str]:
         """Internal helper to test word existence without triggering suggestions loop."""
-        # 1. Supplemental lexicon check
-        lex_entry = self._lexicon.lookup(slp1_word)
-        if lex_entry:
-            lemma_deva = transliterate(lex_entry.lemma, Scheme.Slp1, Scheme.Devanagari)
-            return True, lemma_deva, lex_entry.analysis, lex_entry.text_slp1
-
-        # 2. Direct Kosha lookup
-        entries = list(self._kosha.get(slp1_word))
-        if entries:
-            first = self._pick_best_entry(entries)
-            lemma = getattr(first, "lemma", None)
-            lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
-            analysis = self._describe(first)
-            if len(entries) > 1:
-                analysis += f"  (+{len(entries) - 1} other possible analyses)"
-            return True, lemma_deva, analysis, slp1_word
-
-        # 3. Visarga normalization (-H -> -s, -r)
-        if slp1_word.endswith("H"):
-            stem = slp1_word[:-1]
-            for ending in ["s", "r"]:
-                cand = stem + ending
-                lex_entry = self._lexicon.lookup(cand)
-                if lex_entry:
-                    lemma_deva = transliterate(lex_entry.lemma, Scheme.Slp1, Scheme.Devanagari)
-                    return True, lemma_deva, lex_entry.analysis, cand
-                entries = list(self._kosha.get(cand))
-                if entries:
-                    first = self._pick_best_entry(entries)
-                    lemma = getattr(first, "lemma", None)
-                    lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
-                    analysis = self._describe(first)
-                    if len(entries) > 1:
-                        analysis += f"  (+{len(entries) - 1} other possible analyses)"
-                    return True, lemma_deva, analysis, cand
-
-        # 4. -o ending normalization (-o -> -as)
-        if slp1_word.endswith("o"):
-            cand = slp1_word[:-1] + "as"
+        for cand in [slp1_word, *self._padanta_variants(slp1_word)]:
             lex_entry = self._lexicon.lookup(cand)
             if lex_entry:
                 lemma_deva = transliterate(lex_entry.lemma, Scheme.Slp1, Scheme.Devanagari)
-                return True, lemma_deva, lex_entry.analysis, cand
-            entries = list(self._kosha.get(cand))
-            if entries:
-                first = self._pick_best_entry(entries)
-                lemma = getattr(first, "lemma", None)
-                lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
-                analysis = self._describe(first)
-                if len(entries) > 1:
-                    analysis += f"  (+{len(entries) - 1} other possible analyses)"
-                return True, lemma_deva, analysis, cand
-
-        # 5. Anusvara normalization (-M -> -m)
-        if slp1_word.endswith("M"):
-            cand = slp1_word[:-1] + "m"
-            lex_entry = self._lexicon.lookup(cand)
-            if lex_entry:
-                lemma_deva = transliterate(lex_entry.lemma, Scheme.Slp1, Scheme.Devanagari)
-                return True, lemma_deva, lex_entry.analysis, cand
-            entries = list(self._kosha.get(cand))
-            if entries:
-                first = self._pick_best_entry(entries)
-                lemma = getattr(first, "lemma", None)
-                lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
-                analysis = self._describe(first)
-                return True, lemma_deva, analysis, cand
-
-        # 6. -r ending normalization (-r -> -s)
-        if slp1_word.endswith("r"):
-            cand = slp1_word[:-1] + "s"
-            entries = list(self._kosha.get(cand))
-            if entries:
-                first = self._pick_best_entry(entries)
-                lemma = getattr(first, "lemma", None)
-                lemma_deva = transliterate(lemma, Scheme.Slp1, Scheme.Devanagari) if lemma else None
-                analysis = self._describe(first)
-                return True, lemma_deva, analysis, cand
-
+                return True, lemma_deva, lex_entry.analysis, lex_entry.text_slp1
+            hit = self._kosha_hit(cand)
+            if hit:
+                return True, hit[0], hit[1], cand
         return False, None, None, slp1_word
 
     def _raw_kosha_entries(self, slp1_word: str) -> list:
         """All raw vidyut.kosha entries for a surface form, trying the same
-        visarga/anusvara normalizations as `_raw_check`, but returning every
-        candidate reading rather than an arbitrary first one -- callers that
-        need real grammatical categories (vibhakti, vacana, ...) must inspect
-        all candidates themselves rather than trust entries[0], which is not
+        padanta normalizations as `_raw_check`, but returning every candidate
+        reading rather than an arbitrary first one -- callers that need real
+        grammatical categories (vibhakti, vacana, ...) must inspect all
+        candidates themselves rather than trust entries[0], which is not
         ranked by frequency and can be a rare homograph (e.g. रामः also
         matches a कृदन्त bahuvacana reading of the unrelated root रम्)."""
-        entries = list(self._kosha.get(slp1_word))
-        if entries:
-            return entries
-        if slp1_word.endswith("H"):
-            stem = slp1_word[:-1]
-            for ending in ["s", "r"]:
-                entries = list(self._kosha.get(stem + ending))
-                if entries:
-                    return entries
-        if slp1_word.endswith("o"):
-            entries = list(self._kosha.get(slp1_word[:-1] + "as"))
-            if entries:
-                return entries
-        if slp1_word.endswith("M"):
-            entries = list(self._kosha.get(slp1_word[:-1] + "m"))
-            if entries:
-                return entries
-        if slp1_word.endswith("r"):
-            entries = list(self._kosha.get(slp1_word[:-1] + "s"))
+        for cand in [slp1_word, *self._padanta_variants(slp1_word)]:
+            entries = list(self._kosha.get(cand))
             if entries:
                 return entries
         return []
+
+    def _is_upasarga_compound(self, slp1_word: str) -> bool:
+        """True for a compound headed by an उपसर्ग/अव्यय whose remainder is an
+        independently recognised word ending in -अम्.
+
+        अव्ययीभाव adverbials -- प्रतिदिनम्, प्रतिमासम्, यथाक्रमम् -- are
+        ordinary everyday vocabulary, and the Kosha carries most of them
+        (प्रत्यहम्, प्रतिवर्षम्, प्रतिक्षणम्, अनुदिनम्, उपकूलम्, प्रत्येकम्
+        … 11 of 16 sampled) but not all. The holes are individual lexical
+        gaps in a finite list, not the long-compound segmentation ceiling, so
+        they are worth closing -- and vidyut 0.4.0 has no समास support at all,
+        so they cannot be closed by derivation.
+
+        The -अम् requirement is नाव्ययीभावादतोऽम्त्वपञ्चम्याः (२.४.८३), and it
+        is what makes this safe rather than general prefix-stripping: it
+        excludes उपसर्ग-prefixed *verbs* (परिमुच्यते, परिक्षरति) which are a
+        different question, and it excludes परिक्षा -- a genuine typo for
+        परीक्षा that a bare prefix-strip would have validated as परि + क्षा.
+        Verified against every typo in the gold set: none is validated here.
+
+        This only ever moves a token from review to valid. It cannot cause a
+        confirmed-tier flag, so its failure mode is a missed error, never a
+        wrong accusation.
+        """
+        for prefix in sorted(UPASARGA_PREFIXES, key=len, reverse=True):
+            if not slp1_word.startswith(prefix) or len(slp1_word) <= len(prefix) + 3:
+                continue
+            rest = slp1_word[len(prefix):]
+            if rest.endswith(("am", "aM")) and self._raw_check(rest)[0]:
+                return True
+        return False
 
     def _is_recognized(self, slp1_word: str) -> bool:
         is_valid, *_ = self._raw_check(slp1_word)
@@ -359,12 +386,22 @@ class SanskritEngine:
         n = len(slp1_word)
         candidates: set[str] = set()
         for i in range(n):
-            # Deleting a leading अ- is not a typo candidate: अ-/अन्- is the
-            # productive नञ्-समास negation prefix, so "not W" spelled
-            # correctly is a different, equally valid word from W, not a
-            # misspelling of it (e.g. असामान्यशब्दः "an uncommon word" is not
-            # a typo of सामान्यशब्दः "a common word").
-            if i == 0 and slp1_word[0] == "a" and n > 1:
+            # Never delete a word's *first* letter to reach another word.
+            #
+            # Word-initial material in Sanskrit is morphologically load-bearing
+            # -- a नञ् negation (असामान्यशब्दः is not a typo of सामान्यशब्दः),
+            # an उपसर्ग, or simply the stem itself -- so stripping it does not
+            # repair a typo, it manufactures a different word. This is the
+            # एकस्मिन् → कस्मिन् failure: एक is a perfectly good प्रातिपदिक and
+            # एकस्मिन् its सर्वनाम locative, absent from the Kosha only because
+            # of the upstream सर्वादि gap (see docs/vidyut-issue-eka-sarvadi.md);
+            # deleting the initial ए reaches the unrelated कस्मिन् and the word
+            # was then "corrected" into it.
+            #
+            # This costs nothing in recall: every genuine typo the gold set
+            # catches has its edit at position >= 1 (verified across all 12 --
+            # substitutions, transpositions and one internal deletion).
+            if i == 0 and n > 1:
                 continue
             candidates.add(slp1_word[:i] + slp1_word[i + 1:])
         for i in range(n - 1):
@@ -386,14 +423,181 @@ class SanskritEngine:
         candidates.discard(slp1_word)
         return candidates
 
+    def _is_productively_composite(self, slp1_word: str) -> bool:
+        """True when this token looks like a productively-formed multi-word
+        unit -- two or more padas fused by external sandhi -- rather than a
+        single word that ought to be in the lexicon on its own.
+
+        This is the evidence test that decides whether the token's *absence*
+        from the lexicon means anything. Sandhi-fusion and compounding are
+        open-ended: तथापि (तथा + अपि) and यश्च (यः + च) are perfectly correct
+        Sanskrit that no finite dictionary of whole words can list, so
+        "not found" tells us nothing about them. A simple word's absence, by
+        contrast, is genuinely surprising and does carry information.
+
+        Two conditions must both hold, and each is doing real work:
+
+        1. Chedaka segments the token into 2+ pieces that it *all* recognises.
+           Chedaka's own analysis, not a string search: splitting against a
+           list of bare stems was measured and is vacuous -- with ~169k stems
+           in the Kosha it "decomposes" गुरुः as guru+H and पठति as paWa+ti,
+           which would veto everything.
+
+        2. The surface is *not* the plain concatenation of those pieces --
+           i.e. sandhi visibly applied at the junction (तथा + अपि -> तथापि
+           changes the boundary; the pieces do not simply abut). Without this,
+           any string that happens to cut into two dictionary words qualifies,
+           and Chedaka supplies such cuts freely: विधालयः cuts as विधा+लयः and
+           रामेन as रा+मेन, both plain concatenations of real words and both
+           genuine typos we must keep catching.
+
+        Deliberately *not* done here: nothing in the token stream is rewritten
+        and the pieces are not substituted for the token downstream. Chedaka
+        produces recognised-but-implausible splits freely (अहेतुमन् ->
+        अह+इत्+उम्+अन्), so a split is treated only as evidence about whether
+        absence is informative, never as an analysis to act on.
+        """
+        pieces = self._chedaka.run(slp1_word)
+        if len(pieces) < 2:
+            return False
+        if any(p.data is None for p in pieces):
+            return False
+        # At least one piece must be a particle, indeclinable or pronoun.
+        # This is what separates a fused pada pair from a compound. External
+        # sandhi is printed as one graphic unit mainly around clitics and
+        # pronouns -- च, तु, हि, अपि, इति, एव, न, तद्/इदम् -- as in तथापि,
+        # यश्च, मध्यतस्तु, विशेषस्तस्य. Two *content* words written together
+        # are a समास, which is a single word in its own right, so its absence
+        # from the lexicon is informative and must stay checkable: विधालयः
+        # segments just as neatly into विध + आलयः, and आशिर्वादः into
+        # आशिस् + वादः, but both are misspelled compounds, not fusions.
+        # This also drops the junk segmentations Chedaka offers freely, whose
+        # pieces are neither content words nor real particles (अहेतुमन् ->
+        # अह + इत् + उम् + अन्, शनैर् -> शन् + अ + अ + ईर्).
+        if not any(self._is_function_word(p.text) for p in pieces):
+            return False
+        if "".join(p.text for p in pieces) != slp1_word:
+            return True
+        # The pieces abut, but the junction can still carry sandhi that this
+        # comparison cannot see: Chedaka reports a pada in its underlying
+        # -s/-r form, which at a real pada end would have surfaced as visarga
+        # (विशेषः + तस्य -> विशेषस्तस्य keeps the स्, and मध्यतः + तु ->
+        # मध्यतस्तु likewise). A non-final piece still ending in -s/-r is
+        # therefore evidence that sandhi joined it to what follows, since
+        # standing alone it would have been written -ः.
+        return any(p.text.endswith(("s", "r")) for p in pieces[:-1])
+
+    def _is_function_word(self, slp1_word: str) -> bool:
+        """True if this surface form has an indeclinable or pronoun reading.
+
+        The अव्यय inventory is vidyut's own: Kosha entries carry an
+        `is_avyaya` flag on the prātipadika, which cleanly separates the
+        particles that get written joined (च, तु, हि, खलु, अपि, इति, एव, न,
+        अत्र, वै, स्म, अथ, इव, तथा, मध्यतः) from content words (विध, आलयः,
+        आशिस्, वादः). Chedaka's own copy of that flag is not usable here --
+        it reports `ca` and `atra` as non-avyaya -- so the Kosha is consulted
+        directly. Pronouns come from PRONOUN_MAP, which already settles a
+        pronoun's identity elsewhere in this engine.
+        """
+        if _pronoun_lookup(PRONOUN_MAP, slp1_word) is not None:
+            return True
+        for entry in self._raw_kosha_entries(slp1_word):
+            pratipadika_entry = getattr(entry, "pratipadika_entry", None)
+            pratipadika = getattr(pratipadika_entry, "pratipadika", None)
+            if getattr(pratipadika, "is_avyaya", False):
+                return True
+            # अव्ययकृत्: क्त्वा / ल्यप् / तुमुन् form indeclinables
+            # (क्त्वातोसुन्कसुनः १.१.४०, कृन्मेजन्तः १.१.३९). उक्त्वा and
+            # गत्वा are as much particles-for-this-purpose as च or इति, and
+            # इत्युक्त्वा (इति + उक्त्वा) is a fused pair that must not be
+            # "corrected" to इत्युक्ता. The same test is applied to the
+            # syntax layer's tokens by karaka_syntax._is_avyaya_token.
+            krt = getattr(pratipadika_entry, "krt", None)
+            if krt is not None and _strip_it_markers(str(krt)) in AVYAYA_KRT:
+                return True
+            # PRONOUN_MAP only lists the handful of surface forms this engine
+            # needs elsewhere for पुरुष/वचन, so an oblique pronoun (तस्य, येन,
+            # ...) is not in it. The stem the Kosha assigns settles the
+            # question for the whole declension at once.
+            if getattr(pratipadika, "text", None) in PRONOMINAL_STEMS:
+                return True
+        return False
+
+    @staticmethod
+    def _is_nasal_orthographic_variant(a: str, b: str) -> bool:
+        """True when two spellings differ only by a licensed anusvāra /
+        homorganic-nasal alternation, i.e. they are the same word written two
+        equally correct ways.
+
+        अनुस्वारस्य ययि परसवर्णः (८.४.५८) substitutes the homorganic nasal for
+        anusvāra, so शंकरे and शङ्करे are both correct and choosing between
+        them is house style, not grammar. Asserting one over the other as an
+        error is exactly the kind of overclaiming that costs an author's
+        trust, so no such "correction" is offered.
+
+        The sūtra's ययि condition is enforced, not waved at, and it is what
+        keeps this from swallowing real errors: यय् excludes the sibilants and
+        ह, so before a sibilant the anusvāra has no parasavarṇa substitute and
+        is the only correct spelling -- which is why संस्कृतम् is right and
+        सन्स्कृतम् is a genuine error rather than a variant. The substitute
+        must also be homorganic with what follows: न् before क् is not a
+        licensed variant of anything.
+        """
+        # स्थान (place of articulation) -> the nasal of that class
+        HOMORGANIC_NASAL = {
+            **{c: "N" for c in "kKgGN"},   # कवर्ग
+            **{c: "Y" for c in "cCjJY"},   # चवर्ग
+            **{c: "R" for c in "wWqQR"},   # टवर्ग
+            **{c: "n" for c in "tTdDn"},   # तवर्ग
+            **{c: "m" for c in "pPbBm"},   # पवर्ग
+        }
+        if len(a) != len(b):
+            return False
+        diffs = [i for i, (x, y) in enumerate(zip(a, b)) if x != y]
+        if not diffs:
+            return False
+        for i in diffs:
+            pair = {a[i], b[i]}
+            if "M" not in pair:
+                return False
+            following = a[i + 1] if i + 1 < len(a) else None
+            if following is None or following != b[i + 1]:
+                return False
+            # यय्: every consonant except श ष स ह. A vowel or a sibilant after
+            # the nasal leaves anusvāra with no licensed substitute.
+            if HOMORGANIC_NASAL.get(following) is None and following not in "yvrl":
+                return False
+            expected = HOMORGANIC_NASAL.get(following, following)
+            if (pair - {"M"}) != {expected}:
+                return False
+        return True
+
     def _find_spelling_correction(self, slp1_word: str) -> Optional[str]:
         """A single lexicon-verified one-edit fix, or None if zero or several
         candidates validate -- an ambiguous or unmatched word is left for
         human review rather than guessed at. Precision matters more than
         recall here: asserting a confident but wrong "fix" on a word that
-        was already fine is worse than leaving a genuine typo at review tier."""
+        was already fine is worse than leaving a genuine typo at review tier.
+
+        An unrecognised word is not evidence of an error. "I do not know this
+        word" plus "one edit reaches a word I do know" is only worth asserting
+        when the word's absence from the lexicon is itself informative --
+        see `_is_productively_composite`, which is what decides that. A fused
+        pada-pair is returned unchanged so it stays at review tier, where an
+        unrecognised word belongs, instead of being confidently rewritten into
+        some unrelated word that happens to sit one edit away.
+        """
+        if self._is_productively_composite(slp1_word):
+            return None
+
         valid = [c for c in self._edit_distance_1_candidates(slp1_word) if self._is_recognized(c)]
-        return valid[0] if len(valid) == 1 else None
+        if len(valid) != 1:
+            return None
+
+        suggested = valid[0]
+        if self._is_nasal_orthographic_variant(slp1_word, suggested):
+            return None
+        return suggested
 
     def check_word(
         self, slp1_word: str
@@ -403,6 +607,33 @@ class SanskritEngine:
         Returns (is_valid, lemma, analysis, underlying_slp1, suggestion_deva, rule_citation).
         """
         is_valid, lemma_deva, analysis, underlying = self._raw_check(slp1_word)
+
+        # A finite verb outranks a nominal homograph for display purposes.
+        #
+        # भवति is the लट् third-person of भू, and that is what VerbGrammar
+        # derives; but the Kosha also carries भवत् (the honorific, and the
+        # शतृ participle) whose Saptamī singular is spelled the same, and
+        # _pick_best_entry's preference for an ordinary Basic stem handed the
+        # display to *that* -- so the tool reported "Stem/Root: भवत्" for a
+        # form of भू. The derivation was never wrong and the syntax layer
+        # always read the token as a verb; only the label was wrong.
+        #
+        # Restricted to a Prathama-puruṣa reading so a noun that merely
+        # collides with some rare paradigm cell keeps its nominal identity --
+        # भावः matches an उत्तम dual of भा and must stay the noun भाव.
+        verb_forms = self._verb_grammar.lookup(slp1_word)
+        if verb_forms and any(vf.purusha.name == "Prathama" for vf in verb_forms):
+            vf = next(v for v in verb_forms if v.purusha.name == "Prathama")
+            root_deva = transliterate(
+                self._verb_grammar.clean_root(vf.aupadeshika), Scheme.Slp1, Scheme.Devanagari)
+            verb_analysis = (
+                f"तिङन्त (धातुः {root_deva}, पुरुषः {vf.purusha.name}, वचनम् {vf.vacana.name}, "
+                f"लट्लकारः, कर्तरि प्रयोगः)"
+            )
+            if is_valid:
+                verb_analysis += "  (also readable as a nominal homograph)"
+            return True, root_deva, verb_analysis, underlying if is_valid else slp1_word, None, None
+
         if is_valid:
             return True, lemma_deva, analysis, underlying, None, None
 
@@ -414,18 +645,32 @@ class SanskritEngine:
         verb_forms = self._verb_grammar.lookup(slp1_word)
         if verb_forms:
             vf = verb_forms[0]
-            root_deva = transliterate(vf.aupadeshika, Scheme.Slp1, Scheme.Devanagari)
+            root_deva = transliterate(
+                self._verb_grammar.clean_root(vf.aupadeshika), Scheme.Slp1, Scheme.Devanagari)
             analysis = (
                 f"तिङन्त (धातुः {root_deva}, पुरुषः {vf.purusha.name}, वचनम् {vf.vacana.name}, "
                 f"लट्लकारः, कर्तरि प्रयोगः)"
             )
             return True, root_deva, analysis, slp1_word, None, None
 
+        # An अव्ययीभाव / उपसर्ग compound whose parts are known but whose whole
+        # the Kosha does not list (प्रतिदिनम्). Recognised, not corrected.
+        if self._is_upasarga_compound(slp1_word):
+            return True, None, "अव्ययीभाव / उपसर्ग-समास (recognised from its members)", slp1_word, None, None
+
         # Check for grammatical substitution suggestions (e.g. gamati -> gacCati)
         if slp1_word in COMMON_GRAMMAR_SUGGESTIONS:
             sug_slp1, sutra, exp = COMMON_GRAMMAR_SUGGESTIONS[slp1_word]
             sug_deva = transliterate(sug_slp1, Scheme.Slp1, Scheme.Devanagari)
             return False, None, exp, slp1_word, sug_deva, sutra
+
+        # Everything below asserts a defect on the strength of the word not
+        # being in the lexicon, so it is gated on that absence being
+        # informative in the first place -- see `_is_productively_composite`.
+        # Without this the fixed confusion table below would still "correct"
+        # शनैर् to शणैर् on a token that is simply a sandhi-fused pada pair.
+        if self._is_productively_composite(slp1_word):
+            return False, None, None, slp1_word, None, None
 
         # Check for orthographic/spelling typing substitutions (e.g. viDyArTI -> vidyArTI)
         for old, new, reason in ORTHOGRAPHIC_SUBSTITUTIONS:
@@ -547,6 +792,7 @@ class SanskritEngine:
                 rule=rule,
                 nominal_entries=nominal_entries,
                 verb_readings=verb_readings,
+                kosha_lookup=self._raw_kosha_entries,
             )
             result.tokens.append(tok)
 
@@ -558,7 +804,18 @@ class SanskritEngine:
             # If t1 is a masculine a-stem written as bare stem (e.g. rAma without visarga/o)
             # and is followed by a word starting with voiced consonant, normalize underlying to 'as'
             underlying_w1 = t1.underlying_slp1
-            if underlying_w1 == t1.text_slp1 and underlying_w1.endswith("a") and not underlying_w1.endswith("va"):
+            # A masculine a-stem written without its visarga (राम for रामः)
+            # is restored to -as so the junction can be judged. This must not
+            # be applied to an अव्यय: an indeclinable has no case ending to
+            # restore, so promoting न to नस् and then citing हशि च (६.१.११४)
+            # to demand नो is inventing a विसर्ग the word never had. The rule
+            # only ever applies to a pada that really ends in -अस्.
+            if (
+                underlying_w1 == t1.text_slp1
+                and underlying_w1.endswith("a")
+                and not underlying_w1.endswith("va")
+                and not self._is_function_word(t1.text_slp1)
+            ):
                 if list(self._kosha.get(underlying_w1 + "s")) or self._lexicon.lookup(underlying_w1 + "s"):
                     underlying_w1 = underlying_w1 + "s"
 
@@ -596,8 +853,20 @@ class SanskritEngine:
         for issue in syntax_issues:
             if 0 <= issue.token_index < len(result.tokens):
                 tok = result.tokens[issue.token_index]
-                if tok.status == "valid":
+                # A confirmed grammar error outranks a review-tier note
+                # already sitting on the same token. Sandhi runs first and
+                # marks the *first* word of a junction, which is often the
+                # very word an agreement issue lands on, so without this an
+                # optional style suggestion silently hid a real error from
+                # error_count / syntax_error_count.
+                outranks_existing = (
+                    tok.status != "valid"
+                    and tok.severity == "review"
+                    and issue.severity == "error"
+                )
+                if tok.status == "valid" or outranks_existing:
                     tok.status = issue.issue_type
+                    tok.severity = issue.severity
                     tok.suggestion = issue.suggested_text
                     tok.rule = issue.rule_sutra
                     tok.karaka_issue = f"{issue.title}: {issue.description}"

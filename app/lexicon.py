@@ -216,6 +216,10 @@ class SupplementalLexicon:
                     except Exception:
                         continue
 
+    def is_avyaya(self, slp1_word: str) -> bool:
+        """True if this exact surface form is a known indeclinable."""
+        return slp1_word in COMMON_AVYAYAS
+
     def lookup(self, slp1_word: str) -> Optional[LexiconEntry]:
         """Look up a word in the supplemental lexicon."""
         # 1. Exact match

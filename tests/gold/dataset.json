@@ -1981,6 +1981,127 @@
       "expected_error_surface": null,
       "expected_split": null,
       "note": ""
+    },
+    {
+      "id": "15-151",
+      "section": 15,
+      "section_name": "Locative adjuncts & sarvadi obliques (regression guards)",
+      "category": "Locative adjunct, elided subject",
+      "input": "ग्रामे गच्छति।",
+      "verdict": "correct",
+      "in_scope": true,
+      "note": "Added after the एकस्मिन्→कस्मिन् and ग्रामे-as-subject reports; neither pattern was covered by the original 150 cases."
+    },
+    {
+      "id": "15-152",
+      "section": 15,
+      "section_name": "Locative adjuncts & sarvadi obliques (regression guards)",
+      "category": "Locative adjunct, elided subject",
+      "input": "वने वसति।",
+      "verdict": "correct",
+      "in_scope": true,
+      "note": "Added after the एकस्मिन्→कस्मिन् and ग्रामे-as-subject reports; neither pattern was covered by the original 150 cases."
+    },
+    {
+      "id": "15-153",
+      "section": 15,
+      "section_name": "Locative adjuncts & sarvadi obliques (regression guards)",
+      "category": "Locative adjunct, elided subject",
+      "input": "गृहे तिष्ठति।",
+      "verdict": "correct",
+      "in_scope": true,
+      "note": "Added after the एकस्मिन्→कस्मिन् and ग्रामे-as-subject reports; neither pattern was covered by the original 150 cases."
+    },
+    {
+      "id": "15-154",
+      "section": 15,
+      "section_name": "Locative adjuncts & sarvadi obliques (regression guards)",
+      "category": "Locative adjunct with overt subject",
+      "input": "बालकः ग्रामे गच्छति।",
+      "verdict": "correct",
+      "in_scope": true,
+      "note": "Added after the एकस्मिन्→कस्मिन् and ग्रामे-as-subject reports; neither pattern was covered by the original 150 cases."
+    },
+    {
+      "id": "15-155",
+      "section": 15,
+      "section_name": "Locative adjuncts & sarvadi obliques (regression guards)",
+      "category": "Sarvadi oblique absent from Kosha",
+      "input": "एकस्मिन् ग्रामे वसति।",
+      "verdict": "review",
+      "in_scope": true,
+      "note": "Added after the एकस्मिन्→कस्मिन् and ग्रामे-as-subject reports; neither pattern was covered by the original 150 cases."
+    },
+    {
+      "id": "15-156",
+      "section": 15,
+      "section_name": "Locative adjuncts & sarvadi obliques (regression guards)",
+      "category": "Sarvadi oblique absent from Kosha",
+      "input": "एकस्मै नमः।",
+      "verdict": "review",
+      "in_scope": true,
+      "note": "Added after the एकस्मिन्→कस्मिन् and ग्रामे-as-subject reports; neither pattern was covered by the original 150 cases."
+    },
+    {
+      "id": "15-157",
+      "section": 15,
+      "section_name": "Locative adjuncts & sarvadi obliques (regression guards)",
+      "category": "Sarvadi oblique absent from Kosha",
+      "input": "एकस्मात् आगच्छति।",
+      "verdict": "review",
+      "in_scope": true,
+      "note": "Added after the एकस्मिन्→कस्मिन् and ग्रामे-as-subject reports; neither pattern was covered by the original 150 cases."
+    },
+    {
+      "id": "16-158",
+      "section": 16,
+      "section_name": "Coordinated subjects (regression guards)",
+      "category": "Coordinated dual subject",
+      "input": "तस्य पुत्रः कन्या च वर्तेते।",
+      "verdict": "correct",
+      "in_scope": true,
+      "note": "Added after तस्य पुत्रः कन्या च वर्तेते was asserted as a red-tier agreement error with a suggestion that would corrupt correct text. Two coordinated singulars take a dual verb."
+    },
+    {
+      "id": "16-159",
+      "section": 16,
+      "section_name": "Coordinated subjects (regression guards)",
+      "category": "Coordinated dual subject",
+      "input": "पुत्रः कन्या च वर्तेते।",
+      "verdict": "correct",
+      "in_scope": true,
+      "note": "Added after तस्य पुत्रः कन्या च वर्तेते was asserted as a red-tier agreement error with a suggestion that would corrupt correct text. Two coordinated singulars take a dual verb."
+    },
+    {
+      "id": "16-160",
+      "section": 16,
+      "section_name": "Coordinated subjects (regression guards)",
+      "category": "Coordinated subject, A ca B ca",
+      "input": "रामः च कृष्णः च गच्छतः।",
+      "verdict": "correct",
+      "in_scope": true,
+      "note": "Added after तस्य पुत्रः कन्या च वर्तेते was asserted as a red-tier agreement error with a suggestion that would corrupt correct text. Two coordinated singulars take a dual verb."
+    },
+    {
+      "id": "16-161",
+      "section": 16,
+      "section_name": "Coordinated subjects (regression guards)",
+      "category": "Single subject control",
+      "input": "तस्य पुत्रः वर्तते।",
+      "verdict": "correct",
+      "in_scope": true,
+      "note": "Added after तस्य पुत्रः कन्या च वर्तेते was asserted as a red-tier agreement error with a suggestion that would corrupt correct text. Two coordinated singulars take a dual verb."
+    },
+    {
+      "id": "16-162",
+      "section": 16,
+      "section_name": "Coordinated subjects (regression guards)",
+      "category": "Agreement error, unrelated ca present",
+      "input": "बालकाः पठति च।",
+      "verdict": "error",
+      "in_scope": true,
+      "note": "Added after तस्य पुत्रः कन्या च वर्तेते was asserted as a red-tier agreement error with a suggestion that would corrupt correct text. Two coordinated singulars take a dual verb.",
+      "expected_error_surface": "पठति"
     }
   ]
 }
