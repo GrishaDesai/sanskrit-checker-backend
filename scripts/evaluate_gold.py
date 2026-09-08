@@ -58,6 +58,21 @@ def engine_verdict(result) -> str:
     return "error" if (has_token_error or has_syntax_error) else "correct"
 
 
+def has_review_finding(result) -> bool:
+    """True if the engine actually *offered* something at review tier.
+
+    The `expected == "review"` check below passes on `verdict != "error"`,
+    which silence also satisfies. That was written before the engine had a
+    review tier at all ("the engine has no separate review tier today" in the
+    docstring above), and it has one now -- so a case that expects an advisory
+    and gets total silence was scoring as a pass. This does not change the
+    headline number, which stays comparable with every figure on record; it is
+    reported alongside it as a strict sub-count.
+    """
+    return (any(t.status != "valid" and t.severity != "error" for t in result.tokens)
+            or any(i.severity != "error" for i in result.syntax_issues))
+
+
 def flagged_surfaces(result) -> set[str]:
     surfaces = {t.text_deva for t in result.tokens if t.status != "valid" and t.severity == "error"}
     surfaces |= {i.token_text for i in result.syntax_issues if i.severity == "error"}
@@ -68,6 +83,7 @@ def evaluate_case(engine: SanskritEngine, case: dict) -> dict:
     result = engine.check_text(case["input"])
     verdict = engine_verdict(result)
     flagged = flagged_surfaces(result)
+    reviewed = has_review_finding(result)
 
     expected = case["verdict"]
     if expected == "error":
@@ -89,6 +105,7 @@ def evaluate_case(engine: SanskritEngine, case: dict) -> dict:
         "input": case["input"],
         "expected_verdict": expected,
         "engine_verdict": verdict,
+        "engine_raised_review": reviewed,
         "flagged_surfaces": sorted(flagged),
         "in_scope": case["in_scope"],
         "pass": ok,
@@ -149,7 +166,8 @@ def main() -> int:
             scope_tag = "" if r["in_scope"] else " [known-gap]"
             print(
                 f"  {mark:4}  {r['id']:8} {r['category']:32.32} "
-                f"exp={r['expected_verdict']:7} got={r['engine_verdict']:7}"
+                f"exp={r['expected_verdict']:7} "
+                f"got={('review' if (r['engine_verdict'] != 'error' and r['engine_raised_review']) else r['engine_verdict']):7}"
                 f"{scope_tag}   {r['input']}"
             )
 
@@ -175,6 +193,17 @@ def main() -> int:
         p, t = by_verdict.get(k, (0, 0))
         if t:
             print(f"    expected={k:8} {p}/{t}  ({p / t:.1%})")
+
+    # Strict sub-count: of the expected=review cases that pass, how many did
+    # the engine actually raise an advisory on rather than pass over in
+    # silence? Reported separately so the headline stays comparable.
+    rev = [r for r in results if r["in_scope"] and r["expected_verdict"] == "review" and r["pass"]]
+    offered = sum(1 for r in rev if r["engine_raised_review"])
+    if rev:
+        print()
+        print(f"  of the {len(rev)} passing expected=review cases, "
+              f"{offered} raised an actual review-tier finding and "
+              f"{len(rev) - offered} were silent")
 
     if args.json:
         Path(args.json).write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")

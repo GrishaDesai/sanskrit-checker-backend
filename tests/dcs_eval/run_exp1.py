@@ -23,6 +23,8 @@ results = []
 n_fp = 0
 n_review_only = 0
 n_clean = 0
+n_syntax_err = 0      # error-severity syntax findings, counted as findings not sentences
+n_syntax_review = 0   # review-severity syntax findings (previously never written out)
 
 for c in cases:
     text = c["text_deva"]
@@ -38,6 +40,9 @@ for c in cases:
 
     is_fp = bool(error_tokens) or bool(syntax_issues)
     has_review = bool(review_tokens) or bool(review_issues)
+
+    n_syntax_err += len(syntax_issues)
+    n_syntax_review += len(review_issues)
 
     if is_fp:
         n_fp += 1
@@ -65,8 +70,22 @@ for c in cases:
         "syntax_issues": [
             {"token_text": i.token_text, "issue_type": i.issue_type, "title": i.title,
              "description": i.description, "suggested_text": i.suggested_text,
-             "rule_sutra": i.rule_sutra}
+             "rule_sutra": i.rule_sutra, "severity": i.severity}
             for i in syntax_issues
+        ],
+        # Review-tier syntax findings were counted into `has_review` but never
+        # written out, so the file could not answer "how many review-severity
+        # syntax issues are there?" -- the tokens they attach to showed up in
+        # `review_tokens` with status=agreement_error, but the findings
+        # themselves did not appear anywhere. Kept in a *separate* field
+        # rather than merged into `syntax_issues`, because `syntax_issues`
+        # defines `is_false_positive` and every false-positive rate on record
+        # was computed from it being error-only.
+        "review_syntax_issues": [
+            {"token_text": i.token_text, "issue_type": i.issue_type, "title": i.title,
+             "description": i.description, "suggested_text": i.suggested_text,
+             "rule_sutra": i.rule_sutra, "severity": i.severity}
+            for i in review_issues
         ],
         "token_count": len(result.tokens),
         "error_count": result.error_count,
@@ -79,6 +98,7 @@ print(f"\nTOTAL sentences tested: {total}")
 print(f"False positives (>=1 error-severity flag or syntax_issue): {n_fp}  ({n_fp/total:.1%})")
 print(f"Review-only (no hard error, but >=1 review flag): {n_review_only}  ({n_review_only/total:.1%})")
 print(f"Fully clean (no flags at all): {n_clean}  ({n_clean/total:.1%})")
+print(f"Syntax findings: {n_syntax_err} error-severity, {n_syntax_review} review-severity")
 
 (HERE / "experiment1_sample.json").write_text(
     json.dumps({
@@ -89,6 +109,8 @@ print(f"Fully clean (no flags at all): {n_clean}  ({n_clean/total:.1%})")
             "review_only": n_review_only,
             "review_rate": n_review_only / total,
             "fully_clean": n_clean,
+            "syntax_issues_error": n_syntax_err,
+            "syntax_issues_review": n_syntax_review,
         },
         "results": results,
     }, ensure_ascii=False, indent=1),

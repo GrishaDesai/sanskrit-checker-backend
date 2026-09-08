@@ -64,8 +64,14 @@ for c in cases:
             {"text": t.text_deva, "status": t.status, "analysis": t.analysis, "suggestion": t.suggestion}
             for t in result.tokens if t.status != "valid" and t.severity == "error"
         ],
+        # Mirror image of the gap fixed in run_exp1.py: this one serialises
+        # *every* syntax issue but records no severity, so the file cannot say
+        # which findings counted toward recall (only error-severity ones do,
+        # per the filters above). The recall numbers were always right; the
+        # file just could not be re-aggregated by tier.
         "syntax_issues": [
-            {"token_text": i.token_text, "issue_type": i.issue_type, "title": i.title}
+            {"token_text": i.token_text, "issue_type": i.issue_type, "title": i.title,
+             "severity": i.severity}
             for i in result.syntax_issues
         ],
     })

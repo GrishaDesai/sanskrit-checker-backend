@@ -491,6 +491,23 @@ class KarakaSyntaxEngine:
         return [e for e in entries
                 if type(e.pratipadika_entry).__name__.endswith("Basic") == best_is_basic]
 
+    def _has_basic_prathama_reading(self, tok) -> bool:
+        """True if the token has an independent nominal identity in प्रथमा.
+
+        `Basic` is vidyut's own marker for a प्रातिपदिक listed in its own
+        right, as against `Krdanta`, which is a participle *of a root* and so
+        is not evidence of a separate nominal word at all. A genuine तिङन्त
+        such as गच्छति or पठति has only Krdanta homographs (the शतृ forms of
+        the very same धातु); a noun that merely happens to collide with some
+        paradigm cell -- भरतः, रामः -- has Basic ones. That difference is the
+        signal used to decide which of two competing readings is the verb.
+        """
+        return any(
+            type(e.pratipadika_entry).__name__.endswith("Basic")
+            and e.vibhakti == Vibhakti.Prathama
+            for e in self._top_rank_entries(tok)
+        )
+
     def _sole_argument_candidate(self, tokens, verb_idx: int, verb_indices: list):
         """The one nominal that can be this verb's governed argument, or None.
 
@@ -598,9 +615,7 @@ class KarakaSyntaxEngine:
                 t.verb_readings
                 and not has_uttama_madhyama_pronoun
                 and all(vf.purusha != Purusha.Prathama for vf in t.verb_readings)
-                and any(type(e.pratipadika_entry).__name__.endswith("Basic")
-                        and e.vibhakti == Vibhakti.Prathama
-                        for e in self._top_rank_entries(t))
+                and self._has_basic_prathama_reading(t)
             ):
                 continue
             if (
@@ -611,6 +626,35 @@ class KarakaSyntaxEngine:
                 or t_slp1 in ["paWati", "gacCati", "pibati", "rakzati", "KAdati", "paSyati", "paWanti", "gacCanti", "pibanti", "rakzanti", "paWasi", "gacCasi", "paWAmi", "gacCAmi"]
             ):
                 verb_indices.append(i)
+
+        # An ambiguous verb candidate yields to an unambiguous one.
+        #
+        # The पुरुष filter above rules out उत्तम/मध्यम readings by sūtra
+        # (१.४.१०७, १.४.१०५), but there is no sūtra that rules out a spurious
+        # *प्रथम*-पुरुष reading, and प्रथम is where the damaging collisions sit:
+        # भरतः is a proper noun and simultaneously a well-formed प्रथम-द्विवचन
+        # of भृ, so in रामः लक्ष्मणः भरतः च गच्छन्ति the syntax layer took
+        # भरतः for the verb, ignored the real verb गच्छन्ति, and asserted a
+        # 🔴 subject-verb error against रामः.
+        #
+        # The information needed to resolve it is already in the Kosha and was
+        # simply not being consulted for प्रथम readings: a real तिङन्त's only
+        # nominal homographs are कृदन्त forms of its own root, whereas a noun
+        # that collides with a paradigm cell has a Basic प्रातिपदिक entry. So
+        # when the sentence contains a candidate with no independent nominal
+        # identity, the candidates that *do* have one are not the verb.
+        #
+        # Conditioned on an unambiguous candidate existing, so nothing changes
+        # for a sentence whose only verb is itself a homograph -- अस्ति and
+        # भवति both carry Basic प्रथमा readings and must keep their verb
+        # status, which is what बालिका पठन् अस्ति and a bare भवति depend on.
+        # In a two-clause sentence this can cost a detection; it can never
+        # manufacture an assertion, which is the ordering the project requires.
+        if len(verb_indices) > 1:
+            unambiguous = [i for i in verb_indices
+                           if not self._has_basic_prathama_reading(tokens[i])]
+            if unambiguous:
+                verb_indices = unambiguous
 
         # 3. Kāraka & Verb-Argument Government Checking
         #
@@ -876,12 +920,59 @@ class KarakaSyntaxEngine:
                 if _pronoun_lookup(PRONOUN_MAP, t_slp1) is not None or self._has_vibhakti(t.nominal_entries, Vibhakti.Prathama):
                     subj_tok = t
                     break
+                # Surface-ending fallback, for a subject vidyut gave no
+                # structured reading for. Split in two, because the two halves
+                # rest on completely different evidence.
+                #
+                # An analysis string that says प्रथमा came from a real
+                # derivation, so it is usable whatever the token's status. A
+                # bare *ending* is only a guess -- and on a word the lexicon
+                # never confirmed it is a guess about a stem class that cannot
+                # be checked. -आः is nominative **plural** for an ordinary
+                # अ-stem (रामाः, बालकाः) but nominative **singular** for an
+                # अस्-stem बहुव्रीहि (सुमनाः, महामोहावृतमनाः), and the two are
+                # indistinguishable from the ending alone. Guessing plural
+                # there produced "Subject 'महामोहावृतमनाः' is Bahu ... verb
+                # 'अस्ति' is Eka", suggesting सन्ति -- which would corrupt a
+                # correct sentence.
+                #
+                # Telling the classes apart was measured and does not work: a
+                # scan for a known अस्-stem at the end of the token calls 6 of
+                # 23 checkable -आः forms singular when the Kosha says plural
+                # (सिराः, पुरुषाः, प्रत्ययाः ...), and requiring the match to
+                # sit after a recognised prefix still gets 3 of 23 wrong while
+                # no longer firing on महामोहावृतमनाः at all, whose prefix is
+                # itself an unsegmentable compound. There is no signal to read
+                # here, so the check declines instead of guessing: an
+                # unconfirmed word falls through to the unrecognised-subject
+                # rule below and abandons the search.
+                surface_only = (
+                    t_slp1.endswith("AH") or t_slp1.endswith("as") or t_slp1.endswith("aH")
+                    or t_slp1.endswith("o") or t_slp1.endswith("An")
+                )
                 if not t.nominal_entries and (
                     "Prathama" in t_ana or "प्रथमा" in t_ana
-                    or t_slp1.endswith("AH") or t_slp1.endswith("as") or t_slp1.endswith("aH")
-                    or t_slp1.endswith("o") or t_slp1.endswith("An")
+                    or (surface_only and t.is_valid)
                 ):
                     subj_tok = t
+                    break
+
+                # Reaching here means the token was passed over for a reason
+                # the skips above do not cover -- and if it is also
+                # *unrecognised*, the reason is that nothing is known about
+                # it, not that it was ruled out. Those are opposite states and
+                # must not share a behaviour: an अव्यय is disqualified, so the
+                # search rightly continues past it, but an unanalysable word
+                # may well *be* the कर्ता, so continuing past it silently
+                # promotes the next nominal into a role it may not hold. In
+                # रामलक्ष्मणौ वनं गच्छतः the unsegmentable द्वन्द्व is correctly
+                # flagged ⚪, and the search then settled on वनं -- whose
+                # neuter प्रथमा and द्वितीया are identical -- and asserted a 🔴
+                # number error against the perfectly correct dual गच्छतः.
+                # An unrecognised subject means no confident subject was
+                # found, which suppresses the check rather than redirecting it.
+                if not t.is_valid:
+                    subj_tok = None
                     break
 
             if subj_tok:

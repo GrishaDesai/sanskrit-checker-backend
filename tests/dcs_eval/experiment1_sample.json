@@ -5,7 +5,9 @@
   "false_positive_rate": 0.06538461538461539,
   "review_only": 213,
   "review_rate": 0.8192307692307692,
-  "fully_clean": 30
+  "fully_clean": 30,
+  "syntax_issues_error": 3,
+  "syntax_issues_review": 7
  },
  "results": [
   {
@@ -42,6 +44,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 3,
@@ -74,6 +77,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -120,6 +124,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 15,
    "error_count": 0,
    "review_count": 4,
@@ -152,6 +157,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -177,6 +183,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 1,
@@ -209,6 +216,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -234,6 +242,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -251,6 +260,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 0,
@@ -291,6 +301,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 1,
    "review_count": 2,
@@ -323,6 +334,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -355,6 +367,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -380,6 +393,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -412,6 +426,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -444,6 +459,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -476,6 +492,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -501,6 +518,7 @@
    ],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 1,
    "review_count": 0,
@@ -518,6 +536,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 0,
@@ -557,6 +576,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 3,
@@ -589,6 +609,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -606,6 +627,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 0,
@@ -631,6 +653,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -691,6 +714,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 14,
    "error_count": 0,
    "review_count": 6,
@@ -723,6 +747,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -748,6 +773,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -801,9 +827,11 @@
      "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
      "description": "'दण्डः' (Pum) does not agree in liNga with 'शुल्कं' (Napumsaka).",
      "suggested_text": null,
-     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)"
+     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
+     "severity": "error"
     }
    ],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 1,
    "review_count": 3,
@@ -836,6 +864,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -868,6 +897,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -914,6 +944,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 4,
@@ -953,6 +984,17 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [
+    {
+     "token_text": "कार्यः",
+     "issue_type": "agreement_error",
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "description": "'कार्यः' (Pum) does not agree in liNga with 'पिण्डं' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "suggested_text": null,
+     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
+     "severity": "review"
+    }
+   ],
    "token_count": 7,
    "error_count": 0,
    "review_count": 3,
@@ -1013,6 +1055,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 6,
@@ -1066,6 +1109,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 12,
    "error_count": 0,
    "review_count": 5,
@@ -1098,6 +1142,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -1137,6 +1182,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 3,
@@ -1183,6 +1229,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 4,
@@ -1222,6 +1269,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 12,
    "error_count": 0,
    "review_count": 3,
@@ -1247,6 +1295,7 @@
    ],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 1,
    "review_count": 0,
@@ -1279,6 +1328,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -1304,6 +1354,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 1,
@@ -1329,6 +1380,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -1389,6 +1441,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 13,
    "error_count": 0,
    "review_count": 6,
@@ -1414,6 +1467,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -1460,6 +1514,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 4,
@@ -1485,6 +1540,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -1502,6 +1558,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 0,
@@ -1541,6 +1598,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 14,
    "error_count": 0,
    "review_count": 3,
@@ -1566,6 +1624,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -1583,6 +1642,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 0,
@@ -1608,6 +1668,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -1654,6 +1715,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 4,
@@ -1679,6 +1741,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -1704,6 +1767,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -1729,6 +1793,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -1761,6 +1826,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -1814,6 +1880,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 5,
@@ -1854,6 +1921,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 1,
    "review_count": 2,
@@ -1886,6 +1954,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 2,
@@ -1911,6 +1980,7 @@
    ],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 1,
    "review_count": 0,
@@ -1950,6 +2020,17 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [
+    {
+     "token_text": "भावना",
+     "issue_type": "agreement_error",
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "description": "'भावना' (Pum) does not agree in liNga with 'कर्तव्या' (Stri).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "suggested_text": null,
+     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
+     "severity": "review"
+    }
+   ],
    "token_count": 5,
    "error_count": 0,
    "review_count": 3,
@@ -1989,6 +2070,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -2006,6 +2088,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 0,
@@ -2038,6 +2121,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -2077,6 +2161,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 13,
    "error_count": 0,
    "review_count": 3,
@@ -2109,6 +2194,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -2141,6 +2227,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 2,
@@ -2166,6 +2253,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -2198,6 +2286,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -2215,6 +2304,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 0,
@@ -2247,6 +2337,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -2272,6 +2363,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -2304,6 +2396,17 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [
+    {
+     "token_text": "प्रतिभासा",
+     "issue_type": "agreement_error",
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "description": "'प्रतिभासा' (Stri) does not agree in liNga with 'प्रतीतिः' (Pum).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "suggested_text": null,
+     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
+     "severity": "review"
+    }
+   ],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -2336,6 +2439,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -2368,6 +2472,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 2,
@@ -2393,6 +2498,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -2425,6 +2531,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -2457,6 +2564,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -2474,6 +2582,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 0,
@@ -2562,6 +2671,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 15,
    "error_count": 0,
    "review_count": 10,
@@ -2594,6 +2704,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 2,
@@ -2633,6 +2744,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 13,
    "error_count": 0,
    "review_count": 3,
@@ -2658,6 +2770,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 17,
    "error_count": 0,
    "review_count": 1,
@@ -2690,6 +2803,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -2715,6 +2829,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -2748,6 +2863,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 1,
    "review_count": 1,
@@ -2777,19 +2893,13 @@
      "analysis": null,
      "suggestion": null,
      "sandhi_issue": null
-    },
-    {
-     "text": "पश्यति",
-     "status": "agreement_error",
-     "analysis": "तिङन्त (धातुः दृश्, पुरुषः Prathama, वचनम् Eka, लट्लकारः, कर्तरि प्रयोगः)  (also readable as a nominal homograph)",
-     "suggestion": "पश्यन्ति",
-     "sandhi_issue": null
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
-   "review_count": 3,
+   "review_count": 2,
    "syntax_error_count": 0
   },
   {
@@ -2819,6 +2929,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -2851,6 +2962,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -2897,6 +3009,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 4,
@@ -2936,6 +3049,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 3,
@@ -2968,6 +3082,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 2,
@@ -2993,6 +3108,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 1,
@@ -3032,6 +3148,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -3064,6 +3181,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 14,
    "error_count": 0,
    "review_count": 2,
@@ -3103,6 +3221,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 3,
@@ -3120,6 +3239,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 0,
@@ -3145,6 +3265,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -3177,6 +3298,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -3202,6 +3324,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -3234,6 +3357,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -3259,6 +3383,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -3348,6 +3473,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 15,
    "error_count": 1,
    "review_count": 9,
@@ -3373,6 +3499,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -3398,6 +3525,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -3437,6 +3565,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 3,
@@ -3462,6 +3591,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 1,
@@ -3494,6 +3624,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -3533,6 +3664,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 3,
@@ -3558,6 +3690,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -3583,6 +3716,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -3622,6 +3756,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 3,
@@ -3654,6 +3789,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -3686,6 +3822,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -3711,6 +3848,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -3750,6 +3888,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 3,
@@ -3767,6 +3906,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 0,
@@ -3792,6 +3932,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -3831,6 +3972,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 3,
@@ -3892,6 +4034,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 1,
    "review_count": 5,
@@ -3917,6 +4060,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -3942,6 +4086,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -3967,6 +4112,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -4007,6 +4153,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 1,
    "review_count": 2,
@@ -4032,6 +4179,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -4064,6 +4212,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 2,
@@ -4103,6 +4252,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -4142,6 +4292,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 3,
@@ -4159,6 +4310,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 0,
@@ -4184,6 +4336,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -4223,9 +4376,11 @@
      "title": "Subject-Verb Agreement Error (कर्तृ-क्रिया-अन्वय-दोषः)",
      "description": "Subject 'उन्मत्तो' is Prathama puruSha, Eka vacana, but the verb 'मन्यन्ते' is Prathama puruSha, Bahu vacana.",
      "suggested_text": "मन्यते",
-     "rule_sutra": "कर्तृ-क्रिया-वचनान्वय-नियमः (शेषे प्रथमः १.४.१०८ / तिङस्त्रीणि त्रीणि प्रथममध्यमोत्तमाः १.४.१०१)"
+     "rule_sutra": "कर्तृ-क्रिया-वचनान्वय-नियमः (शेषे प्रथमः १.४.१०८ / तिङस्त्रीणि त्रीणि प्रथममध्यमोत्तमाः १.४.१०१)",
+     "severity": "error"
     }
    ],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 1,
    "review_count": 1,
@@ -4243,6 +4398,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 0,
@@ -4268,6 +4424,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -4293,6 +4450,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 1,
@@ -4332,6 +4490,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 3,
@@ -4371,6 +4530,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -4388,6 +4548,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 0,
@@ -4420,6 +4581,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -4452,6 +4614,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -4492,6 +4655,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 1,
    "review_count": 2,
@@ -4517,6 +4681,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 13,
    "error_count": 0,
    "review_count": 1,
@@ -4549,6 +4714,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -4581,6 +4747,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -4613,6 +4780,17 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [
+    {
+     "token_text": "मृदा",
+     "issue_type": "agreement_error",
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "description": "'मृदा' (Pum) does not agree in liNga with 'लिप्तं' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "suggested_text": null,
+     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
+     "severity": "review"
+    }
+   ],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -4638,6 +4816,7 @@
    ],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 1,
    "review_count": 0,
@@ -4655,6 +4834,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 13,
    "error_count": 0,
    "review_count": 0,
@@ -4680,6 +4860,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -4705,6 +4886,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 1,
@@ -4737,6 +4919,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -4762,6 +4945,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -4794,6 +4978,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -4826,6 +5011,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -4851,6 +5037,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -4883,6 +5070,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 2,
@@ -4915,6 +5103,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -4940,6 +5129,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -4971,9 +5161,11 @@
      "title": "Subject-Verb Agreement Error (कर्तृ-क्रिया-अन्वय-दोषः)",
      "description": "Subject 'स्नातानुलिप्तं' is Prathama puruSha, Eka vacana, but the verb 'भजन्ते' is Prathama puruSha, Bahu vacana.",
      "suggested_text": "भजते",
-     "rule_sutra": "कर्तृ-क्रिया-वचनान्वय-नियमः (शेषे प्रथमः १.४.१०८ / तिङस्त्रीणि त्रीणि प्रथममध्यमोत्तमाः १.४.१०१)"
+     "rule_sutra": "कर्तृ-क्रिया-वचनान्वय-नियमः (शेषे प्रथमः १.४.१०८ / तिङस्त्रीणि त्रीणि प्रथममध्यमोत्तमाः १.४.१०१)",
+     "severity": "error"
     }
    ],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 1,
    "review_count": 0,
@@ -5006,6 +5198,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 2,
@@ -5038,6 +5231,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -5077,6 +5271,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 3,
@@ -5130,6 +5325,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 11,
    "error_count": 0,
    "review_count": 5,
@@ -5147,6 +5343,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 0,
@@ -5164,6 +5361,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 0,
@@ -5196,6 +5394,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -5235,6 +5434,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 3,
@@ -5260,6 +5460,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -5292,6 +5493,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -5331,6 +5533,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 3,
@@ -5370,6 +5573,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 3,
@@ -5402,6 +5606,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -5419,6 +5624,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 0,
@@ -5436,6 +5642,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 0,
@@ -5469,6 +5676,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 1,
    "review_count": 1,
@@ -5508,6 +5716,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -5540,6 +5749,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -5572,6 +5782,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 2,
@@ -5604,6 +5815,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -5643,6 +5855,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -5668,6 +5881,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -5685,6 +5899,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 0,
@@ -5710,6 +5925,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -5735,6 +5951,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 1,
@@ -5774,6 +5991,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 11,
    "error_count": 0,
    "review_count": 3,
@@ -5806,6 +6024,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -5845,6 +6064,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -5877,6 +6097,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -5916,6 +6137,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 3,
@@ -5933,6 +6155,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 0,
@@ -5958,6 +6181,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -5990,6 +6214,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -6029,6 +6254,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -6054,6 +6280,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -6086,6 +6313,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -6111,6 +6339,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -6150,6 +6379,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 11,
    "error_count": 0,
    "review_count": 3,
@@ -6189,6 +6419,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 3,
@@ -6214,6 +6445,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -6253,6 +6485,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 3,
@@ -6299,6 +6532,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 11,
    "error_count": 0,
    "review_count": 4,
@@ -6324,6 +6558,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 1,
@@ -6356,6 +6591,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -6388,6 +6624,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 2,
@@ -6405,6 +6642,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 0,
@@ -6437,6 +6675,17 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [
+    {
+     "token_text": "अविद्या",
+     "issue_type": "agreement_error",
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "description": "'अविद्या' (Pum) does not agree in liNga with 'क्षेत्रम्' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "suggested_text": null,
+     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
+     "severity": "review"
+    }
+   ],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -6462,6 +6711,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -6501,6 +6751,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -6518,6 +6769,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 0,
@@ -6578,6 +6830,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 19,
    "error_count": 0,
    "review_count": 6,
@@ -6617,6 +6870,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 3,
@@ -6670,6 +6924,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 11,
    "error_count": 0,
    "review_count": 5,
@@ -6695,6 +6950,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -6727,6 +6983,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -6766,6 +7023,26 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [
+    {
+     "token_text": "विकृत्या",
+     "issue_type": "agreement_error",
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "description": "'विकृत्या' (Stri) does not agree in liNga with 'विनिमित्तं' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "suggested_text": null,
+     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
+     "severity": "review"
+    },
+    {
+     "token_text": "विनिमित्तं",
+     "issue_type": "agreement_error",
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "description": "'विनिमित्तं' (Napumsaka) does not agree in liNga with 'यः' (Pum).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "suggested_text": null,
+     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
+     "severity": "review"
+    }
+   ],
    "token_count": 5,
    "error_count": 0,
    "review_count": 3,
@@ -6798,6 +7075,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -6837,6 +7115,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 3,
@@ -6869,6 +7148,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -6894,6 +7174,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -6933,6 +7214,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 12,
    "error_count": 0,
    "review_count": 3,
@@ -6965,6 +7247,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -7011,6 +7294,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 4,
@@ -7036,6 +7320,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 1,
@@ -7082,6 +7367,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 4,
@@ -7107,6 +7393,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -7146,6 +7433,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 3,
@@ -7163,6 +7451,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 0,
@@ -7180,6 +7469,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 10,
    "error_count": 0,
    "review_count": 0,
@@ -7197,6 +7487,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 0,
@@ -7229,6 +7520,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -7254,6 +7546,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -7286,6 +7579,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 2,
@@ -7311,6 +7605,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 1,
@@ -7343,6 +7638,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -7375,6 +7671,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -7392,6 +7689,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 0,
@@ -7409,6 +7707,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 10,
    "error_count": 0,
    "review_count": 0,
@@ -7456,6 +7755,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 10,
    "error_count": 1,
    "review_count": 3,
@@ -7488,6 +7788,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -7513,6 +7814,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -7530,6 +7832,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 0,
@@ -7562,6 +7865,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -7594,6 +7898,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 2,
@@ -7640,6 +7945,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 9,
    "error_count": 0,
    "review_count": 4,
@@ -7672,6 +7978,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -7697,6 +8004,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 1,
@@ -7729,6 +8037,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 2,
@@ -7782,6 +8091,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
    "review_count": 5,
@@ -7821,6 +8131,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 3,
@@ -7853,6 +8164,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -7885,6 +8197,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 2,
@@ -7902,6 +8215,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 0,
@@ -7927,6 +8241,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -7952,6 +8267,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -7977,6 +8293,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -8002,6 +8319,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -8035,6 +8353,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 1,
    "review_count": 1,
@@ -8060,6 +8379,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
    "review_count": 1,
@@ -8106,6 +8426,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 4,
@@ -8131,6 +8452,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 1,
@@ -8163,6 +8485,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -8180,6 +8503,7 @@
    "error_tokens": [],
    "review_tokens": [],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 8,
    "error_count": 0,
    "review_count": 0,
@@ -8212,6 +8536,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
    "review_count": 2,
@@ -8244,6 +8569,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,
@@ -8276,6 +8602,7 @@
     }
    ],
    "syntax_issues": [],
+   "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
    "review_count": 2,

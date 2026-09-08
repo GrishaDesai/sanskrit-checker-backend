@@ -74,24 +74,9 @@
    "expected_flagged_surface": "उपात्तेन",
    "note": "'upāttam' (Acc) -> 'upāttena' (Ins); engine's karaka check for this verb only tests for a wrongly-Ṣaṣṭhī argument, so a non-Ṣaṣṭhī wrong case is expected to slip through.",
    "caught": false,
-   "flagged_surfaces": [
-    "त्यजन्ति"
-   ],
-   "error_tokens": [
-    {
-     "text": "त्यजन्ति",
-     "status": "agreement_error",
-     "analysis": "तिङन्त (धातुः त्यज्, पुरुषः Prathama, वचनम् Bahu, लट्लकारः, कर्तरि प्रयोगः)  (also readable as a nominal homograph)",
-     "suggestion": "त्यजति"
-    }
-   ],
-   "syntax_issues": [
-    {
-     "token_text": "त्यजन्ति",
-     "issue_type": "agreement_error",
-     "title": "Subject-Verb Agreement Error (कर्तृ-क्रिया-अन्वय-दोषः)"
-    }
-   ]
+   "flagged_surfaces": [],
+   "error_tokens": [],
+   "syntax_issues": []
   },
   {
    "category": "object_wrong_noncase_instrumental",
@@ -205,7 +190,8 @@
     {
      "token_text": "वदन्ति",
      "issue_type": "agreement_error",
-     "title": "Subject-Verb Agreement Error (कर्तृ-क्रिया-अन्वय-दोषः)"
+     "title": "Subject-Verb Agreement Error (कर्तृ-क्रिया-अन्वय-दोषः)",
+     "severity": "error"
     }
    ]
   },
@@ -492,7 +478,8 @@
     {
      "token_text": "रोगा",
      "issue_type": "agreement_error",
-     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)"
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "severity": "error"
     }
    ]
   },
@@ -524,7 +511,8 @@
     {
      "token_text": "वर्णम्",
      "issue_type": "upapada_error",
-     "title": "Upapada Vibhakti Error (उपपद-विभक्ति-दोषः)"
+     "title": "Upapada Vibhakti Error (उपपद-विभक्ति-दोषः)",
+     "severity": "error"
     }
    ]
   },
@@ -556,7 +544,8 @@
     {
      "token_text": "ताम्",
      "issue_type": "upapada_error",
-     "title": "Upapada Vibhakti Error (उपपद-विभक्ति-दोषः)"
+     "title": "Upapada Vibhakti Error (उपपद-विभक्ति-दोषः)",
+     "severity": "error"
     }
    ]
   },
@@ -1663,7 +1652,6 @@
    "note": "'tandrā' (Nom, the grammatical subject) -> 'tandrayā' (Ins); the engine's subject-finder requires a Prathama-like marker, so an oblique-case 'subject' is never identified and no check fires at all.",
    "caught": false,
    "flagged_surfaces": [
-    "स्पृशन्ति",
     "हिध्मा"
    ],
    "error_tokens": [
@@ -1672,21 +1660,9 @@
      "status": "invalid",
      "analysis": "Spelling: exactly one recognised form is a single letter away",
      "suggestion": "हिमा"
-    },
-    {
-     "text": "स्पृशन्ति",
-     "status": "agreement_error",
-     "analysis": "तिङन्त (धातुः स्पृश्, पुरुषः Prathama, वचनम् Bahu, लट्लकारः, कर्तरि प्रयोगः)  (also readable as a nominal homograph)",
-     "suggestion": "स्पृशति"
     }
    ],
-   "syntax_issues": [
-    {
-     "token_text": "स्पृशन्ति",
-     "issue_type": "agreement_error",
-     "title": "Subject-Verb Agreement Error (कर्तृ-क्रिया-अन्वय-दोषः)"
-    }
-   ]
+   "syntax_issues": []
   },
   {
    "category": "subject_wrong_case_instrumental",
@@ -1963,7 +1939,8 @@
     {
      "token_text": "वाजं",
      "issue_type": "agreement_error",
-     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)"
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "severity": "error"
     }
    ]
   },
@@ -2677,7 +2654,8 @@
     {
      "token_text": "का",
      "issue_type": "agreement_error",
-     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)"
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "severity": "review"
     }
    ]
   },
@@ -2803,7 +2781,8 @@
     {
      "token_text": "मां",
      "issue_type": "agreement_error",
-     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)"
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "severity": "error"
     }
    ]
   },
@@ -2835,7 +2814,8 @@
     {
      "token_text": "निदानं",
      "issue_type": "agreement_error",
-     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)"
+     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
+     "severity": "error"
     }
    ]
   },

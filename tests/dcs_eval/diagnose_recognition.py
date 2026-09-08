@@ -26,7 +26,18 @@ for c in cases:
     for w_deva in WORD_PATTERN.findall(c["text_deva"]):
         s = transliterate(w_deva, Scheme.Devanagari, Scheme.Slp1)
         total += 1
-        if engine._is_recognized(s):
+        # Ask the same question the product asks.
+        #
+        # This previously called `engine._is_recognized`, which consults the
+        # lexicons only. `check_word` is the real recognition path and accepts
+        # two further classes on top of that: a तिङन्त that VerbGrammar derives
+        # from the Dhātupāṭha, and an अव्ययीभाव/उपसर्ग compound recognised from
+        # its members. Those are recognised by the engine and reported as valid
+        # to the user, so counting them as unrecognized overstated the rate --
+        # this is where the 30.6% here and the 30.4% everywhere else came from.
+        # The pipeline figure is the authoritative one; this diagnostic was the
+        # outlier.
+        if engine.check_word(s)[0]:
             continue
         unrec += 1
         unrec_forms[s] += 1
