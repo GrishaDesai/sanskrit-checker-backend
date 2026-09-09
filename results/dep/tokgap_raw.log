@@ -1,0 +1,6 @@
+UFAL sentences                          : 230
+  containing a multiword-token range    : 135  (58.7%)
+  engine tokenisation MATCHES gold count: 97  (42.2%)
+  engine tokenisation DIFFERS           : 132  (57.4%)
+  engine could not analyse at all       : 1
+total tokens: engine 1272 vs treebank syntactic words 1630  (ratio 1.28)

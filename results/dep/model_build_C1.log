@@ -1,0 +1,57 @@
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,235 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,212 words and 0.0%,53.8% coverage.
+Initialized 'deprel' embedding with 0,38 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -5.7835e+03
+Iteration 2: training logprob -5.3880e+03
+Iteration 3: training logprob -3.9800e+03
+Iteration 4: training logprob -3.1003e+03
+Iteration 5: training logprob -2.5970e+03
+Iteration 6: training logprob -2.3538e+03
+Iteration 7: training logprob -2.4828e+03
+Iteration 8: training logprob -2.5788e+03
+Iteration 9: training logprob -2.8940e+03
+Iteration 10: training logprob -3.2031e+03
+config    : C1 full-data model (SELF-TEST scores below are leakage, not results)
+train     : data/treebanks/UD_Sanskrit-UFAL/sa_ufal-ud-test.conllu (230 sentences)
+test      : data/treebanks/UD_Sanskrit-UFAL/sa_ufal-ud-test.conllu
+parser opt: '<udpipe defaults>'
+trained in 37s -> models/sa_ufal_parser.udpipe
+
+---- scored on 1843 tokens ----
+UAS 83.83%   LAS 79.06%
+
+per-relation (gold / labelled-correct / recall / predicted):
+  root           gold  230  correct  206  R  89.6%   pred  230
+  advmod         gold  205  correct  177  R  86.3%   pred  223
+  punct          gold  195  correct  170  R  87.2%   pred  197
+  nsubj          gold  168  correct  152  R  90.5%   pred  200
+  nmod           gold  147  correct  127  R  86.4%   pred  160
+  obl            gold  125  correct   96  R  76.8%   pred  138
+  conj           gold  114  correct   77  R  67.5%   pred  124
+  obj            gold  101  correct   92  R  91.1%   pred  104
+  amod           gold   82  correct   69  R  84.1%   pred   86
+  advcl          gold   72  correct   62  R  86.1%   pred   94
+  det            gold   62  correct   52  R  83.9%   pred   67
+  nmod:poss      gold   52  correct   37  R  71.2%   pred   51
+  nsubj:pass     gold   36  correct   18  R  50.0%   pred   19
+  cc             gold   34  correct   27  R  79.4%   pred   31
+  acl            gold   32  correct   21  R  65.6%   pred   26
+  obl:agent      gold   20  correct   10  R  50.0%   pred   15
+
+==== STEP 4 ACCEPTANCE TEST ====
+  JOB (a) SUBJECT IDENTIFICATION
+    pre-verbal  subjects:  167 gold,  141 exactly right  (84.4%)
+    POST-verbal subjects:   56 gold,   38 exactly right  (67.9%)  <-- the job
+       (right verb attached, any subject label: 44 / 78.6%)
+    subject PRECISION  :  229 predicted,  179 correct   (78.2%)
+  JOB (b) COORDINATION (nominal pairs, transitive closure over conj)
+    gold pairs  369 | predicted  374 | correct  319
+    precision 85.3%   recall 86.4%   <-- precision is the one that matters

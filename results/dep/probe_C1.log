@@ -1,0 +1,87 @@
+==========================================================================
+वनं गच्छति रामः
+  (brief's canonical post-verbal subject)  job (a), expect: गच्छति <- रामः
+  parse:
+    1  वनं              NOUN   Number=Sing                nsubj      -> गच्छति
+    2  गच्छति           VERB   Number=Sing|Person=3       root       -> ROOT
+    3  रामः             NOUN   _                          punct      -> गच्छति
+  RESULT job(a): FAIL
+==========================================================================
+उन्मत्तो मूढ इत्येवं मन्यन्ते इतरे जनाः
+  (DCS FP #3 -- subject follows verb, उन्मत्तो is inside the इति-quoted clause)  job (a), expect: मन्यन्ते <- जनाः
+  parse:
+    1  उन्मत्तो         NOUN   Case=Nom|Gender=Masc|Numbe nsubj      -> मन्यन्ते
+    2  मूढ              NOUN   Case=Voc|Number=Sing       obl        -> मन्यन्ते
+    3  इत्येवं          X      _                          advmod     -> मन्यन्ते
+    4  मन्यन्ते         VERB   Number=Plur|Person=3       root       -> ROOT
+    5  इतरे             NOUN   _                          punct      -> मन्यन्ते
+    6  जनाः             NOUN   _                          punct      -> मन्यन्ते
+  RESULT job(a): FAIL
+==========================================================================
+स्नातानुलिप्तं यं चापि भजन्ते नीलमक्षिकाः
+  (DCS FP #4 -- fronted object, subject follows verb)  job (a), expect: भजन्ते <- नीलमक्षिकाः
+  parse:
+    1  स्नातानुलिप्तं   NOUN   Number=Sing                nsubj      -> भजन्ते
+    2  यं               NOUN   Number=Sing                nmod       -> चापि
+    3  चापि             NOUN   _                          obj        -> भजन्ते
+    4  भजन्ते           VERB   Number=Plur|Person=3       root       -> ROOT
+    5  नीलमक्षिकाः      NOUN   Number=Plur                punct      -> भजन्ते
+  RESULT job(a): FAIL
+==========================================================================
+अस्ति दाक्षिणात्ये जनपदे महिलारोप्यं नाम नगरम्
+  (classic अस्ति-initial existential -- NOTE: this sentence is IN the UFAL training data, so it tests memorisation, not generalisation)  job (a), expect: अस्ति <- नगरम्   [!! IN TRAINING DATA]
+  parse:
+    1  अस्ति            VERB   Number=Sing|Person=3       root       -> ROOT
+    2  दाक्षिणात्ये     NOUN   _                          punct      -> अस्ति
+    3  जनपदे            NOUN   _                          nmod       -> महिलारोप्यं
+    4  महिलारोप्यं      NOUN   Number=Sing                nmod       -> नाम
+    5  नाम              NOUN   Number=Sing                nmod       -> नगरम्
+    6  नगरम्            NOUN   Number=Sing                nsubj      -> दाक्षिणात्ये
+  RESULT job(a): FAIL  (discounted: memorised)
+==========================================================================
+पुस्तकं पठति बालकः
+  (minimal constructed post-verbal subject, held out by construction)  job (a), expect: पठति <- बालकः
+  parse:
+    1  पुस्तकं          NOUN   Number=Sing                nsubj      -> पठति
+    2  पठति             VERB   Number=Sing|Person=3       advcl      -> बालकः
+    3  बालकः            NOUN   Case=Nom|Gender=Masc|Numbe root       -> ROOT
+  RESULT job(a): FAIL
+==========================================================================
+तस्य दण्डः शुल्कं च भवति
+  (brief's canonical coordination)  job (b), expect: दण्डः <- शुल्कं
+  parse:
+    1  तस्य             NOUN   Case=Gen|Number=Sing       obl        -> भवति
+    2  दण्डः            NOUN   _                          obj        -> भवति
+    3  शुल्कं           NOUN   Number=Sing                nsubj      -> भवति
+    4  च                ADV    _                          advmod     -> भवति
+    5  भवति             VERB   Number=Sing|Person=3       root       -> ROOT
+  RESULT job(b): FAIL
+==========================================================================
+गणिकादुहितरं प्रकुर्वतश्चतुष्पञ्चाशत्पणो दण्डः शुल्कं मातुर् भोगः षोडशगुणः
+  (DCS FP #1 -- coordinate enumeration)  job (b), expect: दण्डः <- शुल्कं
+  parse:
+    1  गणिकादुहितरं     X      _                          advmod     -> भोगः
+    2  प्रकुर्वतश्चतुष्पञ्चाशत्पणो X      _                          advmod     -> भोगः
+    3  दण्डः            NOUN   _                          nmod       -> शुल्कं
+    4  शुल्कं           NOUN   Number=Sing                nmod       -> भोगः
+    5  मातुर्           NOUN   Number=Sing                nmod       -> भोगः
+    6  भोगः             NOUN   Case=Nom|Gender=Masc|Numbe root       -> ROOT
+    7  षोडशगुणः         X      _                          punct      -> भोगः
+  RESULT job(b): FAIL
+==========================================================================
+कक्षौ स्तनौ गलः पृष्ठं जघनम् ऊरू च स्थानानि
+  (DCS FP #2 -- anatomical enumeration closed by च)  job (b), expect: गलः <- पृष्ठं
+  parse:
+    1  कक्षौ            NOUN   Gender=Masc|Number=Dual    nsubj      -> स्थानानि
+    2  स्तनौ            NOUN   Number=Dual                nmod       -> गलः
+    3  गलः              NOUN   _                          obl        -> स्थानानि
+    4  पृष्ठं           NOUN   Number=Sing                nmod       -> स्थानानि
+    5  जघनम्            NOUN   Number=Sing                nmod       -> स्थानानि
+    6  ऊरू              NOUN   Number=Dual                nsubj      -> स्थानानि
+    7  च                ADV    _                          advmod     -> स्थानानि
+    8  स्थानानि         NOUN   Gender=Neut|Number=Plur    root       -> ROOT
+  RESULT job(b): FAIL
+==========================================================================
+JOB (a) post-verbal subject : 0 / 4
+JOB (b) coordination        : 0 / 3
+(excluded as present in training data: 1)

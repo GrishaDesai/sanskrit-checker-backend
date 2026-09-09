@@ -1,0 +1,300 @@
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,15 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,216 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,176 words and 0.0%,52.5% coverage.
+Initialized 'deprel' embedding with 0,36 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -4.8440e+03
+Iteration 2: training logprob -4.5143e+03
+Iteration 3: training logprob -3.1668e+03
+Iteration 4: training logprob -2.3960e+03
+Iteration 5: training logprob -2.2453e+03
+Iteration 6: training logprob -2.0159e+03
+Iteration 7: training logprob -1.9853e+03
+Iteration 8: training logprob -2.1206e+03
+Iteration 9: training logprob -2.4630e+03
+Iteration 10: training logprob -2.7505e+03
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,224 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,172 words and 0.0%,50.4% coverage.
+Initialized 'deprel' embedding with 0,37 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -5.4102e+03
+Iteration 2: training logprob -4.9403e+03
+Iteration 3: training logprob -3.3712e+03
+Iteration 4: training logprob -2.6752e+03
+Iteration 5: training logprob -2.3398e+03
+Iteration 6: training logprob -2.1946e+03
+Iteration 7: training logprob -2.1216e+03
+Iteration 8: training logprob -2.3265e+03
+Iteration 9: training logprob -2.7267e+03
+Iteration 10: training logprob -3.0560e+03
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,218 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,185 words and 0.0%,52.7% coverage.
+Initialized 'deprel' embedding with 0,38 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -5.1455e+03
+Iteration 2: training logprob -4.8582e+03
+Iteration 3: training logprob -3.3532e+03
+Iteration 4: training logprob -2.7007e+03
+Iteration 5: training logprob -2.2241e+03
+Iteration 6: training logprob -2.1856e+03
+Iteration 7: training logprob -2.3336e+03
+Iteration 8: training logprob -2.2734e+03
+Iteration 9: training logprob -2.7099e+03
+Iteration 10: training logprob -3.0319e+03
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,219 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,190 words and 0.0%,54.6% coverage.
+Initialized 'deprel' embedding with 0,37 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -4.8936e+03
+Iteration 2: training logprob -4.7800e+03
+Iteration 3: training logprob -3.4696e+03
+Iteration 4: training logprob -2.5584e+03
+Iteration 5: training logprob -2.1815e+03
+Iteration 6: training logprob -1.9920e+03
+Iteration 7: training logprob -2.1369e+03
+Iteration 8: training logprob -2.2611e+03
+Iteration 9: training logprob -2.5489e+03
+Iteration 10: training logprob -3.0252e+03
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,220 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,187 words and 0.0%,53.2% coverage.
+Initialized 'deprel' embedding with 0,38 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -5.3537e+03
+Iteration 2: training logprob -5.0837e+03
+Iteration 3: training logprob -3.5044e+03
+Iteration 4: training logprob -2.8226e+03
+Iteration 5: training logprob -2.3903e+03
+Iteration 6: training logprob -2.1136e+03
+Iteration 7: training logprob -2.0706e+03
+Iteration 8: training logprob -2.3643e+03
+Iteration 9: training logprob -2.6740e+03
+Iteration 10: training logprob -3.2554e+03
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,231 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,197 words and 0.0%,52.4% coverage.
+Initialized 'deprel' embedding with 0,38 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -5.3848e+03
+Iteration 2: training logprob -4.9210e+03
+Iteration 3: training logprob -3.6759e+03
+Iteration 4: training logprob -2.9975e+03
+Iteration 5: training logprob -2.4836e+03
+Iteration 6: training logprob -2.1990e+03
+Iteration 7: training logprob -2.2944e+03
+Iteration 8: training logprob -2.3998e+03
+Iteration 9: training logprob -2.7170e+03
+Iteration 10: training logprob -3.1587e+03
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,227 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,191 words and 0.0%,51.9% coverage.
+Initialized 'deprel' embedding with 0,38 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -5.4555e+03
+Iteration 2: training logprob -5.0694e+03
+Iteration 3: training logprob -3.5326e+03
+Iteration 4: training logprob -2.8545e+03
+Iteration 5: training logprob -2.4332e+03
+Iteration 6: training logprob -2.3007e+03
+Iteration 7: training logprob -2.3227e+03
+Iteration 8: training logprob -2.3310e+03
+Iteration 9: training logprob -2.7117e+03
+Iteration 10: training logprob -3.0595e+03
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,225 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,195 words and 0.0%,52.7% coverage.
+Initialized 'deprel' embedding with 0,38 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -5.3184e+03
+Iteration 2: training logprob -5.1599e+03
+Iteration 3: training logprob -3.5881e+03
+Iteration 4: training logprob -3.0188e+03
+Iteration 5: training logprob -2.5215e+03
+Iteration 6: training logprob -2.3130e+03
+Iteration 7: training logprob -2.3264e+03
+Iteration 8: training logprob -2.2107e+03
+Iteration 9: training logprob -2.5901e+03
+Iteration 10: training logprob -3.1626e+03
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,228 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,199 words and 0.0%,52.8% coverage.
+Initialized 'deprel' embedding with 0,38 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -5.2519e+03
+Iteration 2: training logprob -5.3899e+03
+Iteration 3: training logprob -3.7030e+03
+Iteration 4: training logprob -2.6971e+03
+Iteration 5: training logprob -2.4903e+03
+Iteration 6: training logprob -2.1263e+03
+Iteration 7: training logprob -2.2323e+03
+Iteration 8: training logprob -2.3601e+03
+Iteration 9: training logprob -2.7395e+03
+Iteration 10: training logprob -3.1875e+03
+Parser transition options: system=projective, oracle=dynamic, structured_interval=8, single_root=1
+Parser uses lemmas/upos/xpos/feats: from gold data
+Parser embeddings options: upostag=20, feats=20, xpostag=0, form=50, lemma=0, deprel=20
+  form mincount=2, precomputed form embeddings=none
+  lemma mincount=2, precomputed lemma embeddings=none
+Parser network options: iterations=10, hidden_layer=200, batch_size=10,
+  learning_rate=0.0200, learning_rate_final=0.0010, l2=0.5000, early_stopping=0
+Initialized 'universal_tag' embedding with 0,16 words and 0.0%,100.0% coverage.
+Initialized 'feats' embedding with 0,223 words and 0.0%,100.0% coverage.
+Initialized 'form' embedding with 0,196 words and 0.0%,53.5% coverage.
+Initialized 'deprel' embedding with 0,37 words and 0.0%,100.0% coverage.
+Iteration 1: training logprob -5.3995e+03
+Iteration 2: training logprob -5.0730e+03
+Iteration 3: training logprob -3.5089e+03
+Iteration 4: training logprob -2.7052e+03
+Iteration 5: training logprob -2.1986e+03
+Iteration 6: training logprob -2.2994e+03
+Iteration 7: training logprob -2.0827e+03
+Iteration 8: training logprob -2.4363e+03
+Iteration 9: training logprob -2.6202e+03
+Iteration 10: training logprob -3.0524e+03
+treebank: data/treebanks/UD_Sanskrit-UFAL/sa_ufal-ud-test.conllu
+sentences: 230
+config  : C1 - defaults, raw UFAL (rebuild 2026-09-09)
+parser opts: '<udpipe defaults>'
+
+10-fold cross-validation (contiguous blocks, gold tokenisation + gold tags):
+  fold  0: train 207 sents / test 23 sents,  254 tok -> UAS  37.0  LAS  30.7  (57.0s)
+  fold  1: train 207 sents / test 23 sents,  194 tok -> UAS  60.3  LAS  50.0  (32.6s)
+  fold  2: train 207 sents / test 23 sents,  217 tok -> UAS  58.5  LAS  47.5  (44.0s)
+  fold  3: train 207 sents / test 23 sents,  249 tok -> UAS  52.6  LAS  42.6  (24.9s)
+  fold  4: train 207 sents / test 23 sents,  193 tok -> UAS  60.6  LAS  51.8  (29.9s)
+  fold  5: train 207 sents / test 23 sents,  115 tok -> UAS  56.5  LAS  45.2  (31.9s)
+  fold  6: train 207 sents / test 23 sents,  149 tok -> UAS  73.2  LAS  54.4  (24.8s)
+  fold  7: train 207 sents / test 23 sents,  153 tok -> UAS  79.1  LAS  60.8  (24.3s)
+  fold  8: train 207 sents / test 23 sents,  153 tok -> UAS  67.3  LAS  52.9  (63.2s)
+  fold  9: train 207 sents / test 23 sents,  166 tok -> UAS  79.5  LAS  67.5  (78.2s)
+
+  ---- MICRO-AVERAGE over 1843 tokens ----
+  UAS 60.55%   LAS 49.00%   (total 411s)
+  per-fold UAS range 37.0 - 79.5 ; LAS range 30.7 - 67.5
+
+  per-relation (gold count / labelled-correct / recall / predicted count):
+    root           gold  230  correct  164  R  71.3%   pred  230
+    advmod         gold  205  correct  141  R  68.8%   pred  244
+    punct          gold  195  correct  126  R  64.6%   pred  198
+    nsubj          gold  168  correct   81  R  48.2%   pred  239
+    nmod           gold  147  correct  107  R  72.8%   pred  231
+    obl            gold  125  correct   45  R  36.0%   pred  172
+    conj           gold  114  correct    9  R   7.9%   pred   55
+    obj            gold  101  correct   52  R  51.5%   pred  105
+    amod           gold   82  correct   54  R  65.9%   pred   97
+    advcl          gold   72  correct   44  R  61.1%   pred  111
+    det            gold   62  correct   39  R  62.9%   pred   64
+    nmod:poss      gold   52  correct   15  R  28.8%   pred   41
+    nsubj:pass     gold   36  correct    2  R   5.6%   pred    2
+    cc             gold   34  correct   15  R  44.1%   pred   28
+    acl            gold   32  correct    0  R   0.0%   pred   11
+    obl:agent      gold   20  correct    1  R   5.0%   pred    1
+    nsubj:cop      gold   19  correct    0  R   0.0%   pred    0
+    xcomp          gold   17  correct    0  R   0.0%   pred    0
+
+  ==== STEP 4 ACCEPTANCE TEST: THE TWO NAMED JOBS ====
+  JOB (a) SUBJECT IDENTIFICATION
+    pre-verbal  subjects:  167 gold,   80 exactly right  (47.9%)
+    POST-verbal subjects:   56 gold,    3 exactly right  (5.4%)  <-- the job
+       (right verb attached, any subject label: 10 / 17.9%)
+    subject PRECISION  :  241 predicted,   83 correct   (34.4%)
+  JOB (b) COORDINATION (nominal pairs, transitive closure over conj)
+    gold pairs  369 | predicted   65 | correct   34
+    precision 52.3%   recall 9.2%   <-- precision is the one that matters
+
+  post-verbal subject misses (word / gold rel / gold head -> pred rel / pred head):
+    नमः          nsubj       कविभ्यो      -> root        (root)
+    नमः          nsubj       चाणक्याय     -> root        (root)
+    एतद्         nsubj:pass  ज्ञातम्      -> nsubj       यत्
+    मे           nsubj       पश्यतः       -> nsubj       आवहति
+    गर्भस्रावो   nsubj       वरं          -> nsubj       ऐव
+    जातः         nsubj       वरं          -> nsubj       जनिता
+    कन्या        nsubj       वरम्         -> obl         जनिता
+    भार्या       nsubj       वरं          -> nmod        तनयः
+    तनयः         nsubj       वरम्         -> nsubj       जनिता
+    अर्थः        nsubj:cop   कः           -> nsubj       जातेन
+    विषयः        nsubj       अशाश्वतो     -> root        (root)
+    शास्त्राणि   nsubj       ज्ञेयानि     -> obl         ज्ञेयानि
+    शास्त्रम्    nsubj:cop   अनन्त        -> obl         स्वल्पं
+    आयुः         nsubj:cop   स्वल्पं      -> obl         वह
+    विघ्नाः      nsubj       वह           -> conj        वः
+
+  spurious coordination pairs (job-(b) precision errors):
+    नमः + कर्तृभ्यः
+    विवेक + हीनाः
+    धर्मशास्त्राणि + मन्वादीनि
+    धर्मशास्त्राणि + चाणक्यादीनि
+    धर्मशास्त्राणि + वात्स्यायनादीनि
+    मन्वादीनि + अर्थशास्त्राणि
+    मन्वादीनि + चाणक्यादीनि
+    मन्वादीनि + कामशास्त्राणि
+    मन्वादीनि + वात्स्यायनादीनि
+    अर्थशास्त्राणि + चाणक्यादीनि
+    अर्थशास्त्राणि + वात्स्यायनादीनि
+    चाणक्यादीनि + कामशास्त्राणि
+    चाणक्यादीनि + वात्स्यायनादीनि
+    कामशास्त्राणि + वात्स्यायनादीनि
+    वः + विघ्नाः
+
+  KEY RELATIONS FOR THIS PHASE:
+    nsubj          gold  168  correct   81  R  48.2%   pred  239
+    nsubj:pass     gold   36  correct    2  R   5.6%   pred    2
+    conj           gold  114  correct    9  R   7.9%   pred   55
+    cc             gold   34  correct   15  R  44.1%   pred   28

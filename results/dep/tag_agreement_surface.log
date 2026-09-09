@@ -1,0 +1,18 @@
+sentences compared     : 225 (of 230; 5 skipped on tokenisation mismatch)
+tokens compared        : 1254
+UPOS agreement         : 34.3%
+UPOS agreement (coarse) : 48.9%   [nominal/verbal/pronominal/indeclinable]
+bridge emitted X (word unrecognised) : 292  (23.3%)
+top coarse disagreements (gold -> bridge):
+    VERB     -> NOUN    124
+    VERB     -> X       109
+    NOUN     -> X        96
+    ADV      -> NOUN     87
+    PRON     -> NOUN     77
+    DET      -> NOUN     30
+    ADV      -> X        24
+    PROPN    -> X        15
+FEATS entirely empty   : 489  (39.0% of tokens the parser sees with NO morphology)
+  Case    gold has  801 | bridge emits  320 | agree  222  -> recall 27.7%, precision 69.4%
+  Gender  gold has  759 | bridge emits  212 | agree  125  -> recall 16.5%, precision 59.0%
+  Number  gold has  969 | bridge emits  763 | agree  617  -> recall 63.7%, precision 80.9%

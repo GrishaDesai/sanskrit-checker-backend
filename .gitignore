@@ -64,6 +64,8 @@ pip-wheel-metadata/
 
 *.log
 logs/
+# ...except the dependency-parsing phase result logs, which are the record
+!results/dep/*.log
 
 # ==============================
 # FastAPI / Uvicorn
@@ -94,6 +96,7 @@ desktop.ini
 *.bak
 
 vidyut-data/
-docs/
+docs/*
+!docs/*-phase-scope.md
 data/
 models/
