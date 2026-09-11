@@ -23,6 +23,8 @@ from vidyut.prakriya import (
     Vacana,
     Purusha,
     Pada,
+    Lakara,
+    Prayoga,
 )
 
 from app.verb_grammar import VerbGrammar
@@ -993,9 +995,25 @@ class KarakaSyntaxEngine:
                         Vacana.Bahu if s_slp1.endswith("AH") or s_slp1 in ["te", "tAH", "tAni", "ete"] else Vacana.Eka
                     )
 
+                # Only लट्-कर्तरि readings may drive the exact-match check and
+                # the derived correction. Every other lakara/prayoga combination
+                # keeps today's behaviour of falling through to the legacy
+                # surface heuristic below: those readings have never been
+                # validated against either eval set, and admitting them here
+                # silently re-runs the lakara extension that was measured and
+                # reverted once (DCS FP 8.5% -> 11.9%, gold 43/43 -> 42/43).
+                # The filter is applied to the *branch condition* too, not just
+                # to `agrees` -- checking `not v_tok.verb_readings` alone would
+                # strand a non-लट् verb between both arms, gated out of the
+                # exact-match path and never reaching the fallback.
+                exact_readings = [
+                    vf for vf in v_tok.verb_readings
+                    if vf.lakara == Lakara.Lat and vf.prayoga == Prayoga.Kartari
+                ]
+
                 agrees = any(
                     vf.purusha == subj_purusha and vf.vacana == subj_vacana
-                    for vf in v_tok.verb_readings
+                    for vf in exact_readings
                 )
 
                 # Same discipline as the liṅga check: assert only when the
@@ -1011,12 +1029,15 @@ class KarakaSyntaxEngine:
                     subj_vacana_ambiguous = True
                 agreement_severity = "review" if subj_vacana_ambiguous else "error"
 
-                if v_tok.verb_readings and not agrees and self._verb_grammar:
-                    dhatu_code = v_tok.verb_readings[0].dhatu_code
-                    corrected = sorted(self._verb_grammar.suggest(dhatu_code, subj_purusha, subj_vacana))
+                if exact_readings and not agrees and self._verb_grammar:
+                    dhatu_code = exact_readings[0].dhatu_code
+                    corrected = sorted(self._verb_grammar.suggest(
+                        dhatu_code, subj_purusha, subj_vacana,
+                        Lakara.Lat, Prayoga.Kartari,
+                    ))
                     if corrected:
                         sug_verb_deva = transliterate(corrected[0], Scheme.Slp1, Scheme.Devanagari)
-                        actual = v_tok.verb_readings[0]
+                        actual = exact_readings[0]
                         title, rule_sutra = _agreement_title_and_rule(subj_purusha, actual.purusha != subj_purusha)
                         issues.append(
                             SyntaxIssue(
@@ -1034,10 +1055,11 @@ class KarakaSyntaxEngine:
                                 severity=agreement_severity,
                             )
                         )
-                elif not v_tok.verb_readings:
-                    # Fallback for forms VerbGrammar does not index (lakaras
-                    # other than लट्, or roots outside its coverage): the
-                    # previous surface-heuristic checks, kept only as a net.
+                elif not exact_readings:
+                    # Fallback for forms the exact-match path does not own:
+                    # roots outside VerbGrammar's coverage, and any reading
+                    # whose lakara/prayoga is not लट्-कर्तरि. The previous
+                    # surface-heuristic checks, kept only as a net.
                     _legacy_agreement_fallback(issues, subj_tok, v_tok, first_verb_idx)
 
         return issues, compounds

@@ -175,6 +175,29 @@ ORTHOGRAPHIC_SUBSTITUTIONS = [
     ("ri", "f", "'ऋ' should be used instead of 'रि'"),
 ]
 
+# Display names for a तिङन्त's lakara/prayoga. The analysis string used to
+# state "लट्लकारः, कर्तरि प्रयोगः" as a literal, which was true only because
+# VerbGrammar derived nothing else; it would have mislabelled every form as
+# लट्-कर्तरि the moment it derived more.
+LAKARA_DEVA: dict[str, str] = {
+    "Lat": "लट्", "Lit": "लिट्", "Lut": "लुट्", "Lrt": "लृट्", "Let": "लेट्",
+    "Lot": "लोट्", "Lan": "लङ्", "VidhiLin": "विधिलिङ्", "AshirLin": "आशीर्लिङ्",
+    "Lun": "लुङ्", "Lrn": "लृङ्",
+}
+PRAYOGA_DEVA: dict[str, str] = {
+    "Kartari": "कर्तरि", "Karmani": "कर्मणि", "Bhave": "भावे",
+}
+
+
+def _tinanta_analysis(root_deva: str, vf) -> str:
+    """The तिङन्त analysis string, reading the form's own lakara/prayoga."""
+    lakara = LAKARA_DEVA.get(vf.lakara.name, vf.lakara.name)
+    prayoga = PRAYOGA_DEVA.get(vf.prayoga.name, vf.prayoga.name)
+    return (
+        f"तिङन्त (धातुः {root_deva}, पुरुषः {vf.purusha.name}, वचनम् {vf.vacana.name}, "
+        f"{lakara}लकारः, {prayoga} प्रयोगः)"
+    )
+
 
 @dataclass
 class TokenResult:
@@ -626,10 +649,7 @@ class SanskritEngine:
             vf = next(v for v in verb_forms if v.purusha.name == "Prathama")
             root_deva = transliterate(
                 self._verb_grammar.clean_root(vf.aupadeshika), Scheme.Slp1, Scheme.Devanagari)
-            verb_analysis = (
-                f"तिङन्त (धातुः {root_deva}, पुरुषः {vf.purusha.name}, वचनम् {vf.vacana.name}, "
-                f"लट्लकारः, कर्तरि प्रयोगः)"
-            )
+            verb_analysis = _tinanta_analysis(root_deva, vf)
             if is_valid:
                 verb_analysis += "  (also readable as a nominal homograph)"
             return True, root_deva, verb_analysis, underlying if is_valid else slp1_word, None, None
@@ -647,10 +667,7 @@ class SanskritEngine:
             vf = verb_forms[0]
             root_deva = transliterate(
                 self._verb_grammar.clean_root(vf.aupadeshika), Scheme.Slp1, Scheme.Devanagari)
-            analysis = (
-                f"तिङन्त (धातुः {root_deva}, पुरुषः {vf.purusha.name}, वचनम् {vf.vacana.name}, "
-                f"लट्लकारः, कर्तरि प्रयोगः)"
-            )
+            analysis = _tinanta_analysis(root_deva, vf)
             return True, root_deva, analysis, slp1_word, None, None
 
         # An अव्ययीभाव / उपसर्ग compound whose parts are known but whose whole

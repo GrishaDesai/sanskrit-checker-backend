@@ -69,6 +69,55 @@ PANINI_SUTRA_MAP: dict[tuple[str, str], tuple[str, str]] = {
     ("m", "t"): ("मोऽनुस्वारः (८.३.२३)", "व्यञ्जन सन्धि: पदान्त 'म्' + व्यञ्जन -> अनुस्वार 'ं'"),
 }
 
+# Vowel-junction sutra citations (सवर्ण-दीर्घ / गुण / वृद्धि / यण्), built
+# programmatically rather than hand-typed one pair at a time -- the phoneme
+# pairs below are cross-checked directly against every vowel-sandhi row in
+# app/vidyut-data/sandhi/rules.csv, so a hand-typed list risked silently
+# missing or mis-citing a pair where a generated one cannot.
+_SAVARNA_DIRGHA = (
+    "अकः सवर्णे दीर्घः (६.१.१०१)",
+    "सवर्ण-दीर्घ सन्धि: समान स्वर + समान स्वर -> दीर्घ स्वर",
+)
+_GUNA = (
+    "आद्गुणः (६.१.८७)",
+    "गुण सन्धि: 'अ'/'आ' + इक् स्वर -> गुण",
+)
+_VRDDHI = (
+    "वृद्धिरेचि (६.१.८८)",
+    "वृद्धि सन्धि: 'अ'/'आ' + 'ए'/'ऐ'/'ओ'/'औ' -> वृद्धि",
+)
+_YAN = (
+    "इको यणचि (६.१.७७)",
+    "यण् सन्धि: इक् स्वर (इ/ई/उ/ऊ/ऋ/ॠ/ऌ/ॡ) + असमान स्वर -> य्/व्/र्/ल्",
+)
+
+# अ/आ, इ/ई, उ/ऊ, ऋ/ॠ, ऌ/ॡ -- each pair combines with itself to a long vowel.
+for _short, _long in (("a", "A"), ("i", "I"), ("u", "U"), ("f", "F"), ("x", "X")):
+    for _c1 in (_short, _long):
+        for _c2 in (_short, _long):
+            PANINI_SUTRA_MAP[(_c1, _c2)] = _SAVARNA_DIRGHA
+
+# अ/आ + इक् स्वर -> गुण (इ/ई->ए, उ/ऊ->ओ, ऋ/ॠ->अर्, ऌ/ॡ->अल्)
+for _c1 in ("a", "A"):
+    for _c2 in ("i", "I", "u", "U", "f", "F", "x", "X"):
+        PANINI_SUTRA_MAP[(_c1, _c2)] = _GUNA
+
+# अ/आ + ए/ऐ/ओ/औ -> वृद्धि
+for _c1 in ("a", "A"):
+    for _c2 in ("e", "E", "o", "O"):
+        PANINI_SUTRA_MAP[(_c1, _c2)] = _VRDDHI
+
+# इक् स्वर + कोई भी असमान स्वर -> यण् (साम्य/दीर्घ पहले से ऊपर हैंडल हो चुका है)
+_IK_SAVARNA = {"i": "I", "I": "i", "u": "U", "U": "u", "f": "F", "F": "f", "x": "X", "X": "x"}
+_ALL_VOWELS = ("a", "A", "i", "I", "u", "U", "f", "F", "x", "X", "e", "E", "o", "O")
+for _c1 in _IK_SAVARNA:
+    for _c2 in _ALL_VOWELS:
+        if _c2 == _c1 or _c2 == _IK_SAVARNA[_c1]:
+            continue
+        PANINI_SUTRA_MAP[(_c1, _c2)] = _YAN
+
+del _short, _long, _c1, _c2, _IK_SAVARNA, _ALL_VOWELS
+
 
 class SandhiChecker:
     """Paninian sandhi junction validator."""
@@ -101,6 +150,18 @@ class SandhiChecker:
                     prefix = first_slp1[:-l1]
                     suffix = second_slp1[l2:]
                     joined = prefix + res + suffix
+
+                    # second_slp1 is w2's underlying/lexicon form, which this
+                    # codebase keys on the pre-visarga consonant (e.g. Kosha
+                    # entries end "Alayas", not the spoken "AlayaH" -- see
+                    # sanskrit_engine.py). A space-less rule (full vowel
+                    # fusion: सवर्ण-दीर्घ/गुण/वृद्धि) pulls that raw tail into
+                    # `joined` verbatim, which would otherwise display as a
+                    # bare स् where a visarga belongs. Finish the word-final
+                    # rule using vidyut's own "s,," row from the same
+                    # rules.csv, rather than leaving it half-applied.
+                    if joined.endswith("s") and ("s", "") in self._rules:
+                        joined = joined[:-1] + self._rules[("s", "")]
 
                     # Determine what w1 becomes
                     # If res contains a space, w1 and w2 stay separate words with transformed boundary
@@ -159,6 +220,62 @@ class SandhiChecker:
         # Special check: as + a -> o ' (अतो रोरप्लुतादप्लुते)
         if base_w1.endswith("as") and sutra and "अतो रोरप्लुतादप्लुते" in sutra:
             if not surface_w1_slp1.endswith("o"):
+                return JunctionResult(
+                    is_valid_sandhi=False,
+                    issue_detected=True,
+                    rule_sutra=sutra,
+                    rule_explanation=exp,
+                    suggested_w1_slp1=w1_expected,
+                    suggested_w1_deva=w1_expected_deva,
+                    suggested_joined_deva=joined_expected_deva,
+                )
+
+        # Vowel-junction checks (सवर्ण-दीर्घ / गुण / वृद्धि / यण्). Unlike visarga,
+        # these classes fuse w1 and w2 into a single orthographic unit when
+        # applied, so there is no partial "surface already shows it" ending to
+        # test the way "अस्" -> "ओ" is tested above -- two still-separate
+        # surface tokens already mean the fusion did not happen. The
+        # surface != expected guard is kept anyway, for the same reason every
+        # branch above has one: never assert a computed value without
+        # checking it against what was actually written.
+        if sutra and "सवर्णे दीर्घः" in sutra:
+            if surface_w1_slp1 != w1_expected:
+                return JunctionResult(
+                    is_valid_sandhi=False,
+                    issue_detected=True,
+                    rule_sutra=sutra,
+                    rule_explanation=exp,
+                    suggested_w1_slp1=w1_expected,
+                    suggested_w1_deva=w1_expected_deva,
+                    suggested_joined_deva=joined_expected_deva,
+                )
+
+        if sutra and "आद्गुणः" in sutra:
+            if surface_w1_slp1 != w1_expected:
+                return JunctionResult(
+                    is_valid_sandhi=False,
+                    issue_detected=True,
+                    rule_sutra=sutra,
+                    rule_explanation=exp,
+                    suggested_w1_slp1=w1_expected,
+                    suggested_w1_deva=w1_expected_deva,
+                    suggested_joined_deva=joined_expected_deva,
+                )
+
+        if sutra and "वृद्धिरेचि" in sutra:
+            if surface_w1_slp1 != w1_expected:
+                return JunctionResult(
+                    is_valid_sandhi=False,
+                    issue_detected=True,
+                    rule_sutra=sutra,
+                    rule_explanation=exp,
+                    suggested_w1_slp1=w1_expected,
+                    suggested_w1_deva=w1_expected_deva,
+                    suggested_joined_deva=joined_expected_deva,
+                )
+
+        if sutra and "इको यणचि" in sutra:
+            if surface_w1_slp1 != w1_expected:
                 return JunctionResult(
                     is_valid_sandhi=False,
                     issue_detected=True,

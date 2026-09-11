@@ -190,10 +190,9 @@ upapada fixes the case of the word beside it outright, leaving no competing
 slot.
 
 **What would be needed.** A dependency parser, to say which nominal binds to
-which predicate. **A future phase.** UDPipe 1 was already measured against this
-job and declined — the blocker there was verb invisibility upstream, not the
-parser — so the next attempt needs to re-measure with the verb layer as it
-stands now.
+which predicate. **That re-measurement has now been done, and the answer is
+no — see §4.11.** This entry stays open, but a parser is no longer the
+candidate answer to it.
 
 ### 4.4 Gender-agreement and participle edge cases
 
@@ -334,6 +333,72 @@ review-tier volume to an already-81.9% review rate, and because it warrants its
 own measure-and-revert cycle. **This is the highest-value remaining
 Vidyut-reachable item and should be the first candidate in any follow-up
 Vidyut work.**
+
+### 4.11 The parser was re-measured against improved tags, and closed (2026-09-11)
+
+§4.3 asked for the dependency-parser decline to be re-measured "with the verb
+layer as it stands now", on the reasoning recorded in the dependency-parsing
+phase doc that the blocker was **verb invisibility upstream, not the parser**.
+That was done. **The reasoning was wrong, and the decline stands for a
+different reason.**
+
+**What was changed first.** Four tagging defects in the CoNLL-U bridge, each
+measured before and after: कृदन्त participles tagged NOUN, indeclinables tagged
+NOUN, oblique pronouns tagged NOUN (all three were the same bug — real
+information available and discarded by branch ordering), plus लङ् added to
+`VerbGrammar`. Bridge UPOS agreement went **34.3% → 47.2%**, coarse
+**48.9% → 64.1%**, the verb gap **233 → 156**, and Case/Gender/Number
+precision **69.4/59.0/80.9% → 84.1/79.6/87.9%**.
+
+**What that bought the parser.** Measured by 10-fold CV over the same 225
+sentences / 1445 tokens, with the tag columns as the only variable:
+
+| metric | before | after | gold tags (ceiling) |
+|---|---|---|---|
+| UAS | 48.72% | **51.76%** | 60.48% |
+| LAS | 32.11% | **34.53%** | 48.65% |
+| nsubj recall | 37.3% | **40.5%** | 56.9% |
+| post-verbal subject, right verb | 4.2% | **12.5%** | 18.8% |
+| **subject precision** | **25.1%** | **25.3%** | **33.7%** |
+
+The tagging work is real — UAS +3.0, and post-verbal head attachment tripled.
+It closes about a quarter of the gap to perfect tags.
+
+**Why it is still closed.** Subject precision did not move: 25.1% → 25.3%.
+And with **gold** tags it is only **33.7%** — a ceiling no tagging work can
+reach past. `job_metrics.py` states the bar itself: "a check gated on a
+spurious subject is a new false positive." At 25% precision three of four
+proposed subjects are wrong, so a 🔴 check gated on it is a false-positive
+generator, which is what §5's five reverts exist to prevent.
+
+**The durable correction.** The dependency-parsing doc's conclusion that verb
+coverage is "a prerequisite, not a follow-on" is **not supported**: verb
+coverage improved substantially and the binding constraint did not move.
+The constraint is the parser's own precision on 230 sentences of training data.
+
+**Also settled in the same pass, so it is not re-proposed:**
+
+- **Kosha-missing कृदन्त forms (a "Tier 2" `KrdantaGrammar`)**: built as a
+  prototype and measured — **13.6 s of cold start to fix 0 of 109 tokens.**
+  The remaining VERB→X bucket is not participles; it is ~57% sandhi-fused
+  multi-word tokens (`ko'pyupAyo'nuzWIyatAm`), 38% prefixed verbs, and other
+  lakāras. Do not build this.
+- **Full lakāra coverage**: the whole 11 × 2 space costs 14.3 s of cold start
+  and is worth 39 tokens. Measured per combination: लङ् 11 tokens/0.53 s,
+  लोट् 6/0.59, लट्-कर्मणि 5/0.33, लोट्-कर्मणि 5/0.35, लृट् 5/0.49,
+  लिट् 5/1.16. **लङ् only was kept.** The other four were added, measured,
+  and reverted: they cost 2.6 s of cold start and left the product's
+  unrecognised-token rate at **515/1617 (31.8%), unchanged to the token**,
+  because the Kosha already carries those forms.
+- **उपसर्ग/prefix support**: `Dhatu.with_prefixes()` works correctly
+  (अनु + स्था → अनुष्ठीयते, retroflexion and all), but a prefixed index costs
+  ~11.7 s per lakāra and is worth 8 tokens. Prefix-stripping against the
+  existing index is nearly free but worth only 2.
+
+**What this leaves.** Every road in this pass ended at the same place: roughly
+two-thirds of the remaining tag gap is sandhi-fused compound tokens, which is
+§4.1/§4.2. **Compound segmentation is the next real lever, and nothing else
+comes close.**
 
 ### 4.10 No proper-noun tag in the library
 
@@ -571,14 +636,21 @@ Ordered by measured value, not by how interesting the problem is.
    81.9% review-tier rate. Nothing else comes close. A compound segmenter that
    returns calibrated confidence would address both at once. This is the single
    highest-value item in the entire backlog.
-2. **Dependency parsing (§4.3).** Unlocks the kāraka scope boundary and the
-   three remaining syntax false positives, which are all coordination or
-   word-order cases. Re-measure UDPipe against the verb layer as it now
-   stands — the previous decline was driven by verb invisibility upstream,
-   which has since changed.
-3. **Vowel sandhi advisories (§4.9).** The only remaining item plausibly
-   inside Vidyut's reach. Small, self-contained, needs its own
-   measure-and-revert cycle.
+2. ~~**Dependency parsing (§4.3).**~~ **CLOSED 2026-09-11 — see §4.11.**
+   Re-measured with a substantially improved verb/tag layer (bridge UPOS
+   34.3% → 47.2%). Subject precision did not move (25.1% → 25.3%) and its
+   ceiling with *gold* tags is 33.7%, far below what a 🔴 gate can rest on.
+   The "verb invisibility is the prerequisite" reasoning was tested and
+   disproved. Do not re-open without a fundamentally larger treebank.
+3. ~~**Vowel sandhi advisories (§4.9).**~~ **DONE 2026-09-10.** Implemented in
+   `check_junction`, routing गुण (६.१.८७) / वृद्धि (६.१.८८) / यण् (६.१.७७) /
+   सवर्ण-दीर्घ (६.१.१०१) per the rule that actually fired. Gold advisory
+   sub-count 19 → 24 of 39, with gold pass rate and DCS false positives
+   unchanged. Note 3 of the 6 §4.9 cases (नर इन्द्रः, सुर ईशः, गण ईशः) remain
+   silent for an unrelated reason: `check_text`'s bare-stem promotion rewrites
+   an a-final word to its -as form before the junction is judged, and
+   `PANINI_SUTRA_MAP` has no ("as", vowel) entry. That is a separate,
+   self-contained fix.
 4. **Participle liṅga agreement (§4.4).** Category 1 and Vidyut-reachable for
    half its cause; touches an existing false-positive suppression guard, so it
    needs a dedicated cycle.

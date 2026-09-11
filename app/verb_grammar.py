@@ -32,6 +32,37 @@ PURUSHA_VACANA: list[tuple] = [
     (Purusha.Uttama, Vacana.Bahu),
 ]
 
+# The (lakara, prayoga) paradigms this index derives and recognises.
+#
+# Deliberately not "every lakara": the full 11 x 2 space costs 14.3 s to build
+# against a 1.2 s cold start, and 16 of those 22 combinations are worth about
+# two tokens between them on the UFAL sample. Each entry below was measured
+# individually for build cost against tokens recovered:
+#
+#   लङ्-कर्तरि    11 tokens / 0.53 s      लोट्-कर्तरि   6 tokens / 0.59 s
+#   लट्-कर्मणि     5 tokens / 0.33 s      लृट्-कर्तरि   5 tokens / 0.49 s
+#   लोट्-कर्मणि    5 tokens / 0.35 s
+#
+# लोट्-कर्तरि, लोट्-कर्मणि, लट्-कर्मणि and लृट्-कर्तरि were added, measured and
+# then removed again. They cost 2.6 s of cold start and bought the *product*
+# nothing measurable: the DCS unrecognised-token rate is 515/1617 (31.8%)
+# with or without them, because the Kosha already carries these forms as
+# Tinanta entries -- indexing them here changes which source recognises a
+# word, not whether it is recognised. Their real beneficiary was the CoNLL-U
+# bridge (+32 tokens), and the dependency parser that consumes it was measured
+# and closed (see docs/vidyut-phase-scope.md §4.3). लङ् is kept because it is
+# the cheapest of the set and past-tense forms are much the commonest in real
+# prose, so the analysis label it fixes is the one users actually meet.
+# लिट्-कर्तरि was never added: worst ratio measured, 5 tokens for 1.16 s.
+#
+# Recognition only: `karaka_syntax` admits just लट्-कर्तरि to its exact-match
+# agreement path, so a form added here is tagged correctly but still routes to
+# the legacy fallback for agreement.
+INDEXED_PARADIGMS: list[tuple] = [
+    (Lakara.Lat, Prayoga.Kartari),
+    (Lakara.Lan, Prayoga.Kartari),
+]
+
 
 @dataclass(frozen=True)
 class VerbForm:
@@ -40,6 +71,8 @@ class VerbForm:
     artha: str           # traditional meaning-gloss (SLP1), e.g. "gatO"
     purusha: Purusha
     vacana: Vacana
+    lakara: Lakara = Lakara.Lat
+    prayoga: Prayoga = Prayoga.Kartari
 
 
 class VerbGrammar:
@@ -76,29 +109,58 @@ class VerbGrammar:
 
     def _build_index(self) -> None:
         for code, entry in self._entries.items():
-            for purusha, vacana in PURUSHA_VACANA:
-                for text in self._derive(entry.dhatu, purusha, vacana):
-                    self._by_surface.setdefault(text, []).append(
-                        VerbForm(code, entry.dhatu.aupadeshika, entry.artha, purusha, vacana)
-                    )
+            for lakara, prayoga in INDEXED_PARADIGMS:
+                for purusha, vacana in PURUSHA_VACANA:
+                    for text in self._derive(entry.dhatu, purusha, vacana, lakara, prayoga):
+                        self._by_surface.setdefault(text, []).append(
+                            VerbForm(code, entry.dhatu.aupadeshika, entry.artha, purusha, vacana,
+                                     lakara, prayoga)
+                        )
 
-    def _derive(self, dhatu, purusha: Purusha, vacana: Vacana) -> set[str]:
+    def _derive(
+        self,
+        dhatu,
+        purusha: Purusha,
+        vacana: Vacana,
+        lakara: Lakara = Lakara.Lat,
+        prayoga: Prayoga = Prayoga.Kartari,
+    ) -> set[str]:
         try:
-            tin = Pada.Tinanta(dhatu, Prayoga.Kartari, Lakara.Lat, purusha, vacana)
+            tin = Pada.Tinanta(dhatu, prayoga, lakara, purusha, vacana)
             return {r.text for r in self._vyakarana.derive(tin)}
         except Exception:
             return set()
 
     def lookup(self, surface_slp1: str) -> list[VerbForm]:
-        """All (root, puruSha, vacana) readings for an exact लट्-कर्तरि surface form."""
+        """All readings for an exact surface form, across INDEXED_PARADIGMS.
+
+        Each reading carries its own lakara/prayoga, so a caller that is only
+        entitled to act on लट्-कर्तरि must filter rather than assume.
+        """
         return self._by_surface.get(surface_slp1, [])
 
-    def suggest(self, dhatu_code: str, purusha: Purusha, vacana: Vacana) -> set[str]:
-        """Derive the correct लट्-कर्तरि form of `dhatu_code` for the given puruSha/vacana."""
+    def suggest(
+        self,
+        dhatu_code: str,
+        purusha: Purusha,
+        vacana: Vacana,
+        lakara: Lakara = Lakara.Lat,
+        prayoga: Prayoga = Prayoga.Kartari,
+    ) -> set[str]:
+        """Derive the correct form of `dhatu_code` for the given puruSha/vacana.
+
+        lakara/prayoga are explicit rather than implied by the index: this
+        derives on demand, so once `_derive` covers more than लट्-कर्तरि a
+        caller that did not say which lakara it wanted would silently get
+        forms from several merged into one set, and a caller picking one of
+        them (karaka_syntax sorts and takes the first) could offer a लङ् form
+        to correct a लट् verb. The default keeps every existing caller on
+        लट्-कर्तरि exactly as before.
+        """
         entry = self._entries.get(dhatu_code)
         if entry is None:
             return set()
-        return self._derive(entry.dhatu, purusha, vacana)
+        return self._derive(entry.dhatu, purusha, vacana, lakara, prayoga)
 
     def root_matches(self, dhatu_code: str, hint_slp1: str) -> bool:
         """True if a plain-text root hint (e.g. 'gam', 'dA') plausibly names this dhatu.
