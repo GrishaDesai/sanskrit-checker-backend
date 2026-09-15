@@ -827,10 +827,27 @@ class SanskritEngine:
             # restore, so promoting न to नस् and then citing हशि च (६.१.११४)
             # to demand नो is inventing a विसर्ग the word never had. The rule
             # only ever applies to a pada that really ends in -अस्.
+            #
+            # The restoration is also skipped before a vowel other than short
+            # अ, where it is not merely unnecessary but actively wrong-headed:
+            # विसर्ग before such a vowel leaves no visible trace (अस् + इ is
+            # simply "अ इ" with hiatus), so the promoted form yields no
+            # advisory at all -- while it *blocks* the reading that does, the
+            # गुण/वृद्धि/सवर्ण-दीर्घ junction of a bare stem with the next
+            # word. Measured on the §4.9 cases: promoted, नर + इन्द्रः offers
+            # nothing; bare, it offers नरेन्द्रः (आद्गुणः ६.१.८७), and
+            # likewise सुरेशः and गणेशः. Short अ is deliberately kept on the
+            # promotion path, because there the विसर्ग reading is the right
+            # one -- राम + अपि is रामोऽपि (अतो रोरप्लुतादप्लुते ६.१.११३),
+            # not the सवर्ण-दीर्घ रामापि a bare stem would suggest.
+            next_is_non_a_vowel = (
+                t2.underlying_slp1[:1] in ("A", "i", "I", "u", "U", "f", "F", "x", "X", "e", "E", "o", "O")
+            )
             if (
                 underlying_w1 == t1.text_slp1
                 and underlying_w1.endswith("a")
                 and not underlying_w1.endswith("va")
+                and not next_is_non_a_vowel
                 and not self._is_function_word(t1.text_slp1)
             ):
                 if list(self._kosha.get(underlying_w1 + "s")) or self._lexicon.lookup(underlying_w1 + "s"):

@@ -644,13 +644,20 @@ Ordered by measured value, not by how interesting the problem is.
    disproved. Do not re-open without a fundamentally larger treebank.
 3. ~~**Vowel sandhi advisories (§4.9).**~~ **DONE 2026-09-10.** Implemented in
    `check_junction`, routing गुण (६.१.८७) / वृद्धि (६.१.८८) / यण् (६.१.७७) /
-   सवर्ण-दीर्घ (६.१.१०१) per the rule that actually fired. Gold advisory
-   sub-count 19 → 24 of 39, with gold pass rate and DCS false positives
-   unchanged. Note 3 of the 6 §4.9 cases (नर इन्द्रः, सुर ईशः, गण ईशः) remain
-   silent for an unrelated reason: `check_text`'s bare-stem promotion rewrites
-   an a-final word to its -as form before the junction is judged, and
-   `PANINI_SUTRA_MAP` has no ("as", vowel) entry. That is a separate,
-   self-contained fix.
+   सवर्ण-दीर्घ (६.१.१०१) per the rule that actually fired. **All 6 of the
+   §4.9 cases now raise an advisory**; gold advisory sub-count 19 → 27 of 39,
+   with gold pass rate, every gold category and the DCS false-positive rate
+   unchanged throughout.
+
+   The last 3 (नर इन्द्रः, सुर ईशः, गण ईशः) needed a second fix, completed
+   2026-09-15: `check_text`'s bare-stem promotion was rewriting an a-final
+   word to its -अस् form *before* the junction was judged, and विसर्ग before
+   a vowel other than short अ leaves no visible trace, so the promoted form
+   produced no advisory while blocking the गुण reading that does. The
+   promotion is now skipped before a non-अ vowel — नर + इन्द्रः → नरेन्द्रः
+   (आद्गुणः ६.१.८७), सुरेशः, गणेशः. Short अ deliberately keeps the promotion,
+   because there the विसर्ग reading is the correct one: राम + अपि is रामोऽपि
+   (६.१.११३), not the सवर्ण-दीर्घ रामापि a bare stem would propose.
 4. **Participle liṅga agreement (§4.4).** Category 1 and Vidyut-reachable for
    half its cause; touches an existing false-positive suppression guard, so it
    needs a dedicated cycle.

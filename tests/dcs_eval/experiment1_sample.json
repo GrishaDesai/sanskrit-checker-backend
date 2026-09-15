@@ -3,11 +3,11 @@
   "total_sentences": 260,
   "false_positives": 17,
   "false_positive_rate": 0.06538461538461539,
-  "review_only": 215,
-  "review_rate": 0.8269230769230769,
-  "fully_clean": 28,
+  "review_only": 216,
+  "review_rate": 0.8307692307692308,
+  "fully_clean": 27,
   "syntax_issues_error": 3,
-  "syntax_issues_review": 7
+  "syntax_issues_review": 5
  },
  "results": [
   {
@@ -1003,7 +1003,7 @@
      "token_text": "कार्यः",
      "issue_type": "agreement_error",
      "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
-     "description": "'कार्यः' (Pum) does not agree in liNga with 'पिण्डं' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "description": "'कार्यः' (Pum/Stri) does not agree in liNga with 'पिण्डं' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
      "suggested_text": null,
      "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
      "severity": "review"
@@ -1618,6 +1618,13 @@
      "sandhi_issue": null
     },
     {
+     "text": "पुरुषार्थ",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='puruzArTa'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+1 other possible analyses)",
+     "suggestion": "पुरुषार्थैव",
+     "sandhi_issue": "External sandhi not applied before 'एव': the expected sandhi-joined form is 'पुरुषार्थैव' (वृद्धि सन्धि: 'अ'/'आ' + 'ए'/'ऐ'/'ओ'/'औ' -> वृद्धि). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "केनचित्",
      "status": "invalid",
      "analysis": null,
@@ -1629,7 +1636,7 @@
    "review_syntax_issues": [],
    "token_count": 14,
    "error_count": 0,
-   "review_count": 3,
+   "review_count": 4,
    "syntax_error_count": 0
   },
   {
@@ -1787,6 +1794,13 @@
    "error_tokens": [],
    "review_tokens": [
     {
+     "text": "अत",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Krdanta(dhatu_entry=DhatuEntry(dhatu=Dhatu(aupadeshika='ata~', gana=Gana.Bhvadi), clean_text='at', artha_sa='sAtatyagamane'), krt=Krt.Ga, prayoga=None, lakara=None), linga=Linga.Pum, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+4 other possible analyses)",
+     "suggestion": "अताह",
+     "sandhi_issue": "External sandhi not applied before 'आह': the expected sandhi-joined form is 'अताह' (सवर्ण-दीर्घ सन्धि: समान स्वर + समान स्वर -> दीर्घ स्वर). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "प्रदीपवच्चार्थतो",
      "status": "invalid",
      "analysis": null,
@@ -1798,7 +1812,7 @@
    "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
-   "review_count": 1,
+   "review_count": 2,
    "syntax_error_count": 0
   },
   {
@@ -2055,13 +2069,6 @@
      "sandhi_issue": null
     },
     {
-     "text": "भावना",
-     "status": "agreement_error",
-     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='BAvanA', is_nyap=True), lingas=[Linga.Stri]), linga=Linga.Pum, vibhakti=Vibhakti.Prathama, vacana=Vacana.Eka)  (+23 other possible analyses)",
-     "suggestion": null,
-     "sandhi_issue": null
-    },
-    {
      "text": "नान्यत्रेत्य्",
      "status": "invalid",
      "analysis": null,
@@ -2070,20 +2077,10 @@
     }
    ],
    "syntax_issues": [],
-   "review_syntax_issues": [
-    {
-     "token_text": "भावना",
-     "issue_type": "agreement_error",
-     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
-     "description": "'भावना' (Pum) does not agree in liNga with 'कर्तव्या' (Stri).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
-     "suggested_text": null,
-     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
-     "severity": "review"
-    }
-   ],
+   "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
-   "review_count": 3,
+   "review_count": 2,
    "syntax_error_count": 0
   },
   {
@@ -2229,6 +2226,13 @@
    "error_tokens": [],
    "review_tokens": [
     {
+     "text": "इत",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='ita'), lingas=[Linga.Napumsaka]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+9 other possible analyses)",
+     "suggestion": "इतेदमिति",
+     "sandhi_issue": "External sandhi not applied before 'इदमिति': the expected sandhi-joined form is 'इतेदमिति' (गुण सन्धि: 'अ'/'आ' + इक् स्वर -> गुण). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "इदमिति",
      "status": "invalid",
      "analysis": null,
@@ -2247,7 +2251,7 @@
    "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
-   "review_count": 2,
+   "review_count": 3,
    "syntax_error_count": 0
   },
   {
@@ -2450,30 +2454,13 @@
      "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='saMsarga'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+13 other possible analyses)",
      "suggestion": "संसर्गो",
      "sandhi_issue": "External sandhi not applied before 'योग्य': the expected sandhi-joined form is 'संसर्गो' (विसर्ग सन्धि: 'अस्' + घोष व्यञ्जन (हश्) -> 'ओ'). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
-    },
-    {
-     "text": "प्रतिभासा",
-     "status": "agreement_error",
-     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='pratiBAsa'), lingas=[Linga.Pum]), linga=Linga.Stri, vibhakti=Vibhakti.Prathama, vacana=Vacana.Eka)",
-     "suggestion": null,
-     "sandhi_issue": null
     }
    ],
    "syntax_issues": [],
-   "review_syntax_issues": [
-    {
-     "token_text": "प्रतिभासा",
-     "issue_type": "agreement_error",
-     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
-     "description": "'प्रतिभासा' (Stri) does not agree in liNga with 'प्रतीतिः' (Pum).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
-     "suggested_text": null,
-     "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
-     "severity": "review"
-    }
-   ],
+   "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
-   "review_count": 2,
+   "review_count": 1,
    "syntax_error_count": 0
   },
   {
@@ -4378,14 +4365,22 @@
    "text_iast": "tasya nāsti mokṣa iti",
    "text_deva": "तस्य नास्ति मोक्ष इति",
    "is_false_positive": false,
-   "has_review_flag": false,
+   "has_review_flag": true,
    "error_tokens": [],
-   "review_tokens": [],
+   "review_tokens": [
+    {
+     "text": "मोक्ष",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='mokza'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+9 other possible analyses)",
+     "suggestion": "मोक्षेति",
+     "sandhi_issue": "External sandhi not applied before 'इति': the expected sandhi-joined form is 'मोक्षेति' (गुण सन्धि: 'अ'/'आ' + इक् स्वर -> गुण). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    }
+   ],
    "syntax_issues": [],
    "review_syntax_issues": [],
    "token_count": 4,
    "error_count": 0,
-   "review_count": 0,
+   "review_count": 1,
    "syntax_error_count": 0
   },
   {
@@ -4434,6 +4429,13 @@
    ],
    "review_tokens": [
     {
+     "text": "मूढ",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='mUQa'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+5 other possible analyses)",
+     "suggestion": "मूढेत्येवं",
+     "sandhi_issue": "External sandhi not applied before 'इत्येवं': the expected sandhi-joined form is 'मूढेत्येवं' (गुण सन्धि: 'अ'/'आ' + इक् स्वर -> गुण). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "इत्येवं",
      "status": "invalid",
      "analysis": null,
@@ -4455,7 +4457,7 @@
    "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 1,
-   "review_count": 1,
+   "review_count": 2,
    "syntax_error_count": 1
   },
   {
@@ -4554,6 +4556,13 @@
      "sandhi_issue": null
     },
     {
+     "text": "उपशम",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='upaSama'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+17 other possible analyses)",
+     "suggestion": "उपशमेति",
+     "sandhi_issue": "External sandhi not applied before 'इति': the expected sandhi-joined form is 'उपशमेति' (गुण सन्धि: 'अ'/'आ' + इक् स्वर -> गुण). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "सङ्गदोषः",
      "status": "invalid",
      "analysis": null,
@@ -4565,7 +4574,7 @@
    "review_syntax_issues": [],
    "token_count": 7,
    "error_count": 0,
-   "review_count": 3,
+   "review_count": 4,
    "syntax_error_count": 0
   },
   {
@@ -4871,7 +4880,7 @@
      "token_text": "मृदा",
      "issue_type": "agreement_error",
      "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
-     "description": "'मृदा' (Pum) does not agree in liNga with 'लिप्तं' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "description": "'मृदा' (Pum/Stri) does not agree in liNga with 'लिप्तं' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
      "suggested_text": null,
      "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
      "severity": "review"
@@ -5966,6 +5975,13 @@
    "error_tokens": [],
    "review_tokens": [
     {
+     "text": "पुरुष",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='puruza'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+5 other possible analyses)",
+     "suggestion": "पुरुषेत्युपरिष्टाद्",
+     "sandhi_issue": "External sandhi not applied before 'इत्युपरिष्टाद्': the expected sandhi-joined form is 'पुरुषेत्युपरिष्टाद्' (गुण सन्धि: 'अ'/'आ' + इक् स्वर -> गुण). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "इत्युपरिष्टाद्",
      "status": "invalid",
      "analysis": null,
@@ -5977,7 +5993,7 @@
    "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
-   "review_count": 1,
+   "review_count": 2,
    "syntax_error_count": 0
   },
   {
@@ -6201,13 +6217,20 @@
      "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='mUla'), lingas=[Linga.Napumsaka]), linga=Linga.Pum, vibhakti=Vibhakti.Prathama, vacana=Vacana.Eka)  (+58 other possible analyses)",
      "suggestion": "मूलो",
      "sandhi_issue": "External sandhi not applied before 'दण्डः': the expected sandhi-joined form is 'मूलो' (विसर्ग सन्धि: 'अस्' + घोष व्यञ्जन (हश्) -> 'ओ'). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
+     "text": "योगक्षेम",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='yogakzema'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+1 other possible analyses)",
+     "suggestion": "योगक्षेमावहः",
+     "sandhi_issue": "External sandhi not applied before 'आवहः': the expected sandhi-joined form is 'योगक्षेमावहः' (सवर्ण-दीर्घ सन्धि: समान स्वर + समान स्वर -> दीर्घ स्वर). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
     }
    ],
    "syntax_issues": [],
    "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 0,
-   "review_count": 2,
+   "review_count": 3,
    "syntax_error_count": 0
   },
   {
@@ -6801,7 +6824,7 @@
      "token_text": "अविद्या",
      "issue_type": "agreement_error",
      "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
-     "description": "'अविद्या' (Pum) does not agree in liNga with 'क्षेत्रम्' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "description": "'अविद्या' (Pum/Stri) does not agree in liNga with 'क्षेत्रम्' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
      "suggested_text": null,
      "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
      "severity": "review"
@@ -6915,6 +6938,13 @@
      "sandhi_issue": null
     },
     {
+     "text": "तत",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='tata'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+5 other possible analyses)",
+     "suggestion": "ततैवोदितास्तद्बलेन",
+     "sandhi_issue": "External sandhi not applied before 'एवोदितास्तद्बलेन': the expected sandhi-joined form is 'ततैवोदितास्तद्बलेन' (वृद्धि सन्धि: 'अ'/'आ' + 'ए'/'ऐ'/'ओ'/'औ' -> वृद्धि). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "एवोदितास्तद्बलेन",
      "status": "invalid",
      "analysis": null,
@@ -6954,7 +6984,7 @@
    "review_syntax_issues": [],
    "token_count": 19,
    "error_count": 0,
-   "review_count": 6,
+   "review_count": 7,
    "syntax_error_count": 0
   },
   {
@@ -7149,7 +7179,7 @@
      "token_text": "विकृत्या",
      "issue_type": "agreement_error",
      "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
-     "description": "'विकृत्या' (Stri) does not agree in liNga with 'विनिमित्तं' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "description": "'विकृत्या' (Pum/Stri) does not agree in liNga with 'विनिमित्तं' (Napumsaka).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
      "suggested_text": null,
      "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
      "severity": "review"
@@ -7158,7 +7188,7 @@
      "token_text": "विनिमित्तं",
      "issue_type": "agreement_error",
      "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
-     "description": "'विनिमित्तं' (Napumsaka) does not agree in liNga with 'यः' (Pum).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
+     "description": "'विनिमित्तं' (Napumsaka) does not agree in liNga with 'यः' (Pum/Stri).  The morphological analysis reports more than one possible reading for at least one of these words, so this is offered for review rather than reported as a confirmed error.",
      "suggested_text": null,
      "rule_sutra": "विशेषणं विशेष्येण बहुलम् (विशेषण-विशेष्य-लिङ्ग-अन्वयः)",
      "severity": "review"
@@ -7341,6 +7371,13 @@
      "sandhi_issue": null
     },
     {
+     "text": "प्रयत्न",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='prayatna'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+6 other possible analyses)",
+     "suggestion": "प्रयत्नोत्पन्नः",
+     "sandhi_issue": "External sandhi not applied before 'उत्पन्नो': the expected sandhi-joined form is 'प्रयत्नोत्पन्नः' (गुण सन्धि: 'अ'/'आ' + इक् स्वर -> गुण). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "हस्तादेर्द्रव्यस्य",
      "status": "invalid",
      "analysis": null,
@@ -7359,7 +7396,7 @@
    "review_syntax_issues": [],
    "token_count": 12,
    "error_count": 0,
-   "review_count": 6,
+   "review_count": 7,
    "syntax_error_count": 0
   },
   {
@@ -8383,18 +8420,32 @@
    "error_tokens": [],
    "review_tokens": [
     {
+     "text": "अत",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Krdanta(dhatu_entry=DhatuEntry(dhatu=Dhatu(aupadeshika='ata~', gana=Gana.Bhvadi), clean_text='at', artha_sa='sAtatyagamane'), krt=Krt.Ga, prayoga=None, lakara=None), linga=Linga.Pum, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+4 other possible analyses)",
+     "suggestion": "अतोक्तम्",
+     "sandhi_issue": "External sandhi not applied before 'उक्तं': the expected sandhi-joined form is 'अतोक्तम्' (गुण सन्धि: 'अ'/'आ' + इक् स्वर -> गुण). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "षोडशकस्तु",
      "status": "invalid",
      "analysis": null,
      "suggestion": null,
      "sandhi_issue": null
+    },
+    {
+     "text": "विकार",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='vikAra'), lingas=[Linga.Pum]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+19 other possible analyses)",
+     "suggestion": "विकारेति",
+     "sandhi_issue": "External sandhi not applied before 'इति': the expected sandhi-joined form is 'विकारेति' (गुण सन्धि: 'अ'/'आ' + इक् स्वर -> गुण). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
     }
    ],
    "syntax_issues": [],
    "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
-   "review_count": 1,
+   "review_count": 3,
    "syntax_error_count": 0
   },
   {
@@ -8495,6 +8546,13 @@
    ],
    "review_tokens": [
     {
+     "text": "दण्ड",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='daRqA', is_nyap=True), lingas=[Linga.Stri]), linga=Linga.Napumsaka, vibhakti=Vibhakti.Sambodhana, vacana=Vacana.Eka)  (+12 other possible analyses)",
+     "suggestion": "दण्डात्मरागार्थम्",
+     "sandhi_issue": "External sandhi not applied before 'आत्मरागार्थम्': the expected sandhi-joined form is 'दण्डात्मरागार्थम्' (सवर्ण-दीर्घ सन्धि: समान स्वर + समान स्वर -> दीर्घ स्वर). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "आत्मरागार्थम्",
      "status": "invalid",
      "analysis": null,
@@ -8506,7 +8564,7 @@
    "review_syntax_issues": [],
    "token_count": 6,
    "error_count": 1,
-   "review_count": 1,
+   "review_count": 2,
    "syntax_error_count": 0
   },
   {

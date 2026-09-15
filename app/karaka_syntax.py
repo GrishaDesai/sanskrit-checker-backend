@@ -354,15 +354,36 @@ class KarakaSyntaxEngine:
         prathama_entries = [e for e in tok.nominal_entries if e.vibhakti == Vibhakti.Prathama]
         if not prathama_entries:
             return set()
-        # Same precedence as _rank_nominal_entries: an ordinary/basic nominal
-        # reading is preferred over a rarer secondary (कृदन्त-derived)
-        # formation. Only the single best-ranked reading's liNga is used
-        # (not a union across every same-rank homograph): vidyut's Kosha can
-        # carry several unrelated Basic pratipadikas under one bare surface
-        # key (e.g. नदी also matching an unrelated masculine/neuter proper
-        # noun), and unioning them back in would make almost any liNga
-        # "possible" for almost any word, defeating the check.
-        return {self._rank_nominal_entries(prathama_entries)[0].linga.name}
+        # Every liNga available at the best rank, not just the first one
+        # vidyut happened to return. Which of several equally-ranked Basic
+        # homographs comes back first is an artefact of Kosha ordering, not
+        # evidence: बाला carries five Basic Prathama readings, four Stri and
+        # one Pum (an unrelated बाला stem), and reading only the first entry
+        # made the correct पीताम्बरा बाला अस्ति look like a gender clash.
+        #
+        # The clash test is an intersection, so widening this set can only
+        # ever suppress a finding, never manufacture one -- and a liNga the
+        # analysis genuinely offers is a reading under which the two words do
+        # agree, which is not a defect to report at any tier. Restricting to
+        # one rank is what keeps this from collapsing: unioning across ranks
+        # would drag in every कृदन्त-derived homograph and make almost any
+        # liNga "possible" for almost any word, defeating the check.
+        return {e.linga.name for e in self._top_rank_prathama(tok)}
+
+    def _top_rank_prathama(self, tok) -> list:
+        """A token's best-ranked Prathama Subanta readings -- ordinary/Basic
+        preferred over the rarer कृदन्त-derived formations, the same
+        precedence `_rank_nominal_entries` applies. Returned as a list rather
+        than one entry, so callers can ask both what the liNga is and whether
+        it is settled."""
+        prathama = [e for e in getattr(tok, "nominal_entries", [])
+                    if e.vibhakti == Vibhakti.Prathama]
+        if not prathama:
+            return []
+        ranked = self._rank_nominal_entries(prathama)
+        best_is_basic = type(ranked[0].pratipadika_entry).__name__.endswith("Basic")
+        return [e for e in prathama
+                if type(e.pratipadika_entry).__name__.endswith("Basic") == best_is_basic]
 
     def _prathama_ambiguity(self, tok) -> tuple[bool, bool]:
         """(linga_is_ambiguous, vacana_is_ambiguous) for a token's Prathama reading.
@@ -386,14 +407,9 @@ class KarakaSyntaxEngine:
         the first place is not a confirmed defect, so callers demote it to
         review rather than dropping it.
         """
-        prathama = [e for e in getattr(tok, "nominal_entries", [])
-                    if e.vibhakti == Vibhakti.Prathama]
-        if not prathama:
+        top = self._top_rank_prathama(tok)
+        if not top:
             return False, False
-        ranked = self._rank_nominal_entries(prathama)
-        best_kind = type(ranked[0].pratipadika_entry).__name__.endswith("Basic")
-        top = [e for e in prathama
-               if type(e.pratipadika_entry).__name__.endswith("Basic") == best_kind]
         return (len({e.linga.name for e in top}) > 1,
                 len({e.vacana.name for e in top}) > 1)
 
