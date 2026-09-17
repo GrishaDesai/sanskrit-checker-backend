@@ -1,0 +1,1252 @@
+{
+ "_comment": "C1 hand labels (split correct/wrong). Labelled by Claude 2026-09-17, not second-reviewed. 'correct' = the pieces are the right underlying padas/stems for this word.",
+ "labels": [
+  {
+   "id": "A00",
+   "set": "accepted",
+   "word": "सूतेत्यादि",
+   "pieces": [
+    "sUtA",
+    "ityAdi"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A01",
+   "set": "accepted",
+   "word": "तथापि",
+   "pieces": [
+    "taTA",
+    "api"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A02",
+   "set": "accepted",
+   "word": "साप्यसामान्यैवेति",
+   "pieces": [
+    "sa",
+    "Api",
+    "asAmAnya",
+    "eva",
+    "Iti"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A03",
+   "set": "accepted",
+   "word": "यश्च",
+   "pieces": [
+    "yas",
+    "ca"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A04",
+   "set": "accepted",
+   "word": "कार्यनिष्पत्तिः",
+   "pieces": [
+    "kAri",
+    "anizpattis"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A05",
+   "set": "accepted",
+   "word": "मध्यतस्तु",
+   "pieces": [
+    "maDyatas",
+    "tu"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A06",
+   "set": "accepted",
+   "word": "चात्र",
+   "pieces": [
+    "ca",
+    "atra"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A07",
+   "set": "accepted",
+   "word": "खल्विदम्",
+   "pieces": [
+    "Kalu",
+    "idam"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A08",
+   "set": "accepted",
+   "word": "तथोक्तम्",
+   "pieces": [
+    "taTA",
+    "uktam"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A09",
+   "set": "accepted",
+   "word": "चास्ति",
+   "pieces": [
+    "ca",
+    "asti"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A10",
+   "set": "accepted",
+   "word": "चासति",
+   "pieces": [
+    "ca",
+    "asati"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A11",
+   "set": "accepted",
+   "word": "तथेन्द्रियाणि",
+   "pieces": [
+    "taTA",
+    "indriyARi"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A12",
+   "set": "accepted",
+   "word": "चित्तनिरोधे",
+   "pieces": [
+    "cit",
+    "tan",
+    "iras",
+    "De"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A13",
+   "set": "accepted",
+   "word": "चात्र",
+   "pieces": [
+    "ca",
+    "atra"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A14",
+   "set": "accepted",
+   "word": "बुद्ध्यापि",
+   "pieces": [
+    "budDi",
+    "Api"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A15",
+   "set": "accepted",
+   "word": "त्वात्",
+   "pieces": [
+    "tu",
+    "At"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A16",
+   "set": "accepted",
+   "word": "तदाह",
+   "pieces": [
+    "tadA",
+    "aha"
+   ],
+   "label": "unsure",
+   "true_compound": false
+  },
+  {
+   "id": "A17",
+   "set": "accepted",
+   "word": "अविद्येति",
+   "pieces": [
+    "avidyA",
+    "Iti"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A18",
+   "set": "accepted",
+   "word": "पण्योपघाते",
+   "pieces": [
+    "paRya",
+    "upaGAte"
+   ],
+   "label": "correct",
+   "true_compound": true
+  },
+  {
+   "id": "A19",
+   "set": "accepted",
+   "word": "चैषाम्",
+   "pieces": [
+    "ca",
+    "ezAm"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A20",
+   "set": "accepted",
+   "word": "स्यादिति",
+   "pieces": [
+    "syAt",
+    "iti"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A21",
+   "set": "accepted",
+   "word": "सत्त्वरजस्तमांसि",
+   "pieces": [
+    "sat",
+    "tu",
+    "arajas",
+    "tamAm",
+    "si"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A22",
+   "set": "accepted",
+   "word": "शंकरे",
+   "pieces": [
+    "Sam",
+    "kare"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A23",
+   "set": "accepted",
+   "word": "इदमिति",
+   "pieces": [
+    "idam",
+    "iti"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A24",
+   "set": "accepted",
+   "word": "स्याद्यद्विसर्पे",
+   "pieces": [
+    "syAt",
+    "yat",
+    "visarpe"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A25",
+   "set": "accepted",
+   "word": "त्वद्यापि",
+   "pieces": [
+    "tu",
+    "adya",
+    "api"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A26",
+   "set": "accepted",
+   "word": "एवानुसंदधत्",
+   "pieces": [
+    "eva",
+    "anusaMdaDat"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A27",
+   "set": "accepted",
+   "word": "वामुष्य",
+   "pieces": [
+    "vA",
+    "amuzya"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A28",
+   "set": "accepted",
+   "word": "स्पन्दात्मके",
+   "pieces": [
+    "spanda",
+    "Atmake"
+   ],
+   "label": "correct",
+   "true_compound": true
+  },
+  {
+   "id": "A29",
+   "set": "accepted",
+   "word": "स्वशब्देन",
+   "pieces": [
+    "su",
+    "aSabdena"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A30",
+   "set": "accepted",
+   "word": "प्रादुरस्ति",
+   "pieces": [
+    "prAdur",
+    "asti"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A31",
+   "set": "accepted",
+   "word": "तदास्य",
+   "pieces": [
+    "tadA",
+    "asya"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A32",
+   "set": "accepted",
+   "word": "मेध्याभ्यवहरणादि",
+   "pieces": [
+    "meDya",
+    "aByavaharaRa",
+    "Adi"
+   ],
+   "label": "correct",
+   "true_compound": true
+  },
+  {
+   "id": "A33",
+   "set": "accepted",
+   "word": "जनसंद्रावेषु",
+   "pieces": [
+    "janas",
+    "am",
+    "drAvezu"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A34",
+   "set": "accepted",
+   "word": "अस्तीति",
+   "pieces": [
+    "asti",
+    "Iti"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A35",
+   "set": "accepted",
+   "word": "कियत्यश्चेति",
+   "pieces": [
+    "kiyat",
+    "yas",
+    "ceti"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A36",
+   "set": "accepted",
+   "word": "यन्निसृष्टम्",
+   "pieces": [
+    "yat",
+    "nisfzwam"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A37",
+   "set": "accepted",
+   "word": "यश्च",
+   "pieces": [
+    "yas",
+    "ca"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A38",
+   "set": "accepted",
+   "word": "नास्तीन्द्रियाणाम्",
+   "pieces": [
+    "na",
+    "asti",
+    "indriyARAm"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A39",
+   "set": "accepted",
+   "word": "इतश्च",
+   "pieces": [
+    "itas",
+    "ca"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A40",
+   "set": "accepted",
+   "word": "चोक्तम्",
+   "pieces": [
+    "ca",
+    "uktam"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A41",
+   "set": "accepted",
+   "word": "इन्द्रियोत्पत्तौ",
+   "pieces": [
+    "indriya",
+    "utpattO"
+   ],
+   "label": "correct",
+   "true_compound": true
+  },
+  {
+   "id": "A42",
+   "set": "accepted",
+   "word": "अत्रेकारः",
+   "pieces": [
+    "atra",
+    "IkAras"
+   ],
+   "label": "unsure",
+   "true_compound": false
+  },
+  {
+   "id": "A43",
+   "set": "accepted",
+   "word": "शुष्काथवा",
+   "pieces": [
+    "Suzka",
+    "aTavA"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A44",
+   "set": "accepted",
+   "word": "चाधिमन्थे",
+   "pieces": [
+    "ca",
+    "aDimanTe"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A45",
+   "set": "accepted",
+   "word": "यच्च",
+   "pieces": [
+    "yat",
+    "ca"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A46",
+   "set": "accepted",
+   "word": "अजालावतते",
+   "pieces": [
+    "ajA",
+    "Ala",
+    "avatate"
+   ],
+   "label": "unsure",
+   "true_compound": false
+  },
+  {
+   "id": "A47",
+   "set": "accepted",
+   "word": "एवाभियोज्या",
+   "pieces": [
+    "eva",
+    "aBiyojyA"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A48",
+   "set": "accepted",
+   "word": "यमकादिषु",
+   "pieces": [
+    "yamaka",
+    "Adizu"
+   ],
+   "label": "correct",
+   "true_compound": true
+  },
+  {
+   "id": "A49",
+   "set": "accepted",
+   "word": "नोत्तमैर्",
+   "pieces": [
+    "na",
+    "uttama",
+    "a",
+    "Ir"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A50",
+   "set": "accepted",
+   "word": "नापि",
+   "pieces": [
+    "na",
+    "Api"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A51",
+   "set": "accepted",
+   "word": "व्याकुलीकरणे",
+   "pieces": [
+    "vI",
+    "AkulIkaraRe"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A52",
+   "set": "accepted",
+   "word": "अभिव्यक्तास्य",
+   "pieces": [
+    "aBivI",
+    "akta",
+    "asya"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A53",
+   "set": "accepted",
+   "word": "यतश्च",
+   "pieces": [
+    "yatas",
+    "ca"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A54",
+   "set": "accepted",
+   "word": "तेनैते",
+   "pieces": [
+    "tena",
+    "a",
+    "ite"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A55",
+   "set": "accepted",
+   "word": "मन्त्रमन्त्रेश्वरादयः",
+   "pieces": [
+    "mantf",
+    "amantra",
+    "ISvara",
+    "Adayas"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A56",
+   "set": "accepted",
+   "word": "तस्मान्नित्यः",
+   "pieces": [
+    "tasmAt",
+    "nityas"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A57",
+   "set": "accepted",
+   "word": "चोष्णे",
+   "pieces": [
+    "ca",
+    "uzRe"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A58",
+   "set": "accepted",
+   "word": "कारणान्तरस्य",
+   "pieces": [
+    "kAraRa",
+    "Antarasya"
+   ],
+   "label": "correct",
+   "true_compound": true
+  },
+  {
+   "id": "A59",
+   "set": "accepted",
+   "word": "यदपेक्षया",
+   "pieces": [
+    "yat",
+    "apekzayA"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A60",
+   "set": "accepted",
+   "word": "चन्दनोदुम्बरे",
+   "pieces": [
+    "candana",
+    "ut",
+    "umbare"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A61",
+   "set": "accepted",
+   "word": "तथापि",
+   "pieces": [
+    "taTA",
+    "api"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A62",
+   "set": "accepted",
+   "word": "एवावतिष्ठेत",
+   "pieces": [
+    "eva",
+    "avatizWeta"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A63",
+   "set": "accepted",
+   "word": "बुद्ध्यादयः",
+   "pieces": [
+    "budDi",
+    "Adayas"
+   ],
+   "label": "correct",
+   "true_compound": true
+  },
+  {
+   "id": "A64",
+   "set": "accepted",
+   "word": "एवापेक्ष्यते",
+   "pieces": [
+    "eva",
+    "Apekzyate"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A65",
+   "set": "accepted",
+   "word": "इहेति",
+   "pieces": [
+    "iha",
+    "Iti"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A66",
+   "set": "accepted",
+   "word": "ह्येतत्",
+   "pieces": [
+    "hi",
+    "etat"
+   ],
+   "label": "correct",
+   "true_compound": false
+  },
+  {
+   "id": "A67",
+   "set": "accepted",
+   "word": "भूत्",
+   "pieces": [
+    "Bu",
+    "ut"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A68",
+   "set": "accepted",
+   "word": "सत्त्वतमसी",
+   "pieces": [
+    "sat",
+    "tu",
+    "atamas",
+    "I"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A69",
+   "set": "accepted",
+   "word": "इत्येतानि",
+   "pieces": [
+    "ityA",
+    "itAni"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "A70",
+   "set": "accepted",
+   "word": "तमादिशेत्",
+   "pieces": [
+    "tama",
+    "AdiSet"
+   ],
+   "label": "wrong",
+   "true_compound": false
+  },
+  {
+   "id": "R00",
+   "set": "rejected_sample_seed17",
+   "word": "अयमाम्नातः",
+   "pieces": [
+    "ayam",
+    "AmnAtas"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R01",
+   "set": "rejected_sample_seed17",
+   "word": "षोडशकस्तु",
+   "pieces": [
+    "zoqaSakas",
+    "tu"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R02",
+   "set": "rejected_sample_seed17",
+   "word": "ईश्वरस्यैकैकशः",
+   "pieces": [
+    "ISvarasya",
+    "ek",
+    "a",
+    "ek",
+    "aSas"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R03",
+   "set": "rejected_sample_seed17",
+   "word": "तुष्टस्तस्य",
+   "pieces": [
+    "tuzwas",
+    "tasya"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R04",
+   "set": "rejected_sample_seed17",
+   "word": "आकारेणात्मनो",
+   "pieces": [
+    "AkAreRa",
+    "At",
+    "mano"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R05",
+   "set": "rejected_sample_seed17",
+   "word": "वैचित्र्याच्च",
+   "pieces": [
+    "vEcitryAt",
+    "ca"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R06",
+   "set": "rejected_sample_seed17",
+   "word": "वानुव्यवसीयेतेति",
+   "pieces": [
+    "vA",
+    "anuvyavasIyeta",
+    "Iti"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R07",
+   "set": "rejected_sample_seed17",
+   "word": "तद्युवतीनाम्",
+   "pieces": [
+    "tat",
+    "yuvatInAm"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R08",
+   "set": "rejected_sample_seed17",
+   "word": "वियुज्यत",
+   "pieces": [
+    "viyuji",
+    "ata"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R09",
+   "set": "rejected_sample_seed17",
+   "word": "मिथोविरुद्धान्यप्यनुवर्त्स्यन्ति",
+   "pieces": [
+    "miTas",
+    "virudDAni",
+    "api",
+    "anuva",
+    "ft",
+    "si",
+    "anti"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R10",
+   "set": "rejected_sample_seed17",
+   "word": "सततोद्युक्त",
+   "pieces": [
+    "sat",
+    "atodi",
+    "ukta"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R11",
+   "set": "rejected_sample_seed17",
+   "word": "हरिताश्च",
+   "pieces": [
+    "haritAs",
+    "ca"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R12",
+   "set": "rejected_sample_seed17",
+   "word": "स्वरसंक्षये",
+   "pieces": [
+    "svarasam",
+    "kzaye"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R13",
+   "set": "rejected_sample_seed17",
+   "word": "बुद्ध्यहंकारमनोभूमिषु",
+   "pieces": [
+    "budDi",
+    "aham",
+    "kAram",
+    "anas",
+    "BUm",
+    "izu"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R14",
+   "set": "rejected_sample_seed17",
+   "word": "कर्मान्यत्वे",
+   "pieces": [
+    "karma",
+    "An",
+    "yat",
+    "ve"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R15",
+   "set": "rejected_sample_seed17",
+   "word": "स्वातन्त्र्ययोगः",
+   "pieces": [
+    "svA",
+    "atantri",
+    "ayogas"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R16",
+   "set": "rejected_sample_seed17",
+   "word": "वस्तुसाम्ये",
+   "pieces": [
+    "vastus",
+    "As",
+    "mye"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R17",
+   "set": "rejected_sample_seed17",
+   "word": "विविक्तदर्शनस्यालाभे",
+   "pieces": [
+    "vivik",
+    "tat",
+    "ar",
+    "San",
+    "asyAs",
+    "lABe"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R18",
+   "set": "rejected_sample_seed17",
+   "word": "धनुर्वेदादिष्वपि",
+   "pieces": [
+    "Danurveda",
+    "Adizu",
+    "api"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R19",
+   "set": "rejected_sample_seed17",
+   "word": "उपासकलोकसंवेदनेन",
+   "pieces": [
+    "up",
+    "Asak",
+    "alokas",
+    "am",
+    "vedanena"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R20",
+   "set": "rejected_sample_seed17",
+   "word": "अकर्मनिमित्ते",
+   "pieces": [
+    "aka",
+    "Fm",
+    "animitte"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R21",
+   "set": "rejected_sample_seed17",
+   "word": "मरणमृच्छति",
+   "pieces": [
+    "maraRam",
+    "fcCati"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R22",
+   "set": "rejected_sample_seed17",
+   "word": "अभ्यागच्छतीति",
+   "pieces": [
+    "aByAgacCat",
+    "Iti"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R23",
+   "set": "rejected_sample_seed17",
+   "word": "तद्दृशेः",
+   "pieces": [
+    "tat",
+    "dfSes"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R24",
+   "set": "rejected_sample_seed17",
+   "word": "भिन्नवेद्यविषय",
+   "pieces": [
+    "Bit",
+    "nava",
+    "it",
+    "i",
+    "avizaya"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R25",
+   "set": "rejected_sample_seed17",
+   "word": "भेदैकसारान्",
+   "pieces": [
+    "Beda",
+    "ek",
+    "asArAn"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R26",
+   "set": "rejected_sample_seed17",
+   "word": "तस्याश्रयः",
+   "pieces": [
+    "tasya",
+    "ASrayas"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R27",
+   "set": "rejected_sample_seed17",
+   "word": "चेदुदरे",
+   "pieces": [
+    "ca",
+    "it",
+    "udare"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R28",
+   "set": "rejected_sample_seed17",
+   "word": "केवलमानुषायेति",
+   "pieces": [
+    "kevalamAnuzAya",
+    "Iti"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R29",
+   "set": "rejected_sample_seed17",
+   "word": "कुलत्थोत्थश्च",
+   "pieces": [
+    "kulatTa",
+    "utTas",
+    "ca"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R30",
+   "set": "rejected_sample_seed17",
+   "word": "दोषमेवमवगमयेत्",
+   "pieces": [
+    "dozam",
+    "evam",
+    "avagamayA",
+    "it"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R31",
+   "set": "rejected_sample_seed17",
+   "word": "इतरत्तु",
+   "pieces": [
+    "itarat",
+    "tu"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R32",
+   "set": "rejected_sample_seed17",
+   "word": "सवर्णसंज्ञायाम्",
+   "pieces": [
+    "sas",
+    "varRas",
+    "am",
+    "jYAyAm"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R33",
+   "set": "rejected_sample_seed17",
+   "word": "रोगाद्विमुच्यते",
+   "pieces": [
+    "rogAt",
+    "vimucyate"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R34",
+   "set": "rejected_sample_seed17",
+   "word": "सासूयाया",
+   "pieces": [
+    "sa",
+    "AsUya",
+    "ayA"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R35",
+   "set": "rejected_sample_seed17",
+   "word": "प्रत्ययवती",
+   "pieces": [
+    "pratI",
+    "ayavatI"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R36",
+   "set": "rejected_sample_seed17",
+   "word": "करोत्वयम्",
+   "pieces": [
+    "karotu",
+    "ayam"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R37",
+   "set": "rejected_sample_seed17",
+   "word": "यद्यप्यव्यक्तस्यास्ति",
+   "pieces": [
+    "yadi",
+    "api",
+    "avyaktasya",
+    "asti"
+   ],
+   "label": "correct"
+  },
+  {
+   "id": "R38",
+   "set": "rejected_sample_seed17",
+   "word": "पतिसमः",
+   "pieces": [
+    "patis",
+    "am",
+    "as"
+   ],
+   "label": "wrong"
+  },
+  {
+   "id": "R39",
+   "set": "rejected_sample_seed17",
+   "word": "चानिवेद्य",
+   "pieces": [
+    "cAs",
+    "nivedya"
+   ],
+   "label": "wrong"
+  }
+ ]
+}

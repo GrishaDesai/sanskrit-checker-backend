@@ -64,6 +64,7 @@ def check_text(payload: CheckRequest):
                 rule=t.rule,
                 sandhi_issue=t.sandhi_issue,
                 karaka_issue=t.karaka_issue,
+                samasa_issue=t.samasa_issue,
             )
             for t in result.tokens
         ],

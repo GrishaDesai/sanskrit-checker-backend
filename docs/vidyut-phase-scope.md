@@ -636,6 +636,7 @@ Ordered by measured value, not by how interesting the problem is.
    81.9% review-tier rate. Nothing else comes close. A compound segmenter that
    returns calibrated confidence would address both at once. This is the single
    highest-value item in the entire backlog.
+   **Planned 2026-09-17 as stages C0–C8 and closed the same day: C4 and C5a shipped at ⚪, the rest measured and not built — see §10.11. The segmentation need itself is unchanged.**
 2. ~~**Dependency parsing (§4.3).**~~ **CLOSED 2026-09-11 — see §4.11.**
    Re-measured with a substantially improved verb/tag layer (bridge UPOS
    34.3% → 47.2%). Subject precision did not move (25.1% → 25.3%) and its
@@ -674,6 +675,587 @@ phase**: every change measured against both sets before being kept, reverted
 on any false-positive increase, and no heuristic shipped that has not been
 measured against real prose. Five reverts (§5) are the evidence that this is
 not ceremony.
+
+## 10. Samāsa phase plan (2026-09-17)
+
+Supersedes the "a segmenter with calibrated confidence" framing of §9 item 1
+as the *route*; the goal is unchanged.
+
+### 10.1 Findings this plan rests on
+
+- **`all_known` carries no information.** Over the 477 unrecognised DCS tokens,
+  the 234 that Chedaka splits into 2+ pieces and the 234 whose pieces are all
+  "known" are the *same* tokens: Chedaka only returns splits it recognises.
+  The Kosha also returns entries for junk pieces (`Fm`: 6 entries), so lexicon
+  presence cannot reject a split either.
+- **A shape test does discriminate.** "Does this piece's surface equal its own
+  prātipadika?" separates `rAja` (stem, 1 reading) from `rAjYas` (inflected,
+  0) and rejects the junk piece `Fm` (0). This is सुपो धातुप्रातिपदिकयोः
+  (२.४.७१) read positively — non-final members are bare stems. It is a filter
+  on whole splits, not a per-piece oracle: `aka` passes as a stem, and
+  `अकर्मनिमित्ते → aka+Fm+animitte` dies only because its other pieces fail.
+- **SanskritShala's compound module (SaCTI) cannot detect errors.** Its input is
+  a compound *already split* into members; its output is one of 4 coarse / 15
+  fine types; it has no "invalid" output. Apache-2.0.
+- **SanskritShala's segmenter (TransLIST) cannot run in-process.** F1 98.9%
+  (SIGHUM) / 97.6% (Hackathon), but it needs Python 3.7, a conda env, and
+  installs by copying patched files into `fastNLP`'s site-packages. Viable
+  only as a one-off offline harvester; parked.
+- **Current behaviour on real samāsa errors.** `राज्ञःपुरुषः`, `रामलक्ष्मणः`,
+  `पुरुषराजः` → ⚪ review, indistinguishable from their correct counterparts
+  and from junk (`गजपुस्तकनदी`). `पीताम्बरः बाला`, `उपकृष्णः` → silent.
+  `KNOWN_SAMASAS` (6 hardcoded entries) only populates a display list and
+  never raises a finding.
+
+### 10.2 What is reachable, by compound type
+
+An error is decidable from form only when the written form is wrong under
+**every** type the compound could be. The same string is often several types
+(`पीताम्बरः`: कर्मधारय "yellow cloth" / बहुव्रीहि "he whose cloth is yellow").
+
+| Type | Reachable from form | Tier ceiling |
+|---|---|---|
+| अव्ययीभाव | mostly — indeclinable first member is a visible marker; -म् ending, vowel shortening, indeclinability | ⚪, some 🔴 |
+| तत्पुरुष (incl. कर्मधारय, द्विगु) | partly — महा, samāsānta, last-member gender, द्विगु number | mostly ⚪ |
+| द्वन्द्व | partly — number and gender; a तत्पुरुष reading can never be excluded | ⚪ only |
+| केवल | only the rule shared by all types (२.४.७१) | 🔴 where no exception |
+| बहुव्रीहि | not reachable — agreement follows an external referent | — |
+
+Type *labelling* from form works only for अव्ययीभाव and द्विगु.
+
+### 10.3 Rules for every stage
+
+- One stage at a time, with approval before the next.
+- Gold and DCS run before and after, compared per test. Any regression is
+  reported, not explained away.
+- **🔴 only if** the finding fires on none of the 260 DCS sentences and is
+  silent on every correct sentence in the samāsa test set. Otherwise ⚪, or
+  not shipped.
+- Cold start checked every stage.
+- Each finding gets its own margin message (extend `reviewReason` in the
+  frontend), never the generic lexicon line.
+
+### 10.4 Stages
+
+| Stage | What | Kind | Tier |
+|---|---|---|---|
+| C0 | Samāsa test set + baseline | setup | — |
+| C1 | Test the shape check (measurement only) | **go/no-go** | — |
+| C2 | Recognise well-formed compounds | cuts noise | — |
+| C3 | Case ending kept inside a compound (२.४.७१) | error | 🔴 if clean |
+| C4 | अव्ययीभाव ending rules | error | ⚪, maybe 🔴 |
+| C5 | तत्पुरुष form rules (महा, samāsānta) | error | 🔴 if clean |
+| C6 | Compound takes gender of last member | error | ⚪ |
+| C7 | Collective द्विगु must be singular | error | ⚪ |
+| C8 | द्वन्द्व number | error | ⚪ |
+
+**C0 — Samāsa test set and baseline.** Gold has almost no samāsa cases, so
+precision for C3–C8 cannot be measured without new ones. A self-written set
+with a wrong form and its correct counterpart for every rule, plus the correct
+forms each rule could wrongly flag: अलुक् compounds (`सरसिजम्`, `युधिष्ठिरः`,
+`वनेचरः`, `परस्मैपदम्`), `उपाध्यायः` (उप-initial, not अव्ययीभाव), `पाणिपादम्`
+(correct neuter-singular द्वन्द्व), बहुव्रीहि with unusual gender. Baseline
+already measured: gold 139/155, DCS FP 17/260 (6.5%), review-only 83.1%,
+unrecognised 477/1617, 234 split.
+
+**C1 — Shape check, measurement only.** Non-final members bare stems, final
+member inflected. Run over the 477 unrecognised DCS tokens and hand-check a
+sample. Report correct compounds accepted, junk splits rejected
+(`अकर्मनिमित्ते`), and meaningless compounds accepted (`गजपुस्तकनदी`).
+**If it cannot separate correct compounds from junk reliably, stop** — every
+later stage depends on it.
+
+**C2 — Recognition.** A shape-valid token leaves the review list, or at
+minimum gets "Likely a compound" (chosen from the C1 numbers). Review rate
+should fall; DCS FP must not rise; gold unchanged. Known cost: meaningless
+compounds also go quiet.
+
+**C3 — Case ending retained (सुपो धातुप्रातिपदिकयोः २.४.७१).**
+`राज्ञःपुरुषः` → `राजपुरुषः`. Exempt अलुक् compounds (६.३.१ ff.).
+
+**C4 — अव्ययीभाव.** Detected by an indeclinable first member (उप, अनु, प्रति,
+यथा, सह…). 4a: ends in -म् (नाव्ययीभावादतोऽम्त्वपञ्चम्याः २.४.८३), allowing
+optional -ात्. 4b: final long vowel shortened, `उपगङ्गम्` (ह्रस्वो नपुंसके
+प्रातिपदिकस्य १.२.४७) — best 🔴 candidate. 4c: no declined ending (अव्ययीभावश्च
+१.१.४१). Default ⚪ because of `उपाध्यायः`-type forms; sub-rules measured
+separately.
+
+**C5 — तत्पुरुष form rules, each measured separately.** 5a: `महत्पुरुषः` →
+`महापुरुषः` (आन्महतः समानाधिकरणजातीययोः ६.३.४६). 5b: `महाराजा` → `महाराजः`
+(राजाहस्सखिभ्यष्टच् ५.४.९१).
+
+**C6 — Last-member gender (परवल्लिङ्गं द्वन्द्वतत्पुरुषयोः २.४.२६).**
+`राजकन्यः` → `राजकन्या`. ⚪ only — a बहुव्रीहि may take another gender.
+
+**C7 — Collective द्विगु singular (द्विगुरेकवचनम् २.४.१).** Numeral first
+member. ⚪ only — बहुव्रीहि such as `पञ्चाननः` look identical.
+
+**C8 — द्वन्द्व number.** Separate-item द्वन्द्व is dual for two members,
+plural for three+; collective is neuter singular. `रामलक्ष्मणः` fits none. ⚪
+only — a तत्पुरुष reading cannot be excluded; member count depends on C1.
+
+### 10.5 Not in this plan
+
+- बहुव्रीहि agreement, member order, meaningless compounds — need meaning.
+- Compound type labels (SaCTI) — a label changes no finding.
+- TransLIST in-process — Python 3.7 + patched `fastNLP`; offline harvest parked.
+- Any DCS-derived data — DCS has no licence.
+
+### 10.6 C0 results (2026-09-17)
+
+**Built.**
+- `scripts/build_samasa_dataset.py` → `tests/gold/samasa.json`: 49 self-written
+  cases, same schema as the main gold set. 33 correct sentences (in scope from
+  day one, guarding the 🔴 gate) and 16 wrong forms (known gaps until their
+  stage ships). Section numbers 101–108, so they can never collide with gold.
+- `scripts/evaluate_gold.py --dataset <file>`: optional flag, default
+  unchanged. Main gold re-run afterwards is **byte-identical** to the previous
+  run (139/155).
+
+**Baseline — correct sentences (33).**
+
+| Outcome | Count |
+|---|---|
+| clean | 13 |
+| ⚪ review noise | 19 |
+| 🔴 false positive | **1** |
+
+⚪ noise by section: correct compounds 6/8, C3 negatives 5/8, C4 2/5,
+C5 0/3, C6 2/2, C7 2/3, C8 2/4.
+
+**The one 🔴 is pre-existing and not samāsa-related.** `मातापितरौ नमामि।` —
+and equally `पितरौ नमामि।` — is flagged as a subject-verb agreement error.
+`नमामि` is उत्तम पुरुष, so its कर्ता is an unstated अहम् (अस्मद्युत्तमः
+१.४.१०७); `पितरौ` is the object, whose dual accusative is spelled like the dual
+nominative. The agreement check takes it as the subject. `अहं मातापितरौ
+नमामि।` is clean. Logged, not fixed in C0; it needs its own cycle in
+`karaka_syntax.py`, with gold and DCS measured.
+
+**Fixed 2026-09-17, as its own step before C1.** When every reading of the
+verb is उत्तम or मध्यम पुरुष, its कर्ता is an unstated अहम्/त्वम्, so a nominal
+whose Prathamā is spelled like its own Dvitīyā — same prātipadika, liṅga and
+vacana (every dual in -औ, every neuter in -म्) — can be the verb's object, and
+no agreement error is asserted. New helper
+`KarakaSyntaxEngine._prathama_is_also_dvitiya`. `रामः पठसि।` (gold 6-53) keeps
+its 🔴: रामः has no Dvitīyā reading. The change can only remove findings.
+
+| | Before | After |
+|---|---|---|
+| Gold | 139/155 | **byte-identical per test** |
+| Samāsa set, correct sentences | 32/33 | **33/33** |
+| DCS false positives | 17/260 (6.5%) | 17/260 (6.5%) |
+| DCS syntax findings | 3 🔴, 5 ⚪ | 3 🔴, 5 ⚪ — none removed |
+
+Probe: `पितरौ नमामि।`, `वनं पश्यामि।`, `फलानि खादसि।`, `बालकौ पठामि।` now clean;
+`रामः पठसि।`, `रामः पठामि।`, `बालकः पठामि।` still 🔴.
+
+**Baseline — wrong forms (16).** No wrong form gets a finding specific to its
+rule. 14 get a generic ⚪ (lexicon or sandhi note) that looks the same as the
+noise on their correct counterparts, and 2 are completely silent: `उपकृष्णः`
+(C4a) and `त्रिभुवनानि` (C7).
+
+**Harness caveat for later stages.** The evaluator passes a `review` target on
+anything short of 🔴, including silence and generic noise, so the
+known-gap line (9/16) overstates the baseline — the real figure is 0/16. From
+C2 on, a ⚪-target case only counts as caught if it raises a finding on
+`expected_error_surface` whose reason is the stage's own rule.
+
+**Caveat on the cases themselves.** The Sanskrit in `samasa.json` was written
+for this plan and has not been reviewed by a second person. Treat a surprising
+result on any case as a reason to re-check the case, not only the engine.
+
+### 10.7 C1 results (2026-09-17) — gate failed
+
+**Built** (read-only, changes nothing in the product):
+- `tests/dcs_eval/c1_shape_check.py` — applies the shape check to every token
+  the product leaves unrecognised at ⚪ on the Experiment-1 DCS sample.
+- `tests/dcs_eval/c1_labels.json` — hand labels for all 71 accepts and a
+  seeded (17) sample of 40 rejects. Labelled once, not second-reviewed.
+
+**DCS gold was not usable.** The candidate file dropped DCS's multiword
+ranges; recovering them from the `standalone` flag failed on 142/260
+sentences and mis-aligned others (`तथोक्तम्` matched to `utpadyate`). The
+alignment table the script prints is not to be trusted; the labels are.
+
+**Correct text: 477 unrecognised tokens.**
+
+| Shape verdict | Tokens |
+|---|---|
+| no split | 243 |
+| non-final piece not a stem | 163 |
+| **compound shape (accepted)** | **71 (14.9%)** |
+
+| Hand label | Accepted (71) | Rejected sample (40) |
+|---|---|---|
+| split correct | 43 | 15 |
+| split wrong | 25 | 25 |
+| unsure | 3 | — |
+
+- **Precision on accepts ≈ 63%** (43 of 68 decided).
+- **Only 7 of the 43 correct accepts are real compounds** (`स्पन्दात्मके`,
+  `इन्द्रियोत्पत्तौ`, `कारणान्तरस्य`, `बुद्ध्यादयः`, `यमकादिषु`,
+  `पण्योपघाते`, `मेध्याभ्यवहरणादि`). The other 36 are sandhi-joined phrases
+  (`तथापि`, `यश्च`, `चात्र`): an avyaya's prātipadika is spelled like the avyaya
+  itself, so particles pass as compound members.
+- Junk comes in two shapes: very short real pieces (`चित्तनिरोधे →
+  cit+tan+iras+De`, `सत्त्वरजस्तमांसि → sat+tu+arajas+tamAm+si`) and `iti`/`api`
+  read with a long vowel (`अस्तीति → asti+Iti`, `नापि → na+Api`).
+- The 15 correct rejects are all ordinary phrases (`तुष्टस्तस्य`,
+  `रोगाद्विमुच्यते`) — correctly not compounds, but correct Sanskrit.
+
+**Misspelled text: Experiment 2, 100 multi-letter typos.** 13 already get 🔴
+with a correction; 87 get ⚪. Of those 87, **6 (6.9%) pass the shape check**,
+every one on a junk split (`स्थापयस् → sTA+Apayas`, `शोजैः → Sas+jEs`,
+`वेषुः → vA+Izus`).
+
+**What that means for C2.** Silencing shape-passing tokens would remove 71 of
+477 ⚪ flags on correct text (14.9%) and silence 6 of 87 ⚪ typos (6.9%). The
+check is only about twice as likely to pass a correct word as a misspelled
+one, and on correct text it mostly recognises particle phrases, not compounds.
+That does not meet "separates correct compounds from junk reliably". **C2 as
+specified is not built.**
+
+**Correction to §10.4.** C1's go/no-go note said every later stage depends on
+the shape check. That overstated it:
+- **C3** (case ending retained) does depend on splits; with 25 of 71 accepted
+  splits wrong it cannot be 🔴 on this evidence, and needs its own precision
+  measurement before anything ships.
+- **C4, C5, C7** key off a visible first member (उप/प्रति…, महत्, a numeral) and
+  do not need the general shape check. They remain buildable.
+- **C6, C8** need the members identified, so they inherit C1's weakness.
+
+Not tried, to avoid tuning on the data used to judge it: minimum piece length,
+excluding long-vowel `Iti`/`Api` pieces, or a particle-phrase rule. Any of these
+needs a held-out sample before it counts.
+
+### 10.8 C4 results (2026-09-17) — shipped at ⚪
+
+**What it does.** An *unrecognised* word that reads as an अव्ययीभाव head
+(`AVYAYIBHAVA_HEADS`: यावत्, अन्तर्, बहिस्, प्रति, यथा, उप, अनु, अधि) plus a
+declined form of exactly one kind of final member gets `status:
+"samasa_error"`, severity ⚪, the compound's expected spelling as its
+suggestion, and the sūtra that produces that spelling:
+
+| Written | Suggested | Sūtra cited |
+|---|---|---|
+| `उपगङ्गाम्` | `उपगङ्गम्` | ह्रस्वो नपुंसके प्रातिपदिकस्य (१.२.४७) |
+| `उपनद्याम्` | `उपनदि` | ह्रस्वो नपुंसके प्रातिपदिकस्य (१.२.४७) |
+| `प्रतिदिनेषु` | `प्रतिदिनम्` | नाव्ययीभावादतोऽम्त्वपञ्चम्याः (२.४.८३) |
+| `यथाशक्तिः`, `यथाविधिः` | `यथाशक्ति`, `यथाविधि` | अव्ययादाप्सुपः (२.४.८२) |
+
+The optional -आत्/-एन/-ए forms of an अ-final member (२.४.८३, २.४.८४) are
+accepted. If the member's readings disagree on the spelling, nothing is
+offered. Only ordinary (Basic) प्रातिपदिकs are read: a कृदन्त entry's lemma is its
+root, not its stem.
+
+Also added: `_is_avyayibhava_luk_form` recognises यथा- + a bare इ/उ member
+(`यथाशक्ति`, which drew ⚪ "not in lexicon" before). Limited to यथा- because a
+bare इ/उ word under उप/अनु/प्रति is also what a dropped visarga looks like
+(`अनुभूति` for `अनुभूतिः`), and recognition runs ahead of the spelling
+corrector.
+
+**The safety comes from one gate: never re-read a word the lexicon carries.**
+Without it the rule would "correct" correct prādi nouns — `उपवनानि` →
+`उपवनम्`, `उपकरणानि`, `उपमानानि`, `प्रतिबिम्बानि`, `प्रतिज्ञाम्` → `प्रतिज्ञम्`.
+All of these, and all 37 prādi/other compounds sampled, are in the Kosha. The
+same gate puts `उपकृष्णः` (S104-01) out of reach: the Kosha carries उपकृष्ण.
+
+**Why ⚪ and not 🔴 for the vowel-shortening rule.** The plan's 🔴 gate is "fires
+on no DCS sentence". Only 9 unrecognised DCS words start with a head at all,
+and none splits into head + known member, so the rule had nothing to fire on —
+passing that gate would have been vacuous, not evidence. The head alone also
+does not prove the word is an अव्ययीभाव rather than an unlisted prādi compound.
+
+**API.** `TokenResult.samasa_issue` / `TokenOut.samasa_issue` added (additive).
+Frontend: `reviewReason` returns `'samasa'`; margin line "As an अव्ययीभाव
+compound, expected …"; popover shows the full note, and keeps a samāsa note
+visible as "Also" if a syntax error later takes over the token.
+
+**Harness.** `evaluate_gold.py` honours an optional `expected_status`: a case
+naming one passes only if that word carries that exact finding, so silence and
+generic ⚪ no longer count. No main-gold case has the field.
+
+**Measurements.**
+
+| | Before | After |
+|---|---|---|
+| Gold | 139/155 | **byte-identical per test** |
+| Samāsa set, in scope | 33/33 | **47/47** (42 correct + 5 wrong forms, strict status) |
+| DCS false positives | 17/260 (6.5%) | 17/260 (6.5%) |
+| DCS review-only / clean | 216 / 27 | 216 / 27 |
+| Experiment 2 recall | 15/206 | 15/206, **per-case JSON identical** (A/B on the engine file) |
+| Cold start | — | 1.63 s |
+
+**Logged, not fixed (pre-existing, found while testing).** The visarga-sandhi
+note suggests `सो गच्छति` / `एषो गच्छति`. Before a consonant सः and एषः drop
+the visarga — `स गच्छति`, `एष गच्छति` (एतत्तदोः सुलोपोऽकोरनञ्समासे हलि
+६.१.१३२). Before short अ, `सोऽपि` is correct and is suggested correctly. It is
+a ⚪ note with a wrong suggestion; it needs its own cycle in
+`app/sandhi_checker.py`. **Fixed — see §10.9.**
+
+### 10.9 सः/एषः sandhi fix (2026-09-17)
+
+Fixes the ⚪ note logged in §10.8. `SandhiChecker.check_junction` now applies
+एतत्तदोः सुलोपोऽकोरनञ्समासे हलि (६.१.१३२) ahead of the general visarga rules.
+
+| Written | Before | After |
+|---|---|---|
+| `सः गच्छति` | ⚪ suggest `सो` (हशि च) | ⚪ suggest **`स`** (६.१.१३२) |
+| `एषः गच्छति` | ⚪ suggest `एषो` | ⚪ suggest **`एष`** |
+| `सो गच्छति`, `एषो गच्छति` | silently accepted | ⚪ suggest `स` / `एष` |
+| `स गच्छति`, `एष गच्छति`, `सोऽपि`, `यो`, `को`, `रामो` | — | unchanged |
+| `सः पठति` (voiceless) | silent | **still silent** |
+
+The sūtra also covers voiceless consonants, and the first version flagged
+`सः पठति` too. That put a new ⚪ on gold 11-114 `सः संस्कृतं पठति।`, a case named
+*must_not_flag*, and on 14-146 `सः तत् करोति।`. `सः` before a voiceless consonant
+is the ordinary modern spelling, so the note is now raised only where one was
+raised before (a voiced consonant) or where the written form is the wrong -ओ
+one. Gold byte-identical after that change.
+
+### 10.10 C5 results (2026-09-17) — 5a shipped at ⚪, 5b not built
+
+**5a — महत् → महा (आन्महतः समानाधिकरणजातीययोः ६.३.४६), shipped ⚪.** An
+*unrecognised* word written with any पदान्त spelling of महत् (`MAHAT_SPELLINGS`:
+महत्/महद्/महन्/महच्/महज्/महल्) followed by a known ordinary word gets
+`samasa_error` with महा- substituted, applying sandhi where the member begins
+with a vowel:
+
+| Written | Suggested |
+|---|---|
+| `महत्पुरुषः` | `महापुरुषः` |
+| `महत्देवः`, `महद्देवः` | `महादेवः` |
+| `महदीश्वरः` | `महेश्वरः` |
+
+⚪ because the sūtra covers only a कर्मधारय or बहुव्रीहि; a षष्ठी-तत्पुरुष keeps
+महत्- (`महत्सेवा`, "service of the great") and form alone cannot tell them
+apart. Same lexicon gate as C4: every correct महत्- word sampled (`महत्सेवा`,
+`महत्त्वम्`, `महत्तरः`, `महत्तमः`, `महद्भ्यः`) is in the Kosha and is never
+re-read.
+
+**5b — राजन्/सखि + टच् (राजाहस्सखिभ्यष्टच् ५.४.९१), not built.** The errors it
+targets — `महाराजा`, `देवराजा`, `धर्मराजा`, `कृष्णसखा` — are all *in the lexicon*,
+because each is the correct spelling of a बहुव्रीहि ("one who has a great
+king"); टच् applies to तत्पुरुष only. The rule could only fire by overriding a
+lexicon hit, the one gate that keeps C4 and 5a off correct words. Without that
+gate the prototype also mis-parsed `महाराज्ञी` ("great queen"). This is the
+"compound type is not visible in the form" limit of §10.2, now measured.
+
+Frontend margin line for `samasa_error` is now rule-neutral ("Compound form:
+possibly …"), since two rules share the status.
+
+**Measurements (after the सः fix and 5a together).**
+
+| | Before | After |
+|---|---|---|
+| Gold | 139/155 | **byte-identical per test** |
+| Samāsa set, in scope | 47/47 | **54/54** (45 correct, 9 wrong forms with strict status) |
+| DCS false positives | 17/260 (6.5%) | 17/260 (6.5%) |
+| DCS review-only / clean | 216 / 27 | 216 / 27 |
+| Experiment 2 recall | 15/206 | 15/206, per-case JSON identical |
+
+DCS offered 2 candidate words for C5 (महत्-, -राज-, -सख-), neither a hit, so —
+as with C4 — DCS is no evidence either way.
+
+### 10.11 C6–C8 results (2026-09-17) — none built; samāsa plan closed
+
+Each was prototyped and measured before any engine code, on its test-set wrong
+forms, hand-built correct look-alikes, and the 477 unrecognised words of the
+Experiment-1 DCS sample (all correct Sanskrit, so every fire there is a false
+note). Prototype: an unrecognised word only, the same lexicon gate as C4/C5a.
+
+| Stage | Wrong forms caught | Fires on correct DCS words | Verdict |
+|---|---|---|---|
+| C6 last-member gender (२.४.२६) | 3 of 4 (`राजकन्यः`, `नृपकन्यः`, `गुरुभार्यः`) | **41** | not built |
+| C7 collective द्विगु singular (२.४.१) | 1 of 4 reachable | 0 | not built |
+| C8 द्वन्द्व number | — | **7** | not built |
+
+**C6.** A masculine compound whose last member has a feminine homograph stem is
+spelled exactly like the error: `षोडशगुणः` (गुणा), `सुखदुःखयोगः` (योगा),
+`गोचर्यः`. Restricting to endings a feminine आ-stem can never take still left
+41 false notes against 3 real catches. Among recognised words the same shape
+covers names and बहुव्रीहिs (`वीरसेनः`, `भीमसेनः`, `सत्यकामः`, `चन्द्रगुप्तः`),
+which only the lexicon gate kept quiet.
+
+**C7.** Three of the four target forms — `त्रिभुवनानि`, `पञ्चपात्राणि`,
+`त्रिलोकाः` — are lexicon hits, so under §10's gate they are unreachable. The
+remaining shape (numeral + plural) is also a correct बहुव्रीहि plural
+(`पञ्चमुखाः`, `त्रिनेत्राः`), so even the one reachable form cannot be flagged
+on form alone.
+
+**C8.** Every singular two-stem compound is either a द्वन्द्व written in the
+wrong number or an ordinary तत्पुरुष, and the spelling is identical. The
+prototype fired on `सङ्गदोषः`, `नियोगपर्यायः`, `विकरणभावः`, `सदृशरूपः` — all
+correct तत्पुरुष — and on no real error. vidyut has no proper-noun tag (§4.10),
+so "two names" cannot be used to narrow it.
+
+The wrong forms stay in `tests/gold/samasa.json` as permanent known gaps, each
+with the reason in its note.
+
+**Where the samāsa plan ends up.**
+
+| Stage | Outcome |
+|---|---|
+| C0 | Test set (65 cases) + harness `--dataset` / `expected_status` |
+| C1 | Shape check measured; gate failed |
+| C2 | Not built (depends on C1) |
+| C3 | Not built (depends on splits; C1 showed 25 of 71 accepted splits wrong) |
+| C4 | **Shipped ⚪** — अव्ययीभाव endings (१.२.४७, २.४.८२, २.४.८३) |
+| C5a | **Shipped ⚪** — महत् → महा (६.३.४६) |
+| C5b | Not built — targets are correct बहुव्रीहि spellings in the lexicon |
+| C6, C7, C8 | Not built — measured above |
+
+Also fixed along the way: the पितरौ नमामि false 🔴 (§10.6) and the सः/एषः sandhi
+suggestion (§10.9).
+
+The common cause behind every "not built": **compound type is not visible in
+the spelling.** The rules that shipped are the ones whose wrong form is wrong
+under *every* type (an indeclinable with a case ending; महत्- where no
+षष्ठी reading is involved is left to review). Everything else needs either
+meaning or a real segmenter with calibrated confidence — the latter still
+parked as a one-off offline TransLIST harvest (§10.1).
+
+**Open follow-up (found in §10.10 testing, not fixed).** The spelling corrector
+runs before the samāsa checks, so it can pre-empt them: `अनुगङ्गाम्` gets a 🔴
+"spelling correction" to the right answer under the wrong label, and
+`प्रतिमासाः` gets a **wrong 🔴** (`प्रतिमांसाः`). Reordering needs gold and
+typo-recall measurement, because it could also hide real typos. **Fixed — see §10.12.**
+
+### 10.12 Samāsa check ahead of the spelling corrector (2026-09-17)
+
+Closes the follow-up in §10.11. `check_word` now returns "unrecognised, no
+suggestion" for a word that reads as a samāsa written against a C4/C5a rule,
+beside the existing `_is_productively_composite` gate and before any
+edit-distance correction. `check_text` then raises the ⚪ samāsa note.
+
+| Word | Before | After |
+|---|---|---|
+| `प्रतिमासाः` | **🔴 "spelling" → प्रतिमांसाः (wrong word)** | ⚪ samāsa → `प्रतिमासम्` (२.४.८३) |
+| `प्रतिक्षणाः` | 🔴 "spelling" → प्रतीक्षणाः | ⚪ samāsa → `प्रतिक्षणम्` (२.४.८३) |
+| `अनुगङ्गाम्`, `अनुवेलाम्` | 🔴 "spelling" → right form, wrong label | ⚪ samāsa → `अनुगङ्गम्`, `अनुवेलम्` (१.२.४७) |
+
+**A 5a flaw surfaced by the measurement, and fixed.** The Experiment-2 A/B
+changed one case: `महदादि` ("Mahat and the rest", in an uncorrupted part of a
+DCS sentence) lost a false 🔴 (`महदाद्`) but gained a ⚪ proposing `महादि`.
+६.३.४६ needs महत् to describe the other member, and in an "X and the rest"
+compound X is the thing listed. `LISTING_FINAL_MEMBERS` (आदि, आद्य, प्रभृति,
+प्रमुख) now blocks 5a, and `_is_mahat_listing_compound` keeps such words away
+from the edit-distance corrector too, so `महदादि` is now a plain ⚪ unrecognised
+word with no suggestion.
+
+**Measurements.**
+
+| | Before | After |
+|---|---|---|
+| Gold | 139/155 | **byte-identical per test** |
+| Samāsa set, in scope | 54/54 | **57/57** (11 wrong forms with strict status) |
+| DCS Exp. 1 | 17 FP / 216 / 27 | identical, per-sentence JSON identical |
+| DCS Exp. 2 recall | 15/206 | 15/206; **1 case changed** — the false 🔴 on `महदादि` removed, no typo lost |
+| samāsa notes on correct DCS text (Exp. 1 + Exp. 2 originals, 466 sentences) | — | **0** |
+
+### 10.13 Pada-final -र् and anusvāra-before-vowel (2026-09-17)
+
+Both found by running the first real-text sample
+(`tests/real_text/sample_01_rama.txt`, 138 words, supplied as correct).
+
+**-र् mistaken for -स्.** A पदान्त visarga can stand for either, and the junction
+code assumed -स् throughout, so पुनः and प्रातः were offered as पुनो and प्रातो.
+`SanskritEngine._repha_base` now rewrites the base to -र् when the Kosha reads
+the -र् spelling as an **अव्यय** — पुनर्, प्रातर्, अन्तर् have such a reading and
+पुनस्/प्रातस्/अन्तस् do not. vidyut's own rules.csv then produces the junction;
+it carries no sūtra for these, so `check_junction` cites them:
+
+| Written | Suggested | Sūtra |
+|---|---|---|
+| `पुनः गुरोः` | `पुनर्गुरोः` | खरवसानयोर्विसर्जनीयः (८.३.१५) |
+| `पुनः अपि` | `पुनरपि` | ८.३.१५ |
+| `प्रातः रामः` | `प्राता रामः` | रो रि (८.३.१४) / ढ्रलोपे पूर्वस्य दीर्घोऽणः (६.३.१११) |
+| `पुनः च` | `पुनश्च` | विसर्जनीयस्य सः (८.३.३४) / स्तोः श्चुना श्चुः (८.४.४०) |
+| `पुनः पठति` | — correct as written | |
+
+The अव्यय test is what keeps this off the *other* -र् class: गुरोः + voiced is
+also गुरोर् (सस्जुषो रुः ८.२.६६), but that -र् arises by sandhi rather than being
+lexical. Junctions of that kind are still silent — a separate gap, not touched.
+The ऋ-stem vocative (पितः → पितर्) is likewise not covered: it has no अव्यय
+reading.
+
+**Anusvāra before a vowel.** मोऽनुस्वारः (८.३.२३) replaces a पदान्त म् with
+अनुस्वार only before a consonant, so `शीघ्रं उत्तिष्ठति` should be `शीघ्रम्
+उत्तिष्ठति`. Decided by spelling alone — a final anusvāra, a vowel next — and
+raised as ⚪ in the same `elif` as the sandhi note, so it never displaces one.
+
+**New regression set.** `scripts/build_sandhi_dataset.py` →
+`tests/gold/sandhi.json`, 20 cases over §10.9's सः/एषः rule and both of the
+above, scored by `evaluate_gold.py --dataset`. Wrong forms carry
+`expected_status`, so silence does not pass.
+
+**Measurements.**
+
+| | Before | After |
+|---|---|---|
+| Gold | 139/155 | **byte-identical per test** |
+| Samāsa set | 57/57 | 57/57 |
+| Sandhi set | — | **19/20** (the one failure is a pre-existing defect, below) |
+| DCS Exp. 1 | 17 FP / 216 / 27 | **0 of 260 cases changed** |
+| DCS Exp. 2 | 15/206 | **0 of 206 cases changed** |
+| Real sample | 0 🔴, 16 ⚪ | 0 🔴, 19 ⚪ (3 anusvāra added; 2 wrong suggestions corrected) |
+
+DCS is entirely unaffected because it is printed sandhi-joined; both advisories
+only speak to text that writes words apart, which is what the real sample does.
+
+**Found by the new set, not fixed: a 🔴 on correct text.** `जलं पिबन्ति।` ("they
+drink water") is asserted as a subject-verb number error, because neuter जलम्
+is spelled the same in प्रथमा and द्वितीया and is taken as the subject of a
+plural verb. `ते जलं पिबन्ति।` is clean. This is the same syncretism as the
+पितरौ नमामि defect (§10.6) but with a प्रथम-पुरुष verb, which that fix does not
+cover. `D203-04` is deliberately left **failing in scope** rather than recorded
+as a known gap, since it is a false assertion. **Fixed — see §10.14.** A fix would need the object
+reading to be admissible only where the verb can take an object
+(`TRANSITIVE_DHATU_MAP`), so that `फलानि पतति` keeps its error.
+
+### 10.14 जलं पिबन्ति — the प्रथम-पुरुष half of the syncretism defect (2026-09-17)
+
+Closes the failing case left in §10.13. `जलं पिबन्ति।` ("they drink water") was
+asserted 🔴 as a number error: neuter जलम् is spelled alike in प्रथमा and
+द्वितीया, so it was taken for a singular subject of a plural verb. The §10.6 fix
+did not reach it — that one keys on the verb being उत्तम/मध्यम, and here the verb
+is प्रथम, the same person a nominal subject carries.
+
+**Shipped condition.** The object reading is allowed against a प्रथम-पुरुष verb
+only when *both* hold:
+- the subject is **neuter**, where प्रथमा and द्वितीया coincide by rule
+  (स्वमोर्नपुंसकात् ७.१.२३), and
+- the verb can take an object (`TRANSITIVE_DHATU_MAP`).
+
+**The first condition was learned by measurement.** Reusing the general
+syncretism test cost **five gold cases** (139 → 134): `बालकाः` is also the
+द्वितीया बहुवचन of the feminine बालका, so an unrelated reading excused the real
+error in `बालकाः पठति`. A dual in -औ is syncretic too, but gold 3-35
+(`बालकौ पठति`) requires that to stay an error, so the licence stops at neuter.
+The उत्तम/मध्यम branch keeps the wider test, because there *no* nominal can be
+the subject at all, which is a stronger licence than "some reading exists".
+
+| Sentence | Before | After |
+|---|---|---|
+| `जलं पिबन्ति।`, `फलानि खादति।` | 🔴 | clean |
+| `फलानि पतति।` (पत् takes no object) | 🔴 | 🔴 |
+| `बालकाः पठति।`, `बालकौ पठति।`, `रामाः पठति।` | 🔴 | 🔴 |
+| `बालकाः पुस्तकं पठति।`, `बालकाः पठति च।` | 🔴 | 🔴 |
+
+**Measurements.**
+
+| | Result |
+|---|---|
+| Gold | **byte-identical per test** (139/155) |
+| Sandhi set | **20/20** (was 19/20) |
+| Samāsa set | 57/57 |
+| DCS Exp. 1 / Exp. 2 | **0 of 260 and 0 of 206 cases changed** |
+| Real sample | 0 🔴, 19 ⚪ — unchanged |
+
+**Known limit.** The licence rests on `TRANSITIVE_DHATU_MAP`, a hand-written
+list of 14 roots. A neuter subject with a transitive verb outside that list
+still draws the 🔴 — the failure mode is a false assertion, not a miss, so the
+list is the next thing to widen if this recurs on real text.
 
 ---
 

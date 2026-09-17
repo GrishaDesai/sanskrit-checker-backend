@@ -565,6 +565,17 @@ class KarakaSyntaxEngine:
             candidate = (n_idx, tok, vibhaktis)
         return candidate
 
+    def _prathama_is_also_dvitiya(self, tok) -> bool:
+        """True if a best-ranked Prathama reading is spelled identically in
+        Dvitiya for the same prAtipadika, liNga and vacana -- genuine
+        nominative/accusative syncretism (every dual in -au, every neuter
+        in -am), not an unrelated homograph under some other stem."""
+        def key(e):
+            return (getattr(e.pratipadika_entry, "lemma", None), e.linga, e.vacana)
+        top = {key(e) for e in self._top_rank_prathama(tok)}
+        return any(e.vibhakti == Vibhakti.Dvitiya and key(e) in top
+                   for e in getattr(tok, "nominal_entries", []))
+
     def _prathama_vacana(self, tok):
         """The vacana of a token's best-ranked *Prathama* reading, or None."""
         prathama = [e for e in getattr(tok, "nominal_entries", [])
@@ -1045,7 +1056,49 @@ class KarakaSyntaxEngine:
                     subj_vacana_ambiguous = True
                 agreement_severity = "review" if subj_vacana_ambiguous else "error"
 
-                if exact_readings and not agrees and self._verb_grammar:
+                # A nominal is only ever the कर्ता of a प्रथम-पुरुष verb (शेषे
+                # प्रथमः १.४.१०८). When every reading of the verb is उत्तम or
+                # मध्यम, its कर्ता is an unstated अहम्/त्वम् -- and a nominal
+                # whose Prathamā is spelled like its own Dvitīyā is then just
+                # as well that verb's object. पितरौ नमामि ("I bow to my
+                # parents") was being read as a dual subject and asserted
+                # 🔴 against a perfectly correct नमामि. There is a reading
+                # under which nothing is wrong, so nothing is reported.
+                # रामः पठसि keeps its error: रामः has no Dvitīyā reading, so
+                # it cannot be the object and can only be a mis-agreeing
+                # subject.
+                # A प्रथम-पुरुष verb allows the same reading, with its कर्ता simply
+                # not written -- जलं पिबन्ति, "they drink water" -- but on much
+                # narrower terms, because the verb's own person gives nothing
+                # away here: a nominal subject is प्रथम too. Two conditions,
+                # both needed:
+                #
+                #  * the subject is **neuter**, where प्रथमा and द्वितीया are
+                #    identical by rule (स्वमोर्नपुंसकात् ७.१.२३). Reusing the
+                #    general syncretism test instead cost five gold cases:
+                #    बालकाः is also the द्वितीया बहुवचन of the *feminine* बालका,
+                #    so an unrelated reading would have excused the real error
+                #    in बालकाः पठति. A dual in -औ is syncretic too, but gold
+                #    3-35 (बालकौ पठति) requires that to stay an error, so the
+                #    licence is not extended to it.
+                #  * the verb can take an object at all. पठ्/खाद्/पा can, so
+                #    फलानि खादति is "he eats the fruits"; पत् cannot, so
+                #    फलानि पतति keeps its number error.
+                syncretic_subject = (pronoun_hit is None
+                                     and self._prathama_is_also_dvitiya(subj_tok))
+                non_prathama_verb = bool(v_tok.verb_readings) and all(
+                    vf.purusha != Purusha.Prathama for vf in v_tok.verb_readings)
+                top_prathama = self._top_rank_prathama(subj_tok)
+                neuter_subject = bool(top_prathama) and all(
+                    e.linga.name.lower().startswith("napum") for e in top_prathama)
+                takes_an_object = self._identify_dhatu_hint(
+                    v_tok.verb_readings, TRANSITIVE_DHATU_MAP, v_tok.text_slp1) is not None
+                object_reading_available = syncretic_subject and (
+                    non_prathama_verb or (neuter_subject and takes_an_object))
+
+                if object_reading_available:
+                    pass
+                elif exact_readings and not agrees and self._verb_grammar:
                     dhatu_code = exact_readings[0].dhatu_code
                     corrected = sorted(self._verb_grammar.suggest(
                         dhatu_code, subj_purusha, subj_vacana,

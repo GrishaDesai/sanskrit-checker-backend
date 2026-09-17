@@ -25,6 +25,14 @@ class JunctionResult:
     suggested_joined_deva: Optional[str] = None
 
 
+# The two pronouns whose nominative singular drops its ending before a
+# consonant (एतत्तदोः सुलोपोऽकोरनञ्समासे हलि ६.१.१३२), as underlying padas, and the
+# consonants (हल्) in SLP1.
+_SU_LOPA_PRONOUNS = frozenset({"sas", "ezas"})
+_HAL = frozenset("kKgGNcCjJYwWqQRtTdDnpPbBmyrlvSzsh")
+_HAS = frozenset("gGNjJYqQRdDnbBmyrlvh")   # voiced consonants (हश्)
+
+
 # Paninian Sutra annotations for common sandhi rule patterns
 PANINI_SUTRA_MAP: dict[tuple[str, str], tuple[str, str]] = {
     # as + voiced consonant -> o (हशि च 6.1.114)
@@ -191,6 +199,41 @@ class SandhiChecker:
 
         base_w2 = underlying_w2_slp1
 
+        # एतत्तदोः सुलोपोऽकोरनञ्समासे हलि (६.१.१३२): the nominative singular सः and
+        # एषः lose their ending before *any* consonant -- स गच्छति, एष पठति --
+        # which pre-empts the general visarga rules. Without this, हशि च
+        # (६.१.११४) proposed सो गच्छति, which is wrong, and सो गच्छति as
+        # written was accepted. Only the bare pronoun qualifies: सकः (with
+        # अक्) and असः (a नञ्-compound) are excluded by the sūtra itself, and
+        # neither is spelled sas/ezas. Before a vowel the sūtra does not
+        # apply, so सोऽपि is still reached through ६.१.११३ below.
+        #
+        # The note is raised only where one was raised before -- a voiced
+        # consonant, where हशि च used to fire -- or where the written form is
+        # the wrong -ओ one. सः before a voiceless consonant (सः पठति) is the
+        # ordinary modern spelling and the gold set marks it must-not-flag
+        # (11-114); the sūtra covers it, but a new ⚪ on every such sentence
+        # would be noise, not a correction.
+        if base_w1 in _SU_LOPA_PRONOUNS and base_w2[:1] in _HAL:
+            expected = base_w1[:-1]
+            wrong_o_form = surface_w1_slp1.endswith("o")
+            if surface_w1_slp1 != expected and (wrong_o_form or base_w2[:1] in _HAS):
+                expected_deva = transliterate(expected, Scheme.Slp1, Scheme.Devanagari)
+                return JunctionResult(
+                    is_valid_sandhi=False,
+                    issue_detected=True,
+                    rule_sutra="एतत्तदोः सुलोपोऽकोरनञ्समासे हलि (६.१.१३२)",
+                    rule_explanation=(
+                        "विसर्ग-लोप: 'सः'/'एषः' + व्यञ्जन -> 'स'/'एष' (the ending is dropped, "
+                        "the words stay separate)"
+                    ),
+                    suggested_w1_slp1=expected,
+                    suggested_w1_deva=expected_deva,
+                    suggested_joined_deva=expected_deva + " " + transliterate(
+                        base_w2, Scheme.Slp1, Scheme.Devanagari),
+                )
+            return JunctionResult(is_valid_sandhi=True, issue_detected=False)
+
         sandhi_info = self.apply_sandhi(base_w1, base_w2)
         if not sandhi_info:
             return JunctionResult(is_valid_sandhi=True, issue_detected=False)
@@ -201,6 +244,37 @@ class SandhiChecker:
         w1_expected_deva = transliterate(w1_expected, Scheme.Slp1, Scheme.Devanagari)
         joined_expected_deva = transliterate(joined_expected, Scheme.Slp1, Scheme.Devanagari)
         surface_w1_deva = transliterate(surface_w1_slp1, Scheme.Slp1, Scheme.Devanagari)
+
+        # A pada that really ends in -र् (पुनर्, प्रातर्, अन्तर् -- see
+        # SanskritEngine._repha_base, which is what hands them here as -र्).
+        # vidyut's rules.csv produces these junctions correctly but carries no
+        # sūtra for them, so they are cited here rather than left silent:
+        # before a voiced sound the र् simply stays, and before another र् it
+        # drops with the preceding vowel lengthened.
+        if base_w1.endswith("r") and surface_w1_slp1 != w1_expected:
+            if w1_expected.endswith("r"):
+                r_sutra = "खरवसानयोर्विसर्जनीयः (८.३.१५)"
+                r_exp = ("रेफ सन्धि: पदान्त 'र्' विसर्ग बनता है केवल खर् (अघोष) वर्ण या विराम से "
+                         "पहले; घोष व्यञ्जन या स्वर से पहले 'र्' यथावत् रहता है")
+            elif w1_expected.endswith("S"):
+                r_sutra = "विसर्जनीयस्य सः (८.३.३४) / स्तोः श्चुना श्चुः (८.४.४०)"
+                r_exp = "रेफ सन्धि: 'र्' -> विसर्ग -> 'स्', और च-वर्ग से पहले श्चुत्व द्वारा 'श्'"
+            elif w1_expected.endswith(("s", "z")):
+                r_sutra = "विसर्जनीयस्य सः (८.३.३४)"
+                r_exp = "रेफ सन्धि: 'र्' -> विसर्ग -> 'स्' (त-वर्ग/ट-वर्ग से पहले)"
+            else:
+                r_sutra = "रो रि (८.३.१४) / ढ्रलोपे पूर्वस्य दीर्घोऽणः (६.३.१११)"
+                r_exp = ("रेफ सन्धि: 'र्' + 'र्' -> पूर्व 'र्' का लोप और उससे पहले के स्वर की "
+                         "दीर्घता")
+            return JunctionResult(
+                is_valid_sandhi=False,
+                issue_detected=True,
+                rule_sutra=r_sutra,
+                rule_explanation=r_exp,
+                suggested_w1_slp1=w1_expected,
+                suggested_w1_deva=w1_expected_deva,
+                suggested_joined_deva=joined_expected_deva,
+            )
 
         # Check if surface form matches expected sandhi transformation
         # Specific check: When 'as' + voiced cons requires 'o' (e.g. rAmaH gacCati -> rAmo gacCati)

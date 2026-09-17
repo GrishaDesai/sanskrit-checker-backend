@@ -1116,8 +1116,7 @@
    "note": "'liṅgam' (Nom, the grammatical subject) -> 'liṅgena' (Ins); the engine's subject-finder requires a Prathama-like marker, so an oblique-case 'subject' is never identified and no check fires at all.",
    "caught": false,
    "flagged_surfaces": [
-    "पञ्चभिर्",
-    "महदादि"
+    "पञ्चभिर्"
    ],
    "error_tokens": [
     {
@@ -1125,12 +1124,6 @@
      "status": "invalid",
      "analysis": "Spelling: exactly one recognised form is a single letter away",
      "suggestion": "पञ्चाभिर्"
-    },
-    {
-     "text": "महदादि",
-     "status": "invalid",
-     "analysis": "Spelling: exactly one recognised form is a single letter away",
-     "suggestion": "महदाद्"
     }
    ],
    "syntax_issues": []
@@ -2650,14 +2643,7 @@
    "caught": false,
    "flagged_surfaces": [],
    "error_tokens": [],
-   "syntax_issues": [
-    {
-     "token_text": "का",
-     "issue_type": "agreement_error",
-     "title": "Gender Agreement Error (लिङ्ग-अन्वय-दोषः)",
-     "severity": "review"
-    }
-   ]
+   "syntax_issues": []
   },
   {
    "category": "multi_letter_typo",

@@ -152,6 +152,27 @@ UPASARGA_PREFIXES = frozenset({
     "upa", "yaTA", "sa",
 })
 
+# The अव्ययs that head an अव्ययीभाव often enough to be worth checking its
+# ending (samāsa plan C4, docs/vidyut-phase-scope.md §10). Deliberately
+# narrower than UPASARGA_PREFIXES: सु, सम्, वि, प्र and the like head far
+# more प्रादि-तत्पुरुष and बहुव्रीहि compounds than अव्ययीभावs, and a declined
+# ending is correct on those. Longest first, so यावत् is tried before या-.
+AVYAYIBHAVA_HEADS = ("yAvat", "antar", "bahis", "prati", "yaTA", "upa", "anu", "aDi")
+
+# महत् as the first member of a compound, as it is actually written: the final
+# त् assimilates to what follows (महद्देवः, महन्नाम, महच्चरितम्, महज्जनः,
+# महल्लोकः), so all of its पदान्त spellings are tried (samāsa plan C5a).
+MAHAT_SPELLINGS = ("mahat", "mahad", "mahan", "mahac", "mahaj", "mahal")
+
+# Last members of an "X and the rest" / "headed by X" compound. In these X is
+# the thing listed, never a quality of the last member, so महत् in महदादि
+# ("Mahat and the rest") cannot be समानाधिकरण with it and ६.३.४६ does not
+# apply. Found on DCS text, where महदादि had drawn a महादि suggestion.
+LISTING_FINAL_MEMBERS = frozenset({"Adi", "Adya", "praBfti", "pramuKa"})
+
+# The अच् (vowels) in SLP1, simple and diphthong.
+_VOWELS = frozenset("aAiIuUfFxXeEoO")
+
 # The core सर्वनाम (pronominal) stems. A piece of a fused token whose Kosha
 # reading has one of these stems is a pronoun in some case -- तस्य, येन,
 # एतेषु -- which is the class, alongside the अव्ययs, that external sandhi
@@ -206,13 +227,14 @@ class TokenResult:
     underlying_slp1: str    # normalized pada in SLP1 (e.g. rAmas for rAmaH)
     lemma: Optional[str]    # dictionary root/stem
     is_valid: bool          # True if recognized
-    status: str = "valid"   # "valid" | "invalid" | "sandhi_error" | "karaka_error" | "agreement_error"
+    status: str = "valid"   # "valid" | "invalid" | "sandhi_error" | "samasa_error" | "karaka_error" | "agreement_error"
     severity: str = "error"  # "error" (confirmed problem) | "review" (offered, not asserted)
     analysis: Optional[str] = None
     suggestion: Optional[str] = None
     rule: Optional[str] = None
     sandhi_issue: Optional[str] = None
     karaka_issue: Optional[str] = None
+    samasa_issue: Optional[str] = None
     # Structured grammatical readings, used for real agreement/kAraka analysis
     # instead of string-matching a description. Populated from vidyut.kosha
     # Subanta entries and from VerbGrammar's Paninian-derived tiNanta index.
@@ -379,6 +401,200 @@ class SanskritEngine:
             if rest.endswith(("am", "aM")) and self._raw_check(rest)[0]:
                 return True
         return False
+
+    @staticmethod
+    def _avyayibhava_form(stem: str) -> Optional[tuple[str, str]]:
+        """(the अव्ययीभाव spelling of a final member, the sūtra that makes it).
+
+        The compound is neuter (अव्ययीभावश्च १.१.४१ makes it an अव्यय), so a
+        long final vowel is shortened (ह्रस्वो नपुंसके प्रातिपदिकस्य १.२.४७);
+        an अ-final member then takes -अम् (नाव्ययीभावादतोऽम्त्वपञ्चम्याः
+        २.४.८३), and any other vowel-final member takes no ending at all
+        (अव्ययादाप्सुपः २.४.८२). Consonant-final members are left alone: their
+        treatment (अनश्च ५.४.१०८ and its neighbours) is not modelled here.
+        """
+        final = stem[-1:]
+        if final == "a":
+            return stem + "m", "नाव्ययीभावादतोऽम्त्वपञ्चम्याः (२.४.८३)"
+        if final == "A":
+            return stem[:-1] + "am", "ह्रस्वो नपुंसके प्रातिपदिकस्य (१.२.४७)"
+        if final in ("I", "U"):
+            return stem[:-1] + ("i" if final == "I" else "u"), "ह्रस्वो नपुंसके प्रातिपदिकस्य (१.२.४७)"
+        if final in ("i", "u"):
+            return stem, "अव्ययादाप्सुपः (२.४.८२)"
+        return None
+
+    def _avyayibhava_candidates(self, slp1_word: str) -> Optional[tuple[str, str, str]]:
+        """(head, expected spelling, sūtra) if the word is an अव्ययीभाव head
+        followed by a form of exactly one kind of final member; else None.
+
+        Only ordinary (Basic) प्रातिपदिकs are read as the final member: a
+        कृदन्त entry's "lemma" is its root, not its stem, so it cannot give the
+        spelling. If the member's readings disagree on what the compound
+        should look like, nothing is proposed -- the check declines rather
+        than choosing.
+        """
+        for head in AVYAYIBHAVA_HEADS:
+            if not slp1_word.startswith(head) or len(slp1_word) - len(head) < 3:
+                continue
+            rest = slp1_word[len(head):]
+            expected = set()
+            for entry in self._raw_kosha_entries(rest):
+                pe = getattr(entry, "pratipadika_entry", None)
+                if pe is None or not type(pe).__name__.endswith("Basic"):
+                    continue
+                form = self._avyayibhava_form(pe.lemma)
+                if form:
+                    expected.add((head + form[0], form[1]))
+            if not expected:
+                continue
+            if len({f for f, _ in expected}) != 1:
+                return None
+            # Readings can agree on the spelling but reach it by different
+            # rules -- गङ्गाम् carries both गङ्गा and गङ्ग -- so cite the one that
+            # actually changes what is written, the shortening, when present.
+            spelling = next(iter(expected))[0]
+            sutras = {s for _, s in expected}
+            shortening = next((s for s in sutras if "१.२.४७" in s), None)
+            return head, spelling, shortening or sorted(sutras)[0]
+        return None
+
+    def _is_avyayibhava_luk_form(self, slp1_word: str) -> bool:
+        """True for an अव्ययीभाव whose final member takes no ending at all --
+        यथाशक्ति, उपनदि (अव्ययादाप्सुपः २.४.८२). The -अम् kind is already
+        recognised by `_is_upasarga_compound`; this is its counterpart for
+        इ/उ-final members, which had no recognition path and so drew a ⚪ on
+        perfectly correct words.
+
+        Limited to the यथा- head. A bare इ/उ-final word is also exactly what a
+        dropped visarga looks like -- अनुभूति for अनुभूतिः -- and under उप/अनु/
+        प्रति an इ-stem is as often a प्रादि noun as an अव्ययीभाव, so accepting it
+        there would silence a missing-visarga typo, and would do it ahead of
+        the spelling corrector that asserts it. यथा- compounds on an इ/उ member
+        (यथाशक्ति, यथामति, यथारुचि) are अव्ययीभाव in practice.
+
+        Like its counterpart this only ever moves a token from review to
+        valid, so its failure mode is a missed error, never an accusation.
+        """
+        found = self._avyayibhava_candidates(slp1_word)
+        return (found is not None and found[0] == "yaTA" and found[1] == slp1_word
+                and slp1_word[-1:] in ("i", "u"))
+
+    def _avyayibhava_ending_issue(self, slp1_word: str) -> Optional[tuple[str, str, str]]:
+        """(expected spelling, sūtra, explanation) for an *unrecognised* word
+        that reads as an अव्ययीभाव written with a case ending -- उपगङ्गाम् for
+        उपगङ्गम्, प्रतिदिनेषु for प्रतिदिनम्, यथाशक्तिः for यथाशक्ति.
+
+        Callers must only ask this of a word the lexicon does not carry. That
+        gate is what makes it safe: a declined ending is correct on a
+        प्रादि-तत्पुरुष or बहुव्रीहि with the same head (उपवनानि, उपकरणानि,
+        प्रतिज्ञाम्), and every one of those sampled is in the Kosha. The
+        optional -आत्, -एन and -ए forms of an अ-final member (तृतीयासप्तम्योर्बहुलम्
+        २.४.८४, and the पञ्चमी exception in २.४.८३) are accepted, not flagged.
+
+        Offered at review tier only: the head alone does not prove the word is
+        an अव्ययीभाव rather than an unlisted प्रादि compound.
+        """
+        found = self._avyayibhava_candidates(slp1_word)
+        if found is None:
+            return None
+        head, spelling, sutra = found
+        if spelling == slp1_word:
+            return None
+        if spelling.endswith("am"):
+            base = spelling[:-2]
+            if slp1_word in (base + "At", base + "Ad", base + "ena", base + "e"):
+                return None
+        spelling_deva = transliterate(spelling, Scheme.Slp1, Scheme.Devanagari)
+        head_deva = transliterate(head, Scheme.Slp1, Scheme.Devanagari)
+        explanation = (
+            f"Read as an अव्ययीभाव compound headed by '{head_deva}', this should be "
+            f"written '{spelling_deva}': the compound is an indeclinable (अव्ययीभावश्च "
+            f"१.१.४१) and does not take this case ending. If it is instead a different "
+            f"kind of compound with the same prefix, the word may be correct as written."
+        )
+        return spelling_deva, sutra, explanation
+
+    def _mahat_compound_issue(self, slp1_word: str) -> Optional[tuple[str, str, str]]:
+        """(expected spelling, sūtra, explanation) for an *unrecognised* word
+        written महत्- + a known word -- महत्पुरुषः for महापुरुषः, महदीश्वरः for
+        महेश्वरः (आन्महतः समानाधिकरणजातीययोः ६.३.४६).
+
+        The sūtra covers only a कर्मधारय or बहुव्रीहि, where महत् describes the
+        other member ("a great man"). In a षष्ठी-तत्पुरुष ("service of the
+        great") महत्- is correct as written, and form alone cannot tell the two
+        apart -- so, like the अव्ययीभाव check, this is only asked of a word the
+        lexicon does not carry, and is offered at review tier. Every correct
+        महत्- word sampled (महत्सेवा, महत्त्वम्, महत्तरः, महत्तमः, महद्भ्यः) is in
+        the Kosha.
+        """
+        for spelling in MAHAT_SPELLINGS:
+            if not slp1_word.startswith(spelling) or len(slp1_word) - len(spelling) < 3:
+                continue
+            rest = slp1_word[len(spelling):]
+            lemmas = {e.pratipadika_entry.lemma for e in self._raw_kosha_entries(rest)
+                      if type(getattr(e, "pratipadika_entry", None)).__name__.endswith("Basic")}
+            if not lemmas:
+                continue
+            if lemmas & LISTING_FINAL_MEMBERS:
+                return None   # see `_is_mahat_listing_compound`
+            joined = None
+            if rest[:1] in ("a", "A", "i", "I", "u", "U", "f", "F", "e", "E", "o", "O"):
+                sandhi = self._sandhi_checker.apply_sandhi("mahA", rest)
+                joined = sandhi[0] if sandhi else None
+            expected = joined or ("mahA" + rest)
+            expected_deva = transliterate(expected, Scheme.Slp1, Scheme.Devanagari)
+            explanation = (
+                f"If महत् here describes the other member (\"a great …\"), it becomes महा- "
+                f"in the compound: '{expected_deva}'. If the compound instead means "
+                f"\"… of the great\", महत्- is correct as written."
+            )
+            return expected_deva, "आन्महतः समानाधिकरणजातीययोः (६.३.४६)", explanation
+        return None
+
+    def _is_mahat_listing_compound(self, slp1_word: str) -> bool:
+        """True for महत्- + आदि/आद्य/प्रभृति/प्रमुख (महदादि, "Mahat and the rest").
+
+        Correct as written, and not in the Kosha. It is neither recognised nor
+        flagged: its absence from the lexicon is explained, so it must not be
+        handed to the edit-distance corrector, which asserted महदादि -> महदाद्
+        at 🔴. It stays an ordinary ⚪ unrecognised word.
+        """
+        for spelling in MAHAT_SPELLINGS:
+            if slp1_word.startswith(spelling) and len(slp1_word) - len(spelling) >= 3:
+                rest = slp1_word[len(spelling):]
+                lemmas = {e.pratipadika_entry.lemma for e in self._raw_kosha_entries(rest)
+                          if type(getattr(e, "pratipadika_entry", None)).__name__.endswith("Basic")}
+                if lemmas & LISTING_FINAL_MEMBERS:
+                    return True
+        return False
+
+    def _repha_base(self, base_slp1: str) -> str:
+        """Rewrite a पदान्त visarga/-स् to -र् where the word really ends in -र्.
+
+        A final visarga can stand for either (`PADANTA_FINAL_VARIANTS`), and
+        the junction code assumed -स् throughout, so पुनः before a voiced sound
+        was offered as पुनो by हशि च (६.१.११४). पुनर्, प्रातर् and अन्तर् end in
+        -र्, whose junction is different: the र् simply stays (पुनर्गुरोः,
+        पुनरपि), or drops with the preceding vowel lengthened before another
+        र् (प्राता रामः, रो रि ८.३.१४ / ढ्रलोपे पूर्वस्य दीर्घोऽणः ६.३.१११).
+        vidyut's own rules.csv already produces all of that once it is handed
+        the -र् form.
+
+        The -र् spelling is trusted only when the Kosha reads it as an
+        *अव्यय*. That is what separates these indeclinables, whose pada really
+        ends in र्, from an ordinary -अस् nominal: पुनस्/प्रातस्/अन्तस् have no
+        अव्यय reading, and neither does गुरोर्, whose -र् arises by sandhi
+        (सस्जुषो रुः ८.२.६६) rather than being lexical. That other class is a
+        separate gap and is deliberately not touched here.
+        """
+        if not base_slp1.endswith(("H", "s")):
+            return base_slp1
+        r_form = base_slp1[:-1] + "r"
+        if any(getattr(getattr(e, "pratipadika_entry", None), "is_avyaya", False)
+               for e in self._kosha.get(r_form)):
+            return r_form
+        return base_slp1
 
     def _is_recognized(self, slp1_word: str) -> bool:
         is_valid, *_ = self._raw_check(slp1_word)
@@ -672,7 +888,7 @@ class SanskritEngine:
 
         # An अव्ययीभाव / उपसर्ग compound whose parts are known but whose whole
         # the Kosha does not list (प्रतिदिनम्). Recognised, not corrected.
-        if self._is_upasarga_compound(slp1_word):
+        if self._is_upasarga_compound(slp1_word) or self._is_avyayibhava_luk_form(slp1_word):
             return True, None, "अव्ययीभाव / उपसर्ग-समास (recognised from its members)", slp1_word, None, None
 
         # Check for grammatical substitution suggestions (e.g. gamati -> gacCati)
@@ -687,6 +903,18 @@ class SanskritEngine:
         # Without this the fixed confusion table below would still "correct"
         # शनैर् to शणैर् on a token that is simply a sandhi-fused pada pair.
         if self._is_productively_composite(slp1_word):
+            return False, None, None, slp1_word, None, None
+
+        # Same reasoning for a word that reads as a samāsa written against a
+        # samāsa rule (अनुगङ्गाम्, प्रतिमासाः, महत्पुरुषः): its absence from the
+        # lexicon is already explained, and the explanation comes with the
+        # rule's own spelling. Left to the correctors below it was being
+        # "fixed" by edit distance instead -- प्रतिमासाः became the unrelated
+        # प्रतिमांसाः and was asserted 🔴, and अनुगङ्गाम् reached the right
+        # spelling under a spelling-error label. Returning no suggestion here
+        # hands the word to `check_text`, which raises the ⚪ samāsa note.
+        if (self._avyayibhava_ending_issue(slp1_word) or self._mahat_compound_issue(slp1_word)
+                or self._is_mahat_listing_compound(slp1_word)):
             return False, None, None, slp1_word, None, None
 
         # Check for orthographic/spelling typing substitutions (e.g. viDyArTI -> vidyArTI)
@@ -767,6 +995,20 @@ class SanskritEngine:
             # a specific, lexicon-verified fix was found is a confirmed error.
             severity = "error" if (is_valid or suggestion is not None) else "review"
 
+            # An unrecognised word whose form breaks a samāsa rule -- an
+            # अव्ययीभाव with a case ending, महत्- where महा- is due -- gets that
+            # specific, rule-cited note in place of the generic "not in the
+            # lexicon" one. Only reached when nothing else was found -- no
+            # lexicon hit and no spelling correction -- so it can neither hide
+            # a confirmed error nor create one: it stays ⚪.
+            samasa_issue = None
+            if not is_valid and suggestion is None:
+                ending = (self._avyayibhava_ending_issue(w_slp1)
+                          or self._mahat_compound_issue(w_slp1))
+                if ending:
+                    status = "samasa_error"
+                    suggestion, rule, samasa_issue = ending
+
             # An indeclinable's real grammatical identity is settled by the
             # lexicon match itself; a coincidental Kosha reading of the same
             # letters as some rare declinable noun is noise, not a competing
@@ -807,6 +1049,7 @@ class SanskritEngine:
                 analysis=analysis,
                 suggestion=suggestion,
                 rule=rule,
+                samasa_issue=samasa_issue,
                 nominal_entries=nominal_entries,
                 verb_readings=verb_readings,
                 kosha_lookup=self._raw_kosha_entries,
@@ -856,7 +1099,7 @@ class SanskritEngine:
             junction = self.check_sandhi_boundary(
                 t1.text_slp1,
                 t2.text_slp1,
-                underlying_w1,
+                self._repha_base(underlying_w1),
                 t2.underlying_slp1,
             )
 
@@ -876,6 +1119,29 @@ class SanskritEngine:
                     f"({junction.rule_explanation}). Writing the words unjoined is a "
                     f"legitimate editorial convention, so this is offered for a "
                     f"style decision rather than reported as an error."
+                )
+
+            # अनुस्वार written for a पदान्त म् before a *vowel*. मोऽनुस्वारः
+            # (८.३.२३) is conditioned on हलि -- a following consonant -- so
+            # शीघ्रं उत्तिष्ठति should keep its म्: शीघ्रम् उत्तिष्ठति. This is
+            # decided by the spelling alone (a final anusvāra, a vowel next),
+            # needs no analysis of either word, and is very common in modern
+            # printing, so it is offered as a ⚪ note like the sandhi ones.
+            # Only raised on a word with nothing else to say about it, so it
+            # never displaces a sandhi note or an error.
+            elif (t1.status == "valid" and t1.text_slp1.endswith("M")
+                  and t2.text_slp1[:1] in _VOWELS):
+                corrected = transliterate(t1.text_slp1[:-1] + "m", Scheme.Slp1, Scheme.Devanagari)
+                t1.status = "sandhi_error"
+                t1.severity = "review"
+                t1.suggestion = corrected
+                t1.rule = "मोऽनुस्वारः (८.३.२३)"
+                t1.sandhi_issue = (
+                    f"'{t1.text_deva}' is written with an anusvāra before the vowel of "
+                    f"'{t2.text_deva}'. मोऽनुस्वारः (८.३.२३) replaces a पदान्त म् with "
+                    f"अनुस्वार only before a consonant, so before a vowel the म् stays: "
+                    f"'{corrected}'. Printed texts vary on this, so it is offered as a "
+                    f"style point rather than reported as an error."
                 )
 
         # 3. Phase 3: Syntactic, Kāraka Dependency, and Samāsa Analysis

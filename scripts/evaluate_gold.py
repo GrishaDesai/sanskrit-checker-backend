@@ -97,6 +97,16 @@ def evaluate_case(engine: SanskritEngine, case: dict) -> dict:
     else:
         ok = False
 
+    # Optional, and absent from every case in the main gold set, so its scores
+    # are unchanged. A review target passes on anything short of an error --
+    # silence included -- which says nothing about whether a specific rule
+    # fired. A case that names `expected_status` additionally requires the
+    # expected word to carry exactly that finding.
+    if ok and case.get("expected_status"):
+        ok = any(t.text_deva == case.get("expected_error_surface")
+                 and t.status == case["expected_status"]
+                 for t in result.tokens)
+
     return {
         "id": case["id"],
         "section": case["section"],
@@ -118,6 +128,9 @@ def main() -> int:
     ap.add_argument("--json", type=str, default=None, help="write full results as JSON to this path")
     ap.add_argument("--section", type=int, default=None, help="only run one section number")
     ap.add_argument("--failures-only", action="store_true", help="only print failing cases")
+    ap.add_argument("--dataset", type=str, default=None,
+                    help="score a different case file with the same schema "
+                         "(e.g. tests/gold/samasa.json); default is the main gold set")
     args = ap.parse_args()
 
     if not (DATA_DIR / "kosha").exists():
@@ -125,7 +138,8 @@ def main() -> int:
         return 1
 
     engine = SanskritEngine(DATA_DIR)
-    gold = json.loads(GOLD.read_text(encoding="utf-8"))["cases"]
+    dataset = Path(args.dataset) if args.dataset else GOLD
+    gold = json.loads(dataset.read_text(encoding="utf-8"))["cases"]
     if args.section is not None:
         gold = [c for c in gold if c["section"] == args.section]
 

@@ -5013,6 +5013,13 @@
      "sandhi_issue": null
     },
     {
+     "text": "सो",
+     "status": "sandhi_error",
+     "analysis": "PadaEntry.Subanta(pratipadika_entry=PratipadikaEntry.Basic(pratipadika=Pratipadika(text='sa'), lingas=[Linga.Pum]), linga=Linga.Pum, vibhakti=Vibhakti.Prathama, vacana=Vacana.Eka)  (+11 other possible analyses)",
+     "suggestion": "स",
+     "sandhi_issue": "External sandhi not applied before 'निर्णयार्थमपदिष्टः': the expected sandhi-joined form is 'स' (विसर्ग-लोप: 'सः'/'एषः' + व्यञ्जन -> 'स'/'एष' (the ending is dropped, the words stay separate)). Writing the words unjoined is a legitimate editorial convention, so this is offered for a style decision rather than reported as an error."
+    },
+    {
      "text": "निर्णयार्थमपदिष्टः",
      "status": "invalid",
      "analysis": null,
@@ -5024,7 +5031,7 @@
    "review_syntax_issues": [],
    "token_count": 5,
    "error_count": 0,
-   "review_count": 2,
+   "review_count": 3,
    "syntax_error_count": 0
   },
   {
